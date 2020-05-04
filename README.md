@@ -7,7 +7,7 @@ ALICE - Another Language Interface Created for Everyone
 1) https://docker-curriculum.com/
 
 ### Programming Tools ###
-1) Anancoda (Python) - https://www.anaconda.com/
+1) Anaconda (Python) - https://www.anaconda.com/
 2) VS code - https://code.visualstudio.com/
 
 ### NLP Tools ###
