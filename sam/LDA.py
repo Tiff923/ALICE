@@ -1,143 +1,46 @@
-import io
-import os.path
-import re
-import tarfile
+from gensim import corpora, models
+from util import normalize_corpus,tokenize_text
 
-import smart_open
+def print_topics_gensim(topic_model, total_topics=1,
+                        weight_threshold=0.0001,
+                        display_weights=False,
+                        num_terms=None):
+     for index in range(total_topics):
+         topic = topic_model.show_topic(index)
+         topic = [(word, round(wt,2))for word, wt in topic if abs(wt) >= weight_threshold]
+         if display_weights:
+             print ('Topic #'+str(index+1)+' with weights')
+             print (topic[:num_terms] if num_terms else topic)
+         else:
+             print ('Topic #'+str(index+1)+' without weights')
+             tw = [term for term, wt in topic]
+             print (tw[:num_terms] if num_terms else tw)
+             
 
-def extract_documents(url='https://cs.nyu.edu/~roweis/data/nips12raw_str602.tgz'):
-    fname = url.split('/')[-1]
+def train_lda_model_gensim(corpus, total_topics=2):
+     norm_corpus = normalize_corpus(corpus) 
+     norm_tokenized_corpus = tokenize_text(norm_corpus)
+     dictionary = corpora.Dictionary(norm_tokenized_corpus)
+     mapped_corpus = [dictionary.doc2bow(text)for text in norm_tokenized_corpus]
+     tfidf = models.TfidfModel(mapped_corpus)
+     corpus_tfidf = tfidf[mapped_corpus]
+     lda = models.LdaModel(corpus_tfidf,
+                           id2word=dictionary,
+                           iterations=1000,
+                           num_topics=total_topics)
+     return lda
 
-    # Download the file to local storage first.
-    # We can't read it on the fly because of
-    # https://github.com/RaRe-Technologies/smart_open/issues/331
-    if not os.path.isfile(fname):
-        with smart_open.open(url, "rb") as fin:
-            with smart_open.open(fname, 'wb') as fout:
-                while True:
-                    buf = fin.read(io.DEFAULT_BUFFER_SIZE)
-                    if not buf:
-                        break
-                    fout.write(buf)
+corpus= [
+    "A team of local researchers are working on a Covid-19 vaccine that can be modified within three weeks to tackle the Sars-CoV-2 virus if it mutates, and they are hoping for human trials within six months.Home-grown Esco Aster is developing the vaccine with United States biotechnology company Vivaldi Biosciences, tapping chimeric vaccines which are created by merging proteins from different viruses.The work-in-progress vaccine, currently named Esco Aster DeltaCov, was constructed by joining antigens from the Sars-CoV-2 virus - which causes Covid-19 - with a protein backbone from the flu virus.", 
+    "Researchers at Singapore's Agency for Science, Technology and Research (A*Star) have discovered an antibody that targets a specific part of the coronavirus, preventing it from infecting human cells, and are moving to develop it to defend against the Covid-19 disease.Dr Wang Cheng-I, senior principal investigator at A*Star's Singapore Immunology Network, said that his team discovered the antibody in mid-March, finding it in a collection of 30 billion human antibodies made by recombinant DNA technology.They confirmed its ability to prevent infection early last month.", 
+    "A biotechnology firm based in Singapore has joined in the global effort to find a vaccine against Covid-19.Immunoscape has tied up with partners here and overseas on two studies to find out how patients' immune systems react to the coronavirus which causes Covid-19.The goal of the projects, which started earlier this month, is to study the behaviour of Covid-19-specific immune cells, which recognise and kill cells infected by the virus.", 
+    "Coping during the circuit breaker period could be sometimes lonely and difficult for Madam Izamzamah Kusmon, 49, a single mother and caregiver to her 68-year-old mother, who suffers from a heart disease. I don't have many friends that I can talk to, and my mother and I don't really talk or share so much with each other, she said. As a stroke survivor, she is at greater risk of complications like pneumonia if she contracts the coronavirus, which means she should try to stay home as much as possible.", 
+    "SINGAPORE - Senior Parliamentary Secretary for Education and Manpower Low Yen Ling has come down with dengue fever, placing her among the hundreds of people who have fallen ill in recent days as Singapore enters its peak season for the disease.Ms Low is an MP for Chua Chu Kang GRC, home to some of the high-risk areas for dengue in Singapore.She said in a Facebook post on Monday (May 11) morning: As I have just come down with dengue fever, please bear with me if my email response is delayed. Doctor has advised me to take some time out these few days to rest and recover."]
 
-    with tarfile.open(fname, mode='r:gz') as tar:
-        # Ignore directory entries, as well as files like README, etc.
-        files = [
-            m for m in tar.getmembers()
-            if m.isfile() and re.search(r'nipstxt/nips\d+/\d+\.txt', m.name)
-        ]
-        for member in sorted(files, key=lambda x: x.name):
-            member_bytes = tar.extractfile(member).read()
-            yield member_bytes.decode('utf-8', errors='replace')
+lda_gensim = train_lda_model_gensim(corpus,
+                                    total_topics=5)
 
-docs = list(extract_documents())
-
-print(len(docs))
-print(docs[0][:500]) 
-
-''' 
-    Preprocessing & Vectorising documents 
-    1. Tokenise 
-    2. Lemmatise 
-    3. Compute bigrams 
-    4. Compute bag of words 
-'''
-
-# Tokenize the documents.
-from nltk.tokenize import RegexpTokenizer
-
-# Split the documents into tokens.
-tokenizer = RegexpTokenizer(r'\w+') 
-for idx in range(len(docs)):
-    docs[idx] = docs[idx].lower()  # Convert to lowercase.
-    docs[idx] = tokenizer.tokenize(docs[idx])  # Split into words.
-    
-#print(docs[0])
-
-# Remove numbers, but not words that contain numbers.
-docs = [[token for token in doc if not token.isnumeric()] for doc in docs]
-
-# Remove words that are only one character.
-docs = [[token for token in doc if len(token) > 1] for doc in docs]
-#print(docs[0])
-
-# Lemmatize the documents.
-from nltk.stem.wordnet import WordNetLemmatizer
-
-lemmatizer = WordNetLemmatizer()
-docs = [[lemmatizer.lemmatize(token) for token in doc] for doc in docs]
-#print(docs[0])
-
-# Compute bigrams.
-from gensim.models import Phrases
-
-# Add bigrams and trigrams to docs (only ones that appear 20 times or more).
-# Docs used to train bigram 
-bigram = Phrases(docs, min_count=20)
-for idx in range(len(docs)):
-    for token in bigram[docs[idx]]: #Apply bigram on each docs to get a list with words with common phrase now 
-        if '_' in token:
-            # Token is a bigram, add to document.
-            docs[idx].append(token)
-
-#print(bigram[docs[0]])
-
-# Remove rare and common tokens.
-from gensim.corpora import Dictionary
-
-# Create a dictionary representation of the documents.
-dictionary = Dictionary(docs)
-
-# Filter out words that occur less than 20 (ABSOLUTE) documents, or more than 50% (FRACTION) of the documents.
-dictionary.filter_extremes(no_below=20, no_above=0.5)
-
-# Bag-of-words representation of the documents.
-# Documents to vectors 
-corpus = [dictionary.doc2bow(doc) for doc in docs]
-
-print('Number of unique tokens: %d' % len(dictionary))
-print('Number of documents: %d' % len(corpus))
-
-'''
-    Train LDA model 
-'''
-
-# Train LDA model.
-from gensim.models import LdaModel
-
-# Set training parameters.
-num_topics = 10 # number of categories 
-chunksize = 2000 # how many documents are processed at a time in the training algorithm
-passes = 20 # how often we train the model on the entire corpus
-iterations = 400
-eval_every = None  # Don't evaluate model perplexity, takes too much time.
-
-# Make a index to word dictionary.
-temp = dictionary[0]  # This is only to "load" the dictionary.
-id2word = dictionary.id2token
-
-model = LdaModel(
-    corpus=corpus,
-    id2word=id2word,
-    chunksize=chunksize,
-    alpha='auto',
-    eta='auto',
-    iterations=iterations,
-    num_topics=num_topics,
-    passes=passes,
-    eval_every=eval_every
-)
-
-'''
-    Usage and evaluation of model 
-'''
-# Calculate the Umass topic coherence 
-top_topics = model.top_topics(corpus) 
-
-# Average topic coherence is the sum of topic coherences of all topics, divided by the number of topics.
-avg_topic_coherence = sum([t[1] for t in top_topics]) / num_topics
-print('Average topic coherence: %.4f.' % avg_topic_coherence)
-print(top_topics)
-
-
-            
+print_topics_gensim(topic_model=lda_gensim,
+                     total_topics=5,
+                     num_terms=5,
+                     display_weights=True)
