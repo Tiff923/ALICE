@@ -1,0 +1,136 @@
+{
+  "name": "Topics",
+  "color": "hsl(13, 70%, 50%)",
+  "children": [
+    {
+      "name": "Topic 1",
+      "color": "hsl(50, 70%, 50%)",
+      "children": [
+        {
+          "name": "chart",
+          "color": "hsl(196, 70%, 50%)",
+          "loc": 179349
+        },
+        {
+          "name": "xAxis",
+          "color": "hsl(66, 70%, 50%)",
+          "loc": 55008
+        },
+        {
+          "name": "yAxis",
+          "color": "hsl(285, 70%, 50%)",
+          "loc": 17299
+        },
+        {
+          "name": "layers",
+          "color": "hsl(253, 70%, 50%)",
+          "loc": 54513
+        }
+      ]
+    },
+    {
+      "name": "Topic 2",
+      "color": "hsl(163, 70%, 50%)",
+      "children": [
+        {
+          "name": "outline",
+          "color": "hsl(40, 70%, 50%)",
+          "loc": 116072
+        },
+        {
+          "name": "slices",
+          "color": "hsl(271, 70%, 50%)",
+          "loc": 7886
+        },
+        {
+          "name": "bbox",
+          "color": "hsl(359, 70%, 50%)",
+          "loc": 189932
+        }
+      ]
+    },
+    {
+      "name": "Topic 3",
+      "color": "hsl(110, 70%, 50%)",
+      "children": [
+        {
+          "name": "rgb",
+          "color": "hsl(257, 70%, 50%)",
+          "loc": 152218
+        },
+        {
+          "name": "hsl",
+          "color": "hsl(273, 70%, 50%)",
+          "loc": 141059
+        }
+      ]
+    },
+    {
+      "name": "Topic 4",
+      "color": "hsl(90, 70%, 50%)",
+      "children": [
+        {
+          "name": "randomize",
+          "color": "hsl(135, 70%, 50%)",
+          "loc": 6927
+        },
+        {
+          "name": "resetClock",
+          "color": "hsl(305, 70%, 50%)",
+          "loc": 3738
+        },
+        {
+          "name": "noop",
+          "color": "hsl(35, 70%, 50%)",
+          "loc": 187354
+        },
+        {
+          "name": "tick",
+          "color": "hsl(214, 70%, 50%)",
+          "loc": 18607
+        },
+        {
+          "name": "forceGC",
+          "color": "hsl(290, 70%, 50%)",
+          "loc": 165841
+        },
+        {
+          "name": "stackTrace",
+          "color": "hsl(9, 70%, 50%)",
+          "loc": 193194
+        },
+        {
+          "name": "dbg",
+          "color": "hsl(358, 70%, 50%)",
+          "loc": 59489
+        }
+      ]
+    },
+    {
+      "name": "Topic 5",
+      "color": "hsl(227, 70%, 50%)",
+      "children": [
+        {
+          "name": "hey",
+          "color": "hsl(48, 70%, 50%)",
+          "loc": 38811
+        },
+        {
+          "name": "WTF",
+          "color": "hsl(63, 70%, 50%)",
+          "loc": 105686
+        },
+        {
+          "name": "lol",
+          "color": "hsl(357, 70%, 50%)",
+          "loc": 94205
+        },
+        {
+          "name": "IMHO",
+          "color": "hsl(290, 70%, 50%)",
+          "loc": 45577
+        }
+      ]
+    }
+  ]
+}

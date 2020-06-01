@@ -1,0 +1,11 @@
+[
+  {
+    "sentiment": "sentiment",
+    "positivity": 24,
+    "negativity": -80
+  },
+  {
+    "sentiment": "subjective",
+    "subjectivity": 61
+  }
+]

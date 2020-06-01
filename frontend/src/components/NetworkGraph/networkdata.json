@@ -1,0 +1,723 @@
+{
+  "nodes": [
+    {
+      "id": "England",
+      "name": "England",
+      "val": 18,
+      "size": 90,
+      "color": "#EC7D10",
+      "neighbors": [
+        "nearly two months",
+        "around 6.5 feet",
+        "Wednesday",
+        "seven weeks",
+        "one",
+        "LONDON",
+        "2 meters",
+        "first"
+      ]
+    },
+    {
+      "id": "LONDON",
+      "name": "LONDON",
+      "val": 8,
+      "size": 40,
+      "color": "#EC7D10",
+      "neighbors": ["England", "nearly two months", "Wednesday", "first"]
+    },
+    {
+      "id": "first",
+      "name": "first",
+      "val": 12,
+      "size": 60,
+      "color": "#CCDBDC",
+      "neighbors": ["England", "nearly two months", "Wednesday", "LONDON"]
+    },
+    {
+      "id": "nearly two months",
+      "name": "nearly two months",
+      "val": 14,
+      "size": 70,
+      "color": "#E4959E",
+      "neighbors": ["England", "first", "LONDON", "Wednesday"]
+    },
+    {
+      "id": "Wednesday",
+      "name": "Wednesday",
+      "val": 36,
+      "size": 180,
+      "color": "#E4959E",
+      "neighbors": [
+        "nearly two months",
+        "David Baillie",
+        "England",
+        "600 million pounds ($735 million)",
+        "London",
+        "170",
+        "Tuesday",
+        "LONDON",
+        "Dulwich & Sydenham Hill Golf Club",
+        "first"
+      ]
+    },
+    {
+      "id": "seven weeks",
+      "name": "seven weeks",
+      "val": 12,
+      "size": 60,
+      "color": "#E4959E",
+      "neighbors": ["England", "around 6.5 feet", "one", "2 meters"]
+    },
+    {
+      "id": "one",
+      "name": "one",
+      "val": 12,
+      "size": 60,
+      "color": "#A1E8CC",
+      "neighbors": ["England", "around 6.5 feet", "seven weeks", "2 meters"]
+    },
+    {
+      "id": "2 meters",
+      "name": "2 meters",
+      "val": 16,
+      "size": 80,
+      "color": "#FAC9B8",
+      "neighbors": ["England", "around 6.5 feet", "seven weeks", "one"]
+    },
+    {
+      "id": "around 6.5 feet",
+      "name": "around 6.5 feet",
+      "val": 12,
+      "size": 60,
+      "color": "#FAC9B8",
+      "neighbors": ["England", "seven weeks", "one", "2 meters"]
+    },
+    {
+      "id": "Dulwich & Sydenham Hill Golf Club",
+      "name": "Dulwich & Sydenham Hill Golf Club",
+      "val": 12,
+      "size": 60,
+      "color": "#007EA7",
+      "neighbors": ["David Baillie", "Wednesday", "170", "Tuesday", "London"]
+    },
+    {
+      "id": "David Baillie",
+      "name": "David Baillie",
+      "val": 10,
+      "size": 50,
+      "color": "#0A2463",
+      "neighbors": [
+        "Wednesday",
+        "London",
+        "170",
+        "Tuesday",
+        "Dulwich & Sydenham Hill Golf Club"
+      ]
+    },
+    {
+      "id": "London",
+      "name": "London",
+      "val": 34,
+      "size": 170,
+      "color": "#EC7D10",
+      "neighbors": [
+        "One",
+        "David Baillie",
+        "39",
+        "Carl Moss",
+        "Wednesday",
+        "170",
+        "Tuesday",
+        "today",
+        "Dulwich & Sydenham Hill Golf Club",
+        "St. Thomas Hospital"
+      ]
+    },
+    {
+      "id": "170",
+      "name": "170",
+      "val": 16,
+      "size": 80,
+      "color": "#A1E8CC",
+      "neighbors": [
+        "David Baillie",
+        "Wednesday",
+        "London",
+        "Tuesday",
+        "Dulwich & Sydenham Hill Golf Club"
+      ]
+    },
+    {
+      "id": "Tuesday",
+      "name": "Tuesday",
+      "val": 20,
+      "size": 100,
+      "color": "#E4959E",
+      "neighbors": [
+        "David Baillie",
+        "Wednesday",
+        "London",
+        "170",
+        "Dulwich & Sydenham Hill Golf Club"
+      ]
+    },
+    {
+      "id": "two",
+      "name": "two",
+      "val": 6,
+      "size": 30,
+      "color": "#A1E8CC",
+      "neighbors": ["Ford", "U.K"]
+    },
+    {
+      "id": "Ford",
+      "name": "Ford",
+      "val": 4,
+      "size": 20,
+      "color": "#007EA7",
+      "neighbors": ["two", "U.K"]
+    },
+    {
+      "id": "U.K",
+      "name": "U.K",
+      "val": 8,
+      "size": 40,
+      "color": "#EC7D10",
+      "neighbors": ["two", "Ford"]
+    },
+    {
+      "id": "Wales",
+      "name": "Wales",
+      "val": 12,
+      "size": 60,
+      "color": "#EC7D10",
+      "neighbors": ["Northern Ireland", "Scotland", "Johnson", "Britain"]
+    },
+    {
+      "id": "Scotland",
+      "name": "Scotland",
+      "val": 8,
+      "size": 40,
+      "color": "#EC7D10",
+      "neighbors": ["Northern Ireland", "Johnson", "Wales", "Britain"]
+    },
+    {
+      "id": "Northern Ireland",
+      "name": "Northern Ireland",
+      "val": 10,
+      "size": 50,
+      "color": "#EC7D10",
+      "neighbors": ["Scotland", "Johnson", "Wales", "Britain"]
+    },
+    {
+      "id": "Johnson",
+      "name": "Johnson",
+      "val": 28,
+      "size": 140,
+      "color": "#0A2463",
+      "neighbors": [
+        "British",
+        "Britain",
+        "more than 200,000",
+        "last month",
+        "three nights",
+        "Scotland",
+        "Wales",
+        "Northern Ireland",
+        "Britons"
+      ]
+    },
+    {
+      "id": "Britain",
+      "name": "Britain",
+      "val": 16,
+      "size": 80,
+      "color": "#EC7D10",
+      "neighbors": ["Northern Ireland", "Scotland", "Johnson", "Wales"]
+    },
+    {
+      "id": "Europe",
+      "name": "Europe",
+      "val": 12,
+      "size": 60,
+      "color": "#FFBC0A",
+      "neighbors": ["second", "the United States", "more than 33,000", "U.K."]
+    },
+    {
+      "id": "U.K.",
+      "name": "U.K.",
+      "val": 22,
+      "size": 110,
+      "color": "#EC7D10",
+      "neighbors": [
+        "Treasury",
+        "Sunday",
+        "Rishi Sunak",
+        "more than 33,000",
+        "the United States",
+        "second",
+        "Boris Johnson",
+        "Europe"
+      ]
+    },
+    {
+      "id": "more than 33,000",
+      "name": "more than 33,000",
+      "val": 10,
+      "size": 50,
+      "color": "#A1E8CC",
+      "neighbors": ["the United States", "Europe", "second", "U.K."]
+    },
+    {
+      "id": "second",
+      "name": "second",
+      "val": 14,
+      "size": 70,
+      "color": "#CCDBDC",
+      "neighbors": ["the United States", "Europe", "more than 33,000", "U.K."]
+    },
+    {
+      "id": "the United States",
+      "name": "the United States",
+      "val": 16,
+      "size": 80,
+      "color": "#EC7D10",
+      "neighbors": ["second", "Europe", "more than 33,000", "U.K."]
+    },
+    {
+      "id": "the first quarter of the year",
+      "name": "the first quarter of the year",
+      "val": 10,
+      "size": 50,
+      "color": "#E4959E",
+      "neighbors": ["2%", "March", "5.8%", "the month"]
+    },
+    {
+      "id": "2%",
+      "name": "2%",
+      "val": 8,
+      "size": 40,
+      "color": "#495159",
+      "neighbors": [
+        "March",
+        "the first quarter of the year",
+        "5.8%",
+        "the month"
+      ]
+    },
+    {
+      "id": "5.8%",
+      "name": "5.8%",
+      "val": 12,
+      "size": 60,
+      "color": "#495159",
+      "neighbors": ["2%", "March", "the first quarter of the year", "the month"]
+    },
+    {
+      "id": "March",
+      "name": "March",
+      "val": 14,
+      "size": 70,
+      "color": "#E4959E",
+      "neighbors": ["2%", "the first quarter of the year", "5.8%", "the month"]
+    },
+    {
+      "id": "the month",
+      "name": "the month",
+      "val": 16,
+      "size": 80,
+      "color": "#E4959E",
+      "neighbors": ["2%", "March", "the first quarter of the year", "5.8%"]
+    },
+    {
+      "id": "Treasury",
+      "name": "Treasury",
+      "val": 6,
+      "size": 30,
+      "color": "#007EA7",
+      "neighbors": ["U.K.", "Rishi Sunak"]
+    },
+    {
+      "id": "Rishi Sunak",
+      "name": "Rishi Sunak",
+      "val": 4,
+      "size": 20,
+      "color": "#0A2463",
+      "neighbors": ["Treasury", "U.K."]
+    },
+    {
+      "id": "Boris Johnson",
+      "name": "Boris Johnson",
+      "val": 4,
+      "size": 20,
+      "color": "#0A2463",
+      "neighbors": ["Sunday", "U.K."]
+    },
+    {
+      "id": "Sunday",
+      "name": "Sunday",
+      "val": 8,
+      "size": 40,
+      "color": "#E4959E",
+      "neighbors": ["Boris Johnson", "U.K."]
+    },
+    {
+      "id": "British",
+      "name": "British",
+      "val": 4,
+      "size": 20,
+      "color": "#FC2F00",
+      "neighbors": ["Johnson"]
+    },
+    {
+      "id": "One",
+      "name": "One",
+      "val": 2,
+      "size": 10,
+      "color": "#A1E8CC",
+      "neighbors": ["London"]
+    },
+    {
+      "id": "the morning hours",
+      "name": "the morning hours",
+      "val": 12,
+      "size": 60,
+      "color": "#720E07",
+      "neighbors": [
+        "around 7.3%",
+        "up to 10 a.m.",
+        "the same day last week",
+        "Transport for London"
+      ]
+    },
+    {
+      "id": "Transport for London",
+      "name": "Transport for London",
+      "val": 8,
+      "size": 40,
+      "color": "#007EA7",
+      "neighbors": [
+        "around 7.3%",
+        "up to 10 a.m.",
+        "the same day last week",
+        "the morning hours"
+      ]
+    },
+    {
+      "id": "up to 10 a.m.",
+      "name": "up to 10 a.m.",
+      "val": 12,
+      "size": 60,
+      "color": "#720E07",
+      "neighbors": [
+        "around 7.3%",
+        "the same day last week",
+        "Transport for London",
+        "the morning hours"
+      ]
+    },
+    {
+      "id": "around 7.3%",
+      "name": "around 7.3%",
+      "val": 12,
+      "size": 60,
+      "color": "#495159",
+      "neighbors": [
+        "up to 10 a.m.",
+        "the same day last week",
+        "Transport for London",
+        "the morning hours"
+      ]
+    },
+    {
+      "id": "the same day last week",
+      "name": "the same day last week",
+      "val": 16,
+      "size": 80,
+      "color": "#E4959E",
+      "neighbors": [
+        "around 7.3%",
+        "up to 10 a.m.",
+        "Transport for London",
+        "the morning hours"
+      ]
+    },
+    {
+      "id": "39",
+      "name": "39",
+      "val": 10,
+      "size": 50,
+      "color": "#E4959E",
+      "neighbors": ["London", "St. Thomas Hospital", "today", "Carl Moss"]
+    },
+    {
+      "id": "Carl Moss",
+      "name": "Carl Moss",
+      "val": 10,
+      "size": 50,
+      "color": "#0A2463",
+      "neighbors": ["London", "39", "today", "St. Thomas Hospital"]
+    },
+    {
+      "id": "St. Thomas Hospital",
+      "name": "St. Thomas Hospital",
+      "val": 14,
+      "size": 70,
+      "color": "#007EA7",
+      "neighbors": ["London", "39", "today", "Carl Moss"]
+    },
+    {
+      "id": "today",
+      "name": "today",
+      "val": 10,
+      "size": 50,
+      "color": "#E4959E",
+      "neighbors": ["London", "St. Thomas Hospital", "39", "Carl Moss"]
+    },
+    {
+      "id": "Linda Freitas",
+      "name": "Linda Freitas",
+      "val": 4,
+      "size": 20,
+      "color": "#0A2463",
+      "neighbors": ["Londons Victoria"]
+    },
+    {
+      "id": "Londons Victoria",
+      "name": "Londons Victoria",
+      "val": 2,
+      "size": 10,
+      "color": "#007EA7",
+      "neighbors": ["Linda Freitas"]
+    },
+    {
+      "id": "last month",
+      "name": "last month",
+      "val": 20,
+      "size": 100,
+      "color": "#E4959E",
+      "neighbors": [
+        "COVID-19",
+        "Johnson",
+        "more than 200,000",
+        "three nights",
+        "Britons"
+      ]
+    },
+    {
+      "id": "COVID-19",
+      "name": "COVID-19",
+      "val": 2,
+      "size": 10,
+      "color": "#007EA7",
+      "neighbors": ["last month"]
+    },
+    {
+      "id": "more than 200,000",
+      "name": "more than 200,000",
+      "val": 8,
+      "size": 40,
+      "color": "#A1E8CC",
+      "neighbors": ["three nights", "Britons", "Johnson", "last month"]
+    },
+    {
+      "id": "Britons",
+      "name": "Britons",
+      "val": 10,
+      "size": 50,
+      "color": "#FC2F00",
+      "neighbors": [
+        "three nights",
+        "Johnson",
+        "more than 200,000",
+        "last month"
+      ]
+    },
+    {
+      "id": "three nights",
+      "name": "three nights",
+      "val": 14,
+      "size": 70,
+      "color": "#E4959E",
+      "neighbors": ["Britons", "Johnson", "more than 200,000", "last month"]
+    },
+    {
+      "id": "600 million pounds ($735 million)",
+      "name": "600 million pounds ($735 million)",
+      "val": 4,
+      "size": 20,
+      "color": "#6FD08C",
+      "neighbors": ["Wednesday"]
+    },
+    {
+      "id": "the start of May",
+      "name": "the start of May",
+      "val": 6,
+      "size": 30,
+      "color": "#E4959E",
+      "neighbors": [
+        "More than 8,000",
+        "Britains Office for National Statistics"
+      ]
+    },
+    {
+      "id": "More than 8,000",
+      "name": "More than 8,000",
+      "val": 4,
+      "size": 20,
+      "color": "#A1E8CC",
+      "neighbors": [
+        "the start of May",
+        "Britains Office for National Statistics"
+      ]
+    },
+    {
+      "id": "Britains Office for National Statistics",
+      "name": "Britains Office for National Statistics",
+      "val": 8,
+      "size": 40,
+      "color": "#007EA7",
+      "neighbors": ["More than 8,000", "the start of May"]
+    },
+    {
+      "id": "Labour Party",
+      "name": "Labour Party",
+      "val": 4,
+      "size": 20,
+      "color": "#007EA7",
+      "neighbors": ["Keir Starmer"]
+    },
+    {
+      "id": "Keir Starmer",
+      "name": "Keir Starmer",
+      "val": 2,
+      "size": 10,
+      "color": "#0A2463",
+      "neighbors": ["Labour Party"]
+    }
+  ],
+  "links": [
+    { "source": "LONDON", "target": "England" },
+    { "source": "LONDON", "target": "first" },
+    { "source": "LONDON", "target": "nearly two months" },
+    { "source": "LONDON", "target": "Wednesday" },
+    { "source": "England", "target": "first" },
+    { "source": "England", "target": "nearly two months" },
+    { "source": "England", "target": "Wednesday" },
+    { "source": "first", "target": "nearly two months" },
+    { "source": "first", "target": "Wednesday" },
+    { "source": "nearly two months", "target": "Wednesday" },
+    { "source": "England", "target": "seven weeks" },
+    { "source": "seven weeks", "target": "one" },
+    { "source": "seven weeks", "target": "2 meters" },
+    { "source": "around 6.5 feet", "target": "seven weeks" },
+    { "source": "England", "target": "one" },
+    { "source": "England", "target": "2 meters" },
+    { "source": "England", "target": "around 6.5 feet" },
+    { "source": "one", "target": "2 meters" },
+    { "source": "one", "target": "around 6.5 feet" },
+    { "source": "around 6.5 feet", "target": "2 meters" },
+    {
+      "source": "David Baillie",
+      "target": "Dulwich & Sydenham Hill Golf Club"
+    },
+    { "source": "David Baillie", "target": "London" },
+    { "source": "David Baillie", "target": "170" },
+    { "source": "David Baillie", "target": "Wednesday" },
+    { "source": "David Baillie", "target": "Tuesday" },
+    { "source": "Dulwich & Sydenham Hill Golf Club", "target": "London" },
+    { "source": "Dulwich & Sydenham Hill Golf Club", "target": "170" },
+    { "source": "Dulwich & Sydenham Hill Golf Club", "target": "Wednesday" },
+    { "source": "Dulwich & Sydenham Hill Golf Club", "target": "Tuesday" },
+    { "source": "London", "target": "170" },
+    { "source": "London", "target": "Wednesday" },
+    { "source": "London", "target": "Tuesday" },
+    { "source": "170", "target": "Wednesday" },
+    { "source": "170", "target": "Tuesday" },
+    { "source": "Wednesday", "target": "Tuesday" },
+    { "source": "Ford", "target": "two" },
+    { "source": "Ford", "target": "U.K" },
+    { "source": "two", "target": "U.K" },
+    { "source": "Scotland", "target": "Wales" },
+    { "source": "Scotland", "target": "Northern Ireland" },
+    { "source": "Scotland", "target": "Johnson" },
+    { "source": "Scotland", "target": "Britain" },
+    { "source": "Northern Ireland", "target": "Wales" },
+    { "source": "Wales", "target": "Johnson" },
+    { "source": "Wales", "target": "Britain" },
+    { "source": "Northern Ireland", "target": "Johnson" },
+    { "source": "Northern Ireland", "target": "Britain" },
+    { "source": "Johnson", "target": "Britain" },
+    { "source": "U.K.", "target": "Europe" },
+    { "source": "U.K.", "target": "more than 33,000" },
+    { "source": "U.K.", "target": "second" },
+    { "source": "U.K.", "target": "the United States" },
+    { "source": "more than 33,000", "target": "Europe" },
+    { "source": "Europe", "target": "second" },
+    { "source": "Europe", "target": "the United States" },
+    { "source": "more than 33,000", "target": "second" },
+    { "source": "more than 33,000", "target": "the United States" },
+    { "source": "second", "target": "the United States" },
+    { "source": "2%", "target": "the first quarter of the year" },
+    { "source": "2%", "target": "5.8%" },
+    { "source": "2%", "target": "March" },
+    { "source": "2%", "target": "the month" },
+    { "source": "the first quarter of the year", "target": "5.8%" },
+    { "source": "the first quarter of the year", "target": "March" },
+    { "source": "the first quarter of the year", "target": "the month" },
+    { "source": "5.8%", "target": "March" },
+    { "source": "5.8%", "target": "the month" },
+    { "source": "March", "target": "the month" },
+    { "source": "Rishi Sunak", "target": "Treasury" },
+    { "source": "Treasury", "target": "U.K." },
+    { "source": "Rishi Sunak", "target": "U.K." },
+    { "source": "Boris Johnson", "target": "U.K." },
+    { "source": "U.K.", "target": "Sunday" },
+    { "source": "Boris Johnson", "target": "Sunday" },
+    { "source": "Johnson", "target": "British" },
+    { "source": "One", "target": "London" },
+    { "source": "Transport for London", "target": "the morning hours" },
+    { "source": "Transport for London", "target": "up to 10 a.m." },
+    { "source": "Transport for London", "target": "around 7.3%" },
+    { "source": "Transport for London", "target": "the same day last week" },
+    { "source": "the morning hours", "target": "up to 10 a.m." },
+    { "source": "around 7.3%", "target": "the morning hours" },
+    { "source": "the morning hours", "target": "the same day last week" },
+    { "source": "up to 10 a.m.", "target": "around 7.3%" },
+    { "source": "up to 10 a.m.", "target": "the same day last week" },
+    { "source": "around 7.3%", "target": "the same day last week" },
+    { "source": "Carl Moss", "target": "39" },
+    { "source": "Carl Moss", "target": "St. Thomas Hospital" },
+    { "source": "Carl Moss", "target": "London" },
+    { "source": "today", "target": "Carl Moss" },
+    { "source": "39", "target": "St. Thomas Hospital" },
+    { "source": "39", "target": "London" },
+    { "source": "39", "target": "today" },
+    { "source": "St. Thomas Hospital", "target": "London" },
+    { "source": "today", "target": "St. Thomas Hospital" },
+    { "source": "today", "target": "London" },
+    { "source": "Londons Victoria", "target": "Linda Freitas" },
+    { "source": "COVID-19", "target": "last month" },
+    { "source": "more than 200,000", "target": "Johnson" },
+    { "source": "Britons", "target": "Johnson" },
+    { "source": "Johnson", "target": "three nights" },
+    { "source": "Johnson", "target": "last month" },
+    { "source": "more than 200,000", "target": "Britons" },
+    { "source": "more than 200,000", "target": "three nights" },
+    { "source": "more than 200,000", "target": "last month" },
+    { "source": "Britons", "target": "three nights" },
+    { "source": "Britons", "target": "last month" },
+    { "source": "three nights", "target": "last month" },
+    { "source": "Wednesday", "target": "600 million pounds ($735 million)" },
+    { "source": "More than 8,000", "target": "the start of May" },
+    {
+      "source": "More than 8,000",
+      "target": "Britains Office for National Statistics"
+    },
+    {
+      "source": "the start of May",
+      "target": "Britains Office for National Statistics"
+    },
+    { "source": "Keir Starmer", "target": "Labour Party" }
+  ]
+}
