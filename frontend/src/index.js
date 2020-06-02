@@ -8,6 +8,7 @@ import * as serviceWorker from './serviceWorker';
 import App from './App';
 import testSend from './testSend.js'
 import testReceive from './testReceive.js'
+import upload from './upload.js'
 
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
@@ -28,7 +29,8 @@ ReactDOM.render(
         <Route path="/admin" render={(props) => <App {...props} />} />
         <Route path="/testSend" component={testSend} />
         <Route path="/testReceive" component={testReceive} />
-        <Redirect from="/" to="/admin/dashboard" />
+        <Route path="/upload" component={upload}/>
+        <Redirect from="/" to="/upload" />
         {/* <Route path="/" render={() => <Dashboard />} /> */}
       </Switch>
     </BrowserRouter>
