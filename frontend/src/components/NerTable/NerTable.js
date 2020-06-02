@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import Table from '../Table/Table';
-import {
-  updateNer,
-  udpateNerSearch,
-  updateSelectedNode,
-} from '../../reducers/editstate';
+import { updateNer, udpateNerSearch } from '../../reducers/editstate';
 import { nercolors } from '../../utils/colors';
 
 const NerTable = (props) => {
-  const [data, setData] = useState(props.data.ents);
+  const data = props.data.ents;
   const [selectedRow, setSelectedRow] = useState(null);
 
   const columns = [
@@ -47,10 +43,9 @@ const NerTable = (props) => {
   const editable = {
     onRowUpdate: (newData, oldData) =>
       new Promise((resolve, reject) => {
-        const dataUpdate = [...data];
+        const dataUpdate = data;
         const index = oldData.tableData.id;
         dataUpdate[index] = newData;
-        setData([...dataUpdate]);
         props.updateNer({
           newNer: dataUpdate,
           nerToRelation: [
@@ -67,17 +62,16 @@ const NerTable = (props) => {
         setTimeout(() => {
           const dataDelete = [...data];
           const index = oldData.tableData.id;
+          dataDelete.splice(index, 1);
           props.updateNer({
             newNer: dataDelete,
             nerToRelation: [
-              dataDelete[index].text,
-              dataDelete[index].id,
-              dataDelete[index].type,
+              data[index].text,
+              data[index].id,
+              data[index].type,
               'DELETE',
             ],
           });
-          dataDelete.splice(index, 1);
-          setData([...dataDelete]);
           resolve();
         }, 1000);
       }),
@@ -99,13 +93,25 @@ const NerTable = (props) => {
   const onRowClick = (evt, row) => {
     if (selectedRow === row.tableData.id) {
       setSelectedRow(null);
-      props.updateSelectedNode('');
+      props.setSelectedNode('');
     } else {
       setSelectedRow(row.tableData.id);
-      props.updateSelectedNode(row.text);
+      props.setSelectedNode(row.text);
     }
   };
-  console.log(tableRef.current);
+
+  const onFilterChange = () => {
+    var set = new Set();
+    tableRef.current.dataManager.filteredData.forEach((e) => {
+      set.add(e.text);
+    });
+    if (tableRef.current.dataManager.filteredData.length === data.length) {
+      props.udpateNerSearch(new Set());
+    } else {
+      props.udpateNerSearch(set);
+    }
+  };
+
   return (
     <Table
       data={data}
@@ -115,6 +121,7 @@ const NerTable = (props) => {
       onSearchChange={onSearchChange}
       onRowClick={onRowClick}
       selectedRow={selectedRow}
+      onFilterChange={onFilterChange}
     />
   );
 };
@@ -122,7 +129,6 @@ const NerTable = (props) => {
 const mapDispatchToProps = (dispatch) => ({
   updateNer: (payload) => dispatch(updateNer(payload)),
   udpateNerSearch: (payload) => dispatch(udpateNerSearch(payload)),
-  updateSelectedNode: (payload) => dispatch(updateSelectedNode(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(NerTable);

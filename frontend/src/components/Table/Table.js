@@ -25,6 +25,7 @@ const Table = (props) => {
     onSearchChange,
     onRowClick,
     selectedRow,
+    onFilterChange,
   } = props;
   //   const [data, setData] = useState(props.data);
 
@@ -75,6 +76,7 @@ const Table = (props) => {
       editable={editable}
       tableRef={tableRef}
       onSearchChange={onSearchChange}
+      onFilterChange={onFilterChange}
     />
   );
 };

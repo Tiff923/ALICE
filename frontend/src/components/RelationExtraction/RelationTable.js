@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import Table from '../Table/Table';
-import { updateRelation, updateSelectedLink } from '../../reducers/editstate';
+import { updateRelation } from '../../reducers/editstate';
 
 const RelationTable = (props) => {
   const { data } = props;
@@ -49,7 +49,6 @@ const RelationTable = (props) => {
         const dataUpdate = [...data];
         const index = oldData.tableData.id;
         dataUpdate[index] = newData;
-        // setData([...dataUpdate]);
         props.updateRelation(dataUpdate);
         resolve();
       }),
@@ -59,7 +58,6 @@ const RelationTable = (props) => {
           const dataDelete = [...data];
           const index = oldData.tableData.id;
           dataDelete.splice(index, 1);
-          // setData([...dataDelete]);
           props.updateRelation(dataDelete);
           resolve();
         }, 1000);
@@ -69,16 +67,16 @@ const RelationTable = (props) => {
   const onRowClick = (evt, row) => {
     if (selectedRow === row.tableData.id) {
       setSelectedRow(null);
-      props.updateSelectedLink({});
+      props.setSelectedLink({});
     } else {
       setSelectedRow(row.tableData.id);
       if (row.relation.slice(-7) === '(e2,e1)') {
-        props.updateSelectedLink({
+        props.setSelectedLink({
           source: row.e2,
           target: row.e1,
         });
       } else {
-        props.updateSelectedLink({
+        props.setSelectedLink({
           source: row.e1,
           target: row.e2,
         });
@@ -99,7 +97,6 @@ const RelationTable = (props) => {
 
 const mapDispatchToProps = (dispatch) => ({
   updateRelation: (payload) => dispatch(updateRelation(payload)),
-  updateSelectedLink: (payload) => dispatch(updateSelectedLink(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(RelationTable);

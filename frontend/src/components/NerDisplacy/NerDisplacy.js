@@ -6,7 +6,7 @@ const NerDisplacy = (props) => {
 
   return (
     <div style={{ margin: '2em 1em' }}>
-      <Taggy text={text} spans={ents} />
+      <Taggy text={text} spans={ents} nerSearch={props.nerSearch} />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import './networkgraph.css';
 import { ForceGraph3D } from 'react-force-graph';
+import * as THREE from 'three';
 import SpriteText from 'three-spritetext';
 import $ from 'jquery';
 
@@ -43,7 +44,7 @@ const ThreeDGraph = (props) => {
     setHighlightNodes(new Set(nodeArr));
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     var newHoverObject = hoverObject.slice();
     if (selectedNode) {
       var node = data.nodes.find(({ id }) => id === selectedNode);
@@ -64,7 +65,7 @@ const ThreeDGraph = (props) => {
     setHoverObject(newHoverObject);
   }, [selectedNode, data]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     var newHoverObject = hoverObject.slice();
     if ($.isEmptyObject(selectedLink)) {
       newHoverObject[1] = null;

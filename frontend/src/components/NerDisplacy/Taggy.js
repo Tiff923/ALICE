@@ -1,7 +1,5 @@
 import React from 'react';
 import { nercolors } from '../../utils/colors';
-import { connect } from 'react-redux';
-import { getNerSearch } from '../../reducers/editstate';
 
 const Taggy = (props) => {
   const { spans, text, nerSearch } = props;
@@ -134,8 +132,4 @@ const Taggy = (props) => {
   );
 };
 
-const mapStateToProps = (store) => ({
-  nerSearch: getNerSearch(store),
-});
-
-export default connect(mapStateToProps, null)(Taggy);
+export default Taggy;

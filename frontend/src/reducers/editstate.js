@@ -15,8 +15,6 @@ export const initialState = {
   updatingSentimentData: false,
   updatingTopicData: false,
   nerSearch: new Set(),
-  selectedNode: '',
-  selectedLink: {},
 };
 
 // Actions
@@ -32,8 +30,6 @@ export const types = {
   UPDATED_SENTIMENT_DATA: 'UPDATED_SENTIMENT_DATA',
   UPDATED_TOPIC_DATA: 'UPDATED_TOPIC_DATA',
   SEARCH_NER: 'SEARCH_NER',
-  SELECT_NODE: 'SELECT_NODE',
-  SELECT_LINK: 'SELECT_LINK',
 };
 
 // Reducers
@@ -93,16 +89,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         nerSearch: action.payload,
       };
-    case types.SELECT_NODE:
-      return {
-        ...state,
-        selectedNode: action.payload,
-      };
-    case types.SELECT_LINK:
-      return {
-        ...state,
-        selectedLink: action.payload,
-      };
     default:
       return state;
   }
@@ -130,20 +116,6 @@ export function udpateNerSearch(payload) {
   };
 }
 
-export function updateSelectedNode(payload) {
-  return {
-    type: types.SELECT_NODE,
-    payload,
-  };
-}
-
-export function updateSelectedLink(payload) {
-  return {
-    type: types.SELECT_LINK,
-    payload,
-  };
-}
-
 // Selectors
 export function getNerData(store) {
   return store.editstate.nerData;
@@ -167,14 +139,6 @@ export function getTopicData(store) {
 
 export function getNerSearch(store) {
   return store.editstate.nerSearch;
-}
-
-export function getSelectedNode(store) {
-  return store.editstate.selectedNode;
-}
-
-export function getSelectedLink(store) {
-  return store.editstate.selectedLink;
 }
 
 // export function isUpdatingNer(store) {

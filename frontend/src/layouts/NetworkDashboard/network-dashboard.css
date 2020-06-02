@@ -1,0 +1,8 @@
+#network-graph-dashboard {
+  display: flex;
+  align-items: center;
+  padding: 30px;
+  /* background-color: green; */
+  height: 80vh;
+  width: 90vw;
+}
