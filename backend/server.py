@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import random
 
@@ -24,7 +24,7 @@ def receive():
 def send():
     idNumber = random.randint(10000,100000000)
     sendData = {"request": "TestReceive", "id": idNumber}
-    return sendData
+    return jsonify(sendData)
 
 
 
