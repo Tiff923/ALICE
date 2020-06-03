@@ -1,5 +1,15 @@
+Pattern==3.6
+pandas==0.23.4
+textblob==0.15.3
+flair==0.5
+numpy==1.18.4
+Keras==2.3.1
+nltk==3.4
+tensorflow==2.2.0
+scikit_learn==0.23.1
 click==7.1.2
 Flask==1.1.2
+Flask_Cors==3.0.7
 itsdangerous==1.1.0
 Jinja2==2.11.2
 MarkupSafe==1.1.1
