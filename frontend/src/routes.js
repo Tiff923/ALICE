@@ -4,9 +4,9 @@ const dashboardRoutes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    icon: 'pe-7s-graph',
+    // icon: 'pe-7s-graph',
     component: Dashboard,
-    layout: '/admin',
+    // layout: '/admin',
   },
 ];
 

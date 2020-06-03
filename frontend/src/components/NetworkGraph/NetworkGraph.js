@@ -15,9 +15,9 @@ const NetworkGraph = (props) => {
     <div className="network-graph-container">
       <FormControlLabel
         label="3D"
-        control={<Switch checked={is3D} onChange={handleToggle} />}
+        control={<Switch checked={!is3D} onChange={handleToggle} />}
       />
-      {is3D ? (
+      {!is3D ? (
         <ThreeDGraph
           height={height}
           width={width}

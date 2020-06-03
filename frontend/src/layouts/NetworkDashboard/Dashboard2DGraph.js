@@ -1,20 +1,26 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
-import './networkgraph.css';
-import { ForceGraph2D } from 'react-force-graph';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+} from 'react';
+// import './networkgraph.css';
+import SpriteText from 'three-spritetext';
+import { ForceGraph2D, ForceGraph3D } from 'react-force-graph';
 import $ from 'jquery';
 
-const TwoDGraph = (props) => {
-  const { width, height, data, selectedNode, selectedLink } = props;
-  const fgRef2D = useRef(null);
+const Dashboard2DGraph = (props) => {
+  const { width, height, data, selectedLink } = props;
+  const fgRef = useRef(null);
 
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
-  const [hoverObject, setHoverObject] = useState([null, null, null]);
-  const [showRelationorEntity, setShow] = useState('');
+  const [hoverObject, setHoverObject] = useState([null, null]);
 
   useEffect(() => {
-    fgRef2D.current.d3Force('link').distance(100);
-    fgRef2D.current.d3Force('charge').strength(-50);
+    fgRef.current.d3Force('link').distance(100);
+    fgRef.current.d3Force('charge').strength(-50);
   }, []);
 
   const highlightNode = (node) => {
@@ -38,38 +44,11 @@ const TwoDGraph = (props) => {
 
   useLayoutEffect(() => {
     var newHoverObject = hoverObject.slice();
-    if (selectedNode) {
-      var node = data.nodes.find(({ id }) => id === selectedNode);
-      highlightNode(node);
-      newHoverObject[0] = selectedNode;
-      setShow('NODE');
-    } else {
-      newHoverObject[0] = null;
-      if (hoverObject[1]) {
-        highlightLink(hoverObject[1]);
-        setShow('LINK');
-      } else {
-        setHighlightNodes(new Set());
-        setHighlightLinks(new Set());
-        setShow('');
-      }
-    }
-    setHoverObject(newHoverObject);
-  }, [selectedNode, data]);
-
-  useLayoutEffect(() => {
-    var newHoverObject = hoverObject.slice();
     if ($.isEmptyObject(selectedLink)) {
-      newHoverObject[1] = null;
-      if (hoverObject[0]) {
-        var node = data.nodes.find(({ id }) => id === hoverObject[0]);
-        highlightNode(node);
-        setShow('NODE');
-      } else {
-        setHighlightNodes(new Set());
-        setHighlightLinks(new Set());
-        setShow('');
-      }
+      newHoverObject[0] = null;
+
+      setHighlightNodes(new Set());
+      setHighlightLinks(new Set());
     } else {
       var link = data.links.find(({ source, target }) => {
         return (
@@ -77,27 +56,23 @@ const TwoDGraph = (props) => {
         );
       });
       highlightLink(link);
-      newHoverObject[1] = link;
-      setShow('LINK');
+      newHoverObject[0] = link;
     }
     setHoverObject(newHoverObject);
   }, [selectedLink, data]);
 
   const onNodeHover = (node) => {
-    if ((!node && !highlightNodes.size) || (node && hoverObject[2] === node.id))
+    if ((!node && !highlightNodes.size) || (node && hoverObject[1] === node.id))
       return;
 
     var newHoverObject = hoverObject.slice();
     if (node) {
       highlightNode(node);
-      newHoverObject[2] = node.id;
+      newHoverObject[1] = node.id;
     } else {
-      if (showRelationorEntity === '') {
+      if ($.isEmptyObject(hoverObject[0])) {
         setHighlightNodes(new Set());
         setHighlightLinks(new Set());
-      } else if (showRelationorEntity === 'NODE') {
-        var newNode = data.nodes.find(({ id }) => id === hoverObject[0]);
-        highlightNode(newNode);
       } else {
         var link = data.links.find(({ source, target }) => {
           return (
@@ -107,24 +82,24 @@ const TwoDGraph = (props) => {
         });
         highlightLink(link);
       }
-      newHoverObject[2] = null;
+      newHoverObject[1] = null;
     }
     setHoverObject(newHoverObject);
   };
 
   const onLinkHover = (link) => {
-    if ((!link && !highlightLinks.size) || (link && hoverObject[2] === link))
+    if ((!link && !highlightLinks.size) || (link && hoverObject[1] === link))
       return;
 
     var newHoverObject = hoverObject.slice();
 
     if (link) {
       highlightLink(link);
-      newHoverObject[2] = link;
+      newHoverObject[1] = link;
     } else {
       setHighlightNodes(new Set());
       setHighlightLinks(new Set());
-      newHoverObject[2] = null;
+      newHoverObject[1] = null;
     }
 
     setHoverObject(newHoverObject);
@@ -133,7 +108,7 @@ const TwoDGraph = (props) => {
   return (
     <>
       <ForceGraph2D
-        ref={fgRef2D}
+        ref={fgRef}
         height={height}
         width={width}
         backgroundColor={'#969A97'}
@@ -154,8 +129,8 @@ const TwoDGraph = (props) => {
         onNodeHover={onNodeHover}
         onLinkHover={onLinkHover}
         onNodeClick={(node) => {
-          fgRef2D.current.centerAt(node.x, node.y, 1000);
-          fgRef2D.current.zoom(4, 2000);
+          fgRef.current.centerAt(node.x, node.y, 1000);
+          fgRef.current.zoom(4, 2000);
         }}
         nodeCanvasObject={(node, ctx, globalScale) => {
           const label = node.id;
@@ -181,28 +156,13 @@ const TwoDGraph = (props) => {
         nodeCanvasObjectMode={() => 'after'}
       />
       {!hoverObject.every((element) => element === null) &&
-        (hoverObject[2] && typeof hoverObject[2] === 'string' ? (
+        (hoverObject[1] && typeof hoverObject[1] === 'string' ? (
           <div className="object-details">
             <div>
-              <b>id</b>: {hoverObject[2]}
+              <b>id</b>: {hoverObject[1]}
             </div>
           </div>
-        ) : hoverObject[2] && typeof hoverObject[2] === 'object' ? (
-          <div className="object-details">
-            <div>
-              <b>Source</b>: {hoverObject[2].source.id}
-            </div>
-            <div>
-              <b>Target</b>: {hoverObject[2].target.id}
-            </div>
-          </div>
-        ) : showRelationorEntity === 'NODE' ? (
-          <div className="object-details">
-            <div>
-              <b>id</b>: {hoverObject[0]}
-            </div>
-          </div>
-        ) : (
+        ) : hoverObject[1] && typeof hoverObject[1] === 'object' ? (
           <div className="object-details">
             <div>
               <b>Source</b>: {hoverObject[1].source.id}
@@ -211,9 +171,18 @@ const TwoDGraph = (props) => {
               <b>Target</b>: {hoverObject[1].target.id}
             </div>
           </div>
+        ) : (
+          <div className="object-details">
+            <div>
+              <b>Source</b>: {hoverObject[0].source.id}
+            </div>
+            <div>
+              <b>Target</b>: {hoverObject[0].target.id}
+            </div>
+          </div>
         ))}
     </>
   );
 };
 
-export default TwoDGraph;
+export default Dashboard2DGraph;

@@ -28,7 +28,7 @@ const Dashboard = (props) => {
   const [selectedLink, setSelectedLink] = useState({});
 
   return (
-    <Container fluid>
+    <Container fluid style={{ marginTop: 20 }}>
       <Row lg={4}>
         <Col md={6} sm={6}>
           <StatsCard
@@ -109,7 +109,6 @@ const Dashboard = (props) => {
         <Col lg={7} md={12} sm={12} xs={12}>
           <SizeMe>
             {({ size }) => {
-              console.log(size);
               return (
                 <VisualCard
                   id="network-graph"

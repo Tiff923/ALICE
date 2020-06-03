@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
-import { Nav, Tab } from 'react-bootstrap';
+import { Nav, Tab, Navbar, Tabs } from 'react-bootstrap';
 import Dashboard from './layouts/Dashboard/Dashboard';
 import NetworkDashboard from './layouts/NetworkDashboard/NetworkDashboard';
 import { MdDashboard, MdSave, MdSettings } from 'react-icons/md';
@@ -15,6 +15,7 @@ import {
   getTopicData,
   getNerSearch,
 } from './reducers/editstate';
+import Divider from '@material-ui/core/Divider';
 
 import routes from './routes.js';
 
@@ -44,31 +45,62 @@ const App = (props) => {
     });
   };
 
+  const [key, setKey] = React.useState('dashboard');
+
+  const handleSelect = (eventKey) => {
+    console.log(eventKey, 'key');
+    setKey(eventKey);
+  };
+
   return (
     <div className="wrapper">
-      <Tab.Container defaultActiveKey="dashboard">
-        <Nav variant="pills" fill={true} className="sidebar">
-          <Nav.Item className="nav-item">
-            <Nav.Link style={{ padding: '1rem 1rem' }} eventKey="dashboard">
-              <MdDashboard size={28} />
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item className="nav-item">
-            <Nav.Link style={{ padding: '1rem 1rem' }} eventKey="network">
-              <GiMeshNetwork size={28} />
-            </Nav.Link>
-          </Nav.Item>
-          {/* <Nav.Item>
-            <Nav.Link eventKey="save">
-                <MdSave size={30} />
-              </Nav.Link>
-            </Nav.Item> */}
-          <Nav.Item className="nav-item">
-            <Nav.Link style={{ padding: '1rem 1rem' }} eventKey="settings">
-              <MdSettings size={28} />
-            </Nav.Link>
-          </Nav.Item>
-        </Nav>
+      <Tab.Container activeKey={key}>
+        <Navbar bg="light" expand="lg" className="navbar-alice">
+          <div className="navbar-alice sticky">
+            <Navbar.Brand className="navbrand-alice">
+              <img
+                src="/logo.png"
+                width="60"
+                className="d-inline-block align-top"
+                alt="React Bootstrap logo"
+              />
+            </Navbar.Brand>
+            <Navbar.Toggle />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav
+                variant="pills"
+                fill={true}
+                navbar={true}
+                className="sidebar"
+                onSelect={handleSelect}
+                role="tablist"
+              >
+                <Nav.Item>
+                  <Nav.Link
+                    style={{ padding: '1rem 1rem' }}
+                    eventKey="dashboard"
+                  >
+                    <MdDashboard size={28} />
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link style={{ padding: '1rem 1rem' }} eventKey="network">
+                    <GiMeshNetwork size={28} />
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    style={{ padding: '1rem 1rem' }}
+                    eventKey="settings"
+                    href="#settings"
+                  >
+                    <MdSettings size={28} />
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Navbar.Collapse>
+          </div>
+        </Navbar>
 
         <Tab.Content className="main-panel">
           <Tab.Pane eventKey="dashboard" className="main-panel">
@@ -87,17 +119,13 @@ const App = (props) => {
               networkData={networkData}
             />
           </Tab.Pane>
-          {/* <Tab.Pane eventKey="save">bye</Tab.Pane> */}
+
           <Tab.Pane eventKey="settings" className="main-panel">
             bye
           </Tab.Pane>
         </Tab.Content>
       </Tab.Container>
 
-      {/* <AdminNavbar
-          {...this.props}
-          brandText={this.getBrandText(this.props.location.pathname)}
-        /> */}
       {/* <Switch>{getRoutes(routes)}</Switch> */}
     </div>
   );

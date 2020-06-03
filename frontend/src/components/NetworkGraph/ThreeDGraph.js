@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import './networkgraph.css';
 import { ForceGraph3D } from 'react-force-graph';
-import * as THREE from 'three';
 import SpriteText from 'three-spritetext';
 import $ from 'jquery';
 

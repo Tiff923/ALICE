@@ -24,8 +24,10 @@ const Table = (props) => {
     tableRef,
     onSearchChange,
     onRowClick,
-    selectedRow,
     onFilterChange,
+    options,
+    title,
+    actions,
   } = props;
   //   const [data, setData] = useState(props.data);
 
@@ -57,18 +59,11 @@ const Table = (props) => {
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
   };
 
-  const options = {
-    showTitle: false,
-    filtering: true,
-    search: true,
-    rowStyle: (rowData) => ({
-      backgroundColor: selectedRow === rowData.tableData.id ? '#EEE' : '#FFF',
-    }),
-  };
-
   return (
     <MaterialTable
       data={data}
+      title={title}
+      actions={actions}
       columns={columns}
       icons={tableIcons}
       options={options}

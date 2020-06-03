@@ -112,9 +112,19 @@ const NerTable = (props) => {
     }
   };
 
+  const options = {
+    showTitle: false,
+    filtering: true,
+    search: true,
+    rowStyle: (rowData) => ({
+      backgroundColor: selectedRow === rowData.tableData.id ? '#EEE' : '#FFF',
+    }),
+  };
+
   return (
     <Table
       data={data}
+      options={options}
       columns={columns}
       editable={editable}
       tableRef={tableRef}
