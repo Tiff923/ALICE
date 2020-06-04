@@ -10,22 +10,22 @@ import App from './App';
 import Upload from './Upload.js';
 
 import { createStore, applyMiddleware } from 'redux';
+import {composeWithDevTools} from 'redux-devtools-extension'
 import createSagaMiddleware from 'redux-saga';
 import { Provider } from 'react-redux';
 
-import reducer from './reducers';
+import reducers from './reducers';
 import rootSaga from './sagas';
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
 // mount it on the Store
-const store = createStore(reducer, applyMiddleware(sagaMiddleware));
+const store = createStore(reducers, composeWithDevTools(applyMiddleware(sagaMiddleware)));
 
 sagaMiddleware.run(rootSaga);
 
-const uploading = store.getState().editstate.uploadingData;
-const uploadStatus = store.getState().editstate.uploadStatus;
-const redirect = !uploading & !uploadStatus
+// const uploading = store.getState().editstate.uploadingData;
+// const uploadStatus = store.getState().editstate.uploadStatus;
 
 // const PrivateRoute = ({...props }) =>
 //   redirect

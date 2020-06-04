@@ -13,10 +13,6 @@ import TopicBubble from '../../components/TopicModelling/TopicBubble';
 import EntityDisplay from '../../components/NerTable/EntityDisplay';
 import { SizeMe } from 'react-sizeme';
 
-
-
-var imgurl = "http://localhost:5000/wordcloud?" + new Date().getTime();
-
 const Dashboard = (props) => {
   const {
     nerData,

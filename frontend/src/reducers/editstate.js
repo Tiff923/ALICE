@@ -1,8 +1,8 @@
-import rdat from '../components/RelationExtraction/relationdata.json';
-import ndat from '../components/NerTable/nerdata.json';
-import ntwkdat from '../components/NetworkGraph/networkdata.json';
-import sentimentdat from '../components/SentimentGraph/sentimentdata.json';
-import topicdat from '../components/TopicModelling/topicdata.json';
+// import rdat from '../components/RelationExtraction/relationdata.json';
+// import ndat from '../components/NerTable/nerdata.json';
+// import ntwkdat from '../components/NetworkGraph/networkdata.json';
+// import sentimentdat from '../components/SentimentGraph/sentimentdata.json';
+// import topicdat from '../components/TopicModelling/topicdata.json';
 
 export const initialState = {
   // relationData: rdat,
@@ -37,6 +37,7 @@ export const initialState = {
 
 // Actions
 export const types = {
+  RESET_STATE: 'RESET_STATE',
   UPDATING_RELATION_DATA: 'UPDATING_RELATION_DATA',
   UPDATING_NER_DATA: 'UPDATING_NER_DATA',
   UPDATED_RELATION_DATA: 'UPDATED_RELATION_DATA',
@@ -62,6 +63,8 @@ export const types = {
 // Reducers
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case types.RESET_STATE:
+      return {...initialState}
     case types.UPDATING_RELATION_DATA:
       return {
         ...state,
@@ -159,6 +162,11 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action Creators
+export function resetState(payload) {
+return {type: types.RESET_STATE,
+payload};
+}
+
 export function updateRelation(payload) {
   return {
     type: types.UPDATING_RELATION_DATA,
