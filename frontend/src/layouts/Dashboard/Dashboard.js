@@ -13,6 +13,10 @@ import TopicBubble from '../../components/TopicModelling/TopicBubble';
 import EntityDisplay from '../../components/NerTable/EntityDisplay';
 import { SizeMe } from 'react-sizeme';
 
+
+
+var imgurl = "http://localhost:5000/wordcloud?" + new Date().getTime();
+
 const Dashboard = (props) => {
   const {
     nerData,
@@ -22,10 +26,12 @@ const Dashboard = (props) => {
     topicData,
     summaryData,
     keyData,
+    wordCloud,
     nerSearch,
   } = props;
   const [selectedNode, setSelectedNode] = useState('');
   const [selectedLink, setSelectedLink] = useState({});
+  const wordCloudURL = "data:image/png;base64,"+wordCloud;
 
   return (
     <Container fluid style={{ marginTop: 20 }}>
@@ -87,6 +93,15 @@ const Dashboard = (props) => {
             id="word-cloud"
             title="Word Cloud"
             category="Word cloud placeholder"
+            content={
+              <div style={{display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 400,
+                width: '100%'}}>
+                <img src={wordCloudURL} alt="word cloud" style={{maxWidth: '100%', maxHeight: '100%'}}/>
+              </div>
+            }
           />
         </Col>
         <Col md={6} sm={12} xs={12}>
@@ -117,7 +132,7 @@ const Dashboard = (props) => {
           />
         </Col>
         <Col lg={7} md={12} sm={12} xs={12}>
-          <SizeMe>
+          <SizeMe monitorHeight>
             {({ size }) => {
               return (
                 <VisualCard
@@ -127,7 +142,7 @@ const Dashboard = (props) => {
                   style={{ overflow: 'hidden' }}
                   content={
                     <NetworkGraph
-                      height={380}
+                      height={size.height - 110}
                       width={size.width - 30}
                       data={networkData}
                       selectedNode={selectedNode}

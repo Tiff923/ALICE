@@ -7,7 +7,7 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 
-import upload from './upload.js';
+import Upload from './Upload.js';
 
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
@@ -23,15 +23,25 @@ const store = createStore(reducer, applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(rootSaga);
 
+const uploading = store.getState().editstate.uploadingData;
+const uploadStatus = store.getState().editstate.uploadStatus;
+const redirect = !uploading & !uploadStatus
+
+// const PrivateRoute = ({...props }) =>
+//   redirect
+//     ? <Redirect to="/upload" />
+//     : <Route { ...props } /> 
+
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
+      {/* <PrivateRoute redirect={redirect} path="/dashboard" component={App} /> */}
         <Route path="/dashboard">
           <App />
         </Route>
 
-        <Route path="/upload" component={upload} />
+        <Route path="/upload" component={Upload} />
         <Redirect from="/" to="/upload" />
       </Switch>
     </BrowserRouter>

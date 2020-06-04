@@ -5,6 +5,15 @@ body,
   height: 100%;
 }
 
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 0px; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+
 .loader-container {
   width: 100vw;
   height: 100vh;
@@ -75,18 +84,35 @@ body,
 
 .drawer-container {
   width: 250px;
-  background-color: '#3358f4';
+  background-color: "#3358f4";
 }
 
 .drawer-text {
   color: white;
 }
 
+.navbar-drawer {
+  display: none;
+}
+
+.navbar-drawer-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
 /* Changes for small display */
 @media (max-width: 991px) {
+  .navbar-drawer {
+    display: block;
+  }
+
   .navbar-alice {
     flex-direction: row;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 99;
   }
 
   .navbrand-alice {
@@ -106,7 +132,7 @@ body,
 
   .side-bar {
     flex-direction: row;
-    width: '100%';
+    width: "100%";
   }
 
   body {

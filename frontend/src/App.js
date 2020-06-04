@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route, Link } from 'react-router-dom'
 import clsx from 'clsx';
 import './App.css';
 import { Nav, Tab, Navbar } from 'react-bootstrap';
@@ -17,16 +17,17 @@ import {
   getNerSearch,
   getKeyData,
   getSummaryData,
+  getWordCloud,
   getUploadStatus,
   isUploadingData,
 } from './reducers/editstate';
 import Loader from 'react-loader-spinner';
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { RiMenu3Line } from 'react-icons/ri';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
-import Hidden from '@material-ui/core/Hidden';
+import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -38,10 +39,7 @@ const useStyles = makeStyles({
   list: {
     height: '100vh',
     width: 250,
-    backgroundColor: '#3358f4',
-  },
-  listText: {
-    color: 'white',
+    backgroundColor: '#f5f5f5',
   },
 });
 
@@ -54,6 +52,7 @@ const App = (props) => {
     topicData,
     summaryData,
     keyData,
+    wordCloud,
     nerSearch,
     uploadStatus,
     isUploading,
@@ -95,17 +94,18 @@ const App = (props) => {
         <Navbar bg="light" expand="lg" className="navbar-alice">
           <div className="navbar-alice sticky">
             <Navbar.Brand className="navbrand-alice">
+              <Link to="/">
               <img
-                href="/"
                 src="/logo.png"
                 width="60"
                 className="d-inline-block align-top"
                 alt="React Bootstrap logo"
               />
+              </Link>
             </Navbar.Brand>
             {/* <Navbar.Toggle /> */}
 
-            <Hidden mdUp implementation="css">
+            <div className="navbar-drawer">
               <Button onClick={handleDrawerToggle}>
                 <RiMenu3Line size={35} />
               </Button>
@@ -116,21 +116,30 @@ const App = (props) => {
                   onKeyDown={() => toggleDrawer(false)}
                 >
                   <List>
+                    <div className="navbar-drawer-logo">
+                  <img
+                src="/logo.png"
+                width="200"
+                className="d-inline-block align-top"
+                alt="React Bootstrap logo"
+              />
+              </div>
+              <Divider/>
                     {[
                       {
                         text: 'Dashboard',
                         key: 'dashboard',
-                        icon: <MdDashboard size={28} color="white" />,
+                        icon: <MdDashboard size={28} color="black" />,
                       },
                       {
                         text: 'Network',
                         key: 'network',
-                        icon: <GiMeshNetwork size={28} color="white" />,
+                        icon: <GiMeshNetwork size={28} color="black" />,
                       },
                       {
                         text: 'Settings',
                         key: 'settings',
-                        icon: <MdSettings size={28} color="white" />,
+                        icon: <MdSettings size={28} color="black" />,
                       },
                     ].map((el, index) => (
                       <ListItem
@@ -143,14 +152,14 @@ const App = (props) => {
                         <ListItemIcon>{el.icon}</ListItemIcon>
                         <ListItemText
                           primary={el.text}
-                          style={{ color: 'white' }}
+                          style={{ color: 'black' }}
                         />
                       </ListItem>
                     ))}
                   </List>
                 </div>
               </Drawer>
-            </Hidden>
+            </div>
 
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav
@@ -197,6 +206,7 @@ const App = (props) => {
               networkData={networkData}
               topicData={topicData}
               summaryData={summaryData}
+              wordCloud={wordCloud}
               keyData={keyData}
               nerSearch={nerSearch}
             />
@@ -228,6 +238,7 @@ const mapStateToProps = (store) => ({
   sentimentData: getSentimentData(store),
   summaryData: getSummaryData(store),
   keyData: getKeyData(store),
+  wordCloud: getWordCloud(store),
   topicData: getTopicData(store),
   nerSearch: getNerSearch(store),
 

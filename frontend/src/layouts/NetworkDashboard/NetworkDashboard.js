@@ -53,12 +53,12 @@ const NetworkDashboard = (props, { size }) => {
                 <Col xs={12} sm={12} md={12}>
                   {!is3D ? (
                     <div id="network-graph-dashboard-container">
-                      {/* <Dashboard3DGraph
+                      <Dashboard3DGraph
                         data={data}
                         height={size.height - 86}
                         width={size.width}
                         selectedLink={selectedLink}
-                      /> */}
+                      />
                     </div>
                   ) : (
                     <div id="network-graph-dashboard-container">

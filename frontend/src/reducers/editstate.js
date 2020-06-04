@@ -25,6 +25,7 @@ export const initialState = {
   classifierData: null,
   summaryData: null,
   keyData: null,
+  wordCloud: null,
 
   uploadingData: false,
   uploadStatus: null, // SUCCESS/FAILURE/null
@@ -53,6 +54,7 @@ export const types = {
   UPLOADED_CLASSIFIER_DATA: 'UPLOADED_CLASSIFIER_DATA',
   UPLOADED_SUMMARY_DATA: 'UPLOADED_SUMMARY_DATA',
   UPLOADED_KEY_DATA: 'UPLOADED_KEY_DATA',
+  UPLOADED_WORD_CLOUD: 'UPLOADED_WORD_CLOUD',
 
   SEARCH_NER: 'SEARCH_NER',
 };
@@ -145,6 +147,12 @@ export default function reducer(state = initialState, action) {
         ...state,
         keyData: action.payload,
       };
+
+    case types.UPLOADED_WORD_CLOUD:
+      return {
+        ...state,
+        wordCloud: action.payload
+      }
     default:
       return state;
   }
@@ -210,6 +218,10 @@ export function getSummaryData(store) {
 
 export function getKeyData(store) {
   return store.editstate.keyData;
+}
+
+export function getWordCloud(store) {
+  return store.editstate.wordCloud
 }
 
 export function getNerSearch(store) {

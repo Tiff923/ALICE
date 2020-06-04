@@ -138,12 +138,23 @@ export function* setKeyData({ data }) {
   });
 }
 
-const apiPost = (text) => {
-  // return axios.post("http://localhost:5000/uploadText", {
-  return axios.post('https://d604e6c9137e.ngrok.io/uploadText', {
-    request: 'textUpload',
-    data: text,
-  });
+export function* setWordCloud({data}) {
+  const wordcloud = data.wordcloud
+  yield put({
+    type: types.UPLOADED_WORD_CLOUD,
+    payload: wordcloud
+  })
+}
+
+const apiPost = (payload) => {
+  if (payload[1] === 'STRING'){
+  return axios.post('http://localhost:5000/uploadText', {
+    data: payload[0],
+  })} else if (payload[1] === 'TXT') {
+    var formData = new FormData()
+    formData.append('file', payload[0])
+    return axios.post('http://localhost:5000/uploadFile', formData)
+  };
 };
 
 export function* uploadData({ payload }) {
@@ -154,7 +165,7 @@ export function* uploadData({ payload }) {
     yield all([
       call(setSentiment, args),
       call(setTopic, args),
-      // call(setClassifier, args),
+      call(setWordCloud, args),
       call(setSummary, args),
       call(setRelation, args),
       call(setNer, args),
