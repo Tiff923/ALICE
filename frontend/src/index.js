@@ -27,9 +27,9 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-      <Route path="/dashboard">
-<App/>
-</Route>
+        <Route path="/dashboard">
+          <App />
+        </Route>
 
         <Route path="/upload" component={upload} />
         <Redirect from="/" to="/upload" />

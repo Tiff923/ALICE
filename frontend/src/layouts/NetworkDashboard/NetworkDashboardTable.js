@@ -171,6 +171,7 @@ const NetworkDashboardTable = (props) => {
       title="Relation Table"
       columns={columns}
       options={options}
+      editable={editable}
       onRowClick={onRowClick}
       selectedRow={selectedRow}
     />

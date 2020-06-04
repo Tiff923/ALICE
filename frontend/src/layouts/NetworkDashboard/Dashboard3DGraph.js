@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 // import './networkgraph.css';
 import SpriteText from 'three-spritetext';
-import { ForceGraph2D, ForceGraph3D } from 'react-force-graph';
+import { ForceGraph3D } from 'react-force-graph';
 import $ from 'jquery';
 
 const Dashboard3DGraph = (props) => {

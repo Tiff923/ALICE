@@ -1,13 +1,5 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-} from 'react';
-// import './networkgraph.css';
-import SpriteText from 'three-spritetext';
-import { ForceGraph2D, ForceGraph3D } from 'react-force-graph';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { ForceGraph2D } from 'react-force-graph';
 import $ from 'jquery';
 
 const Dashboard2DGraph = (props) => {

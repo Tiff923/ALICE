@@ -29,7 +29,7 @@ const NetworkDashboard = (props, { size }) => {
       <SizeMe monitorHeight>
         {({ size }) => {
           return (
-            <Fullscreen enabled={isFullScreen} onChange={isFull => handleFullScreen(isFull)}>
+            <Fullscreen enabled={isFullScreen}>
               <Row>
                 <div className="options-container">
                   <FormControlLabel
