@@ -7,7 +7,6 @@ import Dashboard3DGraph from './Dashboard3DGraph';
 import NetworkDashboardTable from './NetworkDashboardTable';
 import './network-dashboard.css';
 import { SizeMe } from 'react-sizeme';
-import Fullscreen from 'react-full-screen';
 
 const NetworkDashboard = (props, { size }) => {
   const [is3D, set2Dor3D] = useState(true);
@@ -29,7 +28,10 @@ const NetworkDashboard = (props, { size }) => {
       <SizeMe monitorHeight>
         {({ size }) => {
           return (
-            <Fullscreen enabled={isFullScreen}>
+            <div
+              id="fullscreen"
+              className={isFullScreen ? 'fullscreen-enabled' : ''}
+            >
               <Row>
                 <div className="options-container">
                   <FormControlLabel
@@ -51,12 +53,12 @@ const NetworkDashboard = (props, { size }) => {
                 <Col xs={12} sm={12} md={12}>
                   {!is3D ? (
                     <div id="network-graph-dashboard-container">
-                      <Dashboard3DGraph
+                      {/* <Dashboard3DGraph
                         data={data}
                         height={size.height - 86}
                         width={size.width}
                         selectedLink={selectedLink}
-                      />
+                      /> */}
                     </div>
                   ) : (
                     <div id="network-graph-dashboard-container">
@@ -70,7 +72,7 @@ const NetworkDashboard = (props, { size }) => {
                   )}
                 </Col>
               </Row>
-            </Fullscreen>
+            </div>
           );
         }}
       </SizeMe>

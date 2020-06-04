@@ -10,7 +10,7 @@ import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
 import SentimentGraph from '../../components/SentimentGraph/SentimentGraph';
 import NerDisplacy from '../../components/NerDisplacy/NerDisplacy';
 import TopicBubble from '../../components/TopicModelling/TopicBubble';
-import EntityDisplay from '../../components/NerTable/EntityDisplay'
+import EntityDisplay from '../../components/NerTable/EntityDisplay';
 import { SizeMe } from 'react-sizeme';
 
 const Dashboard = (props) => {
@@ -61,7 +61,7 @@ const Dashboard = (props) => {
       </Row>
       <Row>
         <Col>
-        <VisualCard
+          <VisualCard
             id="text-summary"
             title="Summary of document"
             category="PLACEHOLDER"
@@ -153,8 +153,11 @@ const Dashboard = (props) => {
             title="Named Entities"
             category="Key entities and types"
             content={
-              <div style={{ height: 400,width: '100%', overflowX: 'hidden' }}>
-                <EntityDisplay data={nerData} setSelectedNode={setSelectedNode} />
+              <div style={{ height: 400, width: '100%', overflowX: 'hidden' }}>
+                <EntityDisplay
+                  data={nerData}
+                  setSelectedNode={setSelectedNode}
+                />
               </div>
             }
           />

@@ -1,34 +1,34 @@
-import { put, all, call, select, takeEvery } from "redux-saga/effects";
-import { types, getNerData, getRelationData } from "../reducers/editstate";
-import { nercolors } from "../utils/colors";
-import $ from "jquery";
-import axios from "axios";
+import { put, all, call, select, takeEvery } from 'redux-saga/effects';
+import { types, getNerData, getRelationData } from '../reducers/editstate';
+import { nercolors } from '../utils/colors';
+import $ from 'jquery';
+import axios from 'axios';
 
 export function* updateNetwork({ data }) {
   const links = [];
   const links_template = {
-    source: "",
-    target: "",
+    source: '',
+    target: '',
   };
   // Edges
   const nodes_temp = {};
   for (var i = 0; i < data.length; i++) {
     var temp = $.extend(true, {}, links_template);
     var el = data[i];
-    if (el["relation"].slice(-7) === "(e2,e1)") {
-      temp["source"] = el["e2"];
-      temp["target"] = el["e1"];
+    if (el['relation'].slice(-7) === '(e2,e1)') {
+      temp['source'] = el['e2'];
+      temp['target'] = el['e1'];
     } else {
-      temp["source"] = el["e1"];
-      temp["target"] = el["e2"];
+      temp['source'] = el['e1'];
+      temp['target'] = el['e2'];
     }
-    var node_t = temp["target"];
-    var node_t_label = node_t === el["e1"] ? el["e1_label"] : el["e2_label"];
-    var node_s = temp["source"];
-    var node_s_label = node_s === el["e2"] ? el["e2_label"] : el["e1_label"];
+    var node_t = temp['target'];
+    var node_t_label = node_t === el['e1'] ? el['e1_label'] : el['e2_label'];
+    var node_s = temp['source'];
+    var node_s_label = node_s === el['e2'] ? el['e2_label'] : el['e1_label'];
     if (node_t in nodes_temp) {
-      nodes_temp[node_t]["val"] += 4;
-      nodes_temp[node_t]["neighbors"].add(node_s);
+      nodes_temp[node_t]['val'] += 4;
+      nodes_temp[node_t]['neighbors'].add(node_s);
     } else {
       nodes_temp[node_t] = {
         id: node_t,
@@ -39,8 +39,8 @@ export function* updateNetwork({ data }) {
       };
     }
     if (node_s in nodes_temp) {
-      nodes_temp[node_s]["val"] += 2;
-      nodes_temp[node_s]["neighbors"].add(node_t);
+      nodes_temp[node_s]['val'] += 2;
+      nodes_temp[node_s]['neighbors'].add(node_t);
     } else {
       nodes_temp[node_s] = {
         id: node_s,
@@ -54,7 +54,7 @@ export function* updateNetwork({ data }) {
   }
 
   const nodes = $.map(nodes_temp, function (value, key) {
-    value["neighbors"] = Array.from(value["neighbors"]);
+    value['neighbors'] = Array.from(value['neighbors']);
     return value;
   });
   yield put({
@@ -70,12 +70,12 @@ export function* setSentiment({ data }) {
     type: types.UPLOADED_SENTIMENT_DATA,
     payload: [
       {
-        sentiment: "sentiment",
+        sentiment: 'sentiment',
         positivity: positivity * 100,
         negativity: negativity * 100,
       },
       {
-        sentiment: "subjective",
+        sentiment: 'subjective',
         subjectivity: subjectivity * 100,
       },
     ],
@@ -104,7 +104,10 @@ export function* setNer({ data }) {
 }
 
 export function* setSummary({ data }) {
-  yield put({ type: types.UPLOADED_SUMMARY_DATA, payload: data.summary.summary });
+  yield put({
+    type: types.UPLOADED_SUMMARY_DATA,
+    payload: data.summary.summary,
+  });
 }
 
 export function* setRelationHelper({ data }) {
@@ -119,25 +122,26 @@ export function* setRelation({ data }) {
   yield all([call(setRelationHelper, args), call(updateNetwork, args)]);
 }
 
-export function* setKeyData({data}) {
-  const num_words = data.ner.text.split(" ").length
-  const topic_classifier = data.classify.classify
-  const sentiment = data.sentiment.sentiment
-  const legitimacy = "Trusted"
+export function* setKeyData({ data }) {
+  const num_words = data.ner.text.split(' ').length;
+  const topic_classifier = data.classify.classify;
+  const sentiment = data.sentiment.sentiment;
+  const legitimacy = 'Trusted';
   yield put({
     type: types.UPLOADED_KEY_DATA,
     payload: {
       num_words: num_words,
       topic_classifier: topic_classifier,
-      sentiment:sentiment,
-      legitimacy:legitimacy
+      sentiment: sentiment,
+      legitimacy: legitimacy,
     },
   });
 }
 
 const apiPost = (text) => {
-  return axios.post("http://localhost:5000/uploadText", {
-    request: "textUpload",
+  // return axios.post("http://localhost:5000/uploadText", {
+  return axios.post('https://d604e6c9137e.ngrok.io/uploadText', {
+    request: 'textUpload',
     data: text,
   });
 };
@@ -146,7 +150,7 @@ export function* uploadData({ payload }) {
   try {
     const res = yield call(apiPost, payload);
     const args = { data: res.data };
-    console.log(res.data, "LOGGER");
+    console.log(res.data, 'LOGGER');
     yield all([
       call(setSentiment, args),
       call(setTopic, args),
@@ -154,7 +158,7 @@ export function* uploadData({ payload }) {
       call(setSummary, args),
       call(setRelation, args),
       call(setNer, args),
-      call(setKeyData, args)
+      call(setKeyData, args),
     ]);
     yield put({
       type: types.UPLOAD_SUCCESS,
@@ -163,7 +167,7 @@ export function* uploadData({ payload }) {
     yield put({
       type: types.UPLOAD_FAILURE,
     });
-    console.log("ERROR", error);
+    console.log('ERROR', error);
   }
 }
 
@@ -174,7 +178,7 @@ export function* updateNer({ payload }) {
   const text = currentNerData.text;
   const currentRelationData = yield select(getRelationData);
   var newRelationData;
-  if (nerToRelation[3] === "DELETE") {
+  if (nerToRelation[3] === 'DELETE') {
     newRelationData = currentRelationData.filter((e) => {
       return (
         (e.e1 !== nerToRelation[0] || e.e1_id !== nerToRelation[1]) &&

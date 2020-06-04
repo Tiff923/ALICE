@@ -103,7 +103,7 @@ const Dashboard2DGraph = (props) => {
         ref={fgRef}
         height={height}
         width={width}
-        backgroundColor={'#969A97'}
+        backgroundColor={'#f5f5f5'}
         graphData={data}
         linkWidth={(link) => (highlightLinks.has(link) ? 5 : 1)}
         nodeColor={(node) =>

@@ -9,10 +9,12 @@ import './networkgraph.css';
 import { ForceGraph3D } from 'react-force-graph';
 import SpriteText from 'three-spritetext';
 import $ from 'jquery';
+// var three = window.THREE ? window.THREE : require('three');
 
 const ThreeDGraph = (props) => {
   const { width, height, data, selectedNode, selectedLink } = props;
   const fgRef3D = useRef(null);
+  console.log(data);
 
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
@@ -176,7 +178,11 @@ const ThreeDGraph = (props) => {
           return sprite;
         }}
         nodeThreeObjectExtend={true}
-        linkWidth={(link) => (highlightLinks.has(link) ? 3 : 2)}
+        linkWidth={(link) => (highlightLinks.has(link) ? 5 : 1)}
+        linkDirectionalParticles={4}
+        linkDirectionalParticleWidth={(link) =>
+          highlightLinks.has(link) ? 4 : 0
+        }
         linkDirectionalParticles={(link) => (highlightLinks.has(link) ? 2 : 0)}
         linkDirectionalParticleWidth={4}
         linkThreeObjectExtend={true}
@@ -184,7 +190,7 @@ const ThreeDGraph = (props) => {
           const sprite = new SpriteText(
             `${link.source.id} > ${link.target.id}`
           );
-          sprite.color = 'lightgrey';
+          sprite.color = 'black';
           sprite.textHeight = 3;
           return sprite;
         }}

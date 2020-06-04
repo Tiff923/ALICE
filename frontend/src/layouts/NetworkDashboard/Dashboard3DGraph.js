@@ -9,6 +9,7 @@ import React, {
 import SpriteText from 'three-spritetext';
 import { ForceGraph3D } from 'react-force-graph';
 import $ from 'jquery';
+var three = window.THREE ? window.THREE : require('three');
 
 const Dashboard3DGraph = (props) => {
   const { width, height, data, selectedLink } = props;
@@ -152,7 +153,7 @@ const Dashboard3DGraph = (props) => {
           const sprite = new SpriteText(
             `${link.source.id} > ${link.target.id}`
           );
-          sprite.color = 'lightgrey';
+          sprite.color = 'black';
           sprite.textHeight = 3;
           return sprite;
         }}

@@ -136,7 +136,7 @@ const TwoDGraph = (props) => {
         ref={fgRef2D}
         height={height}
         width={width}
-        backgroundColor={'#969A97'}
+        backgroundColor={'#f5f5f5'}
         graphData={data}
         linkWidth={(link) => (highlightLinks.has(link) ? 5 : 1)}
         nodeColor={(node) =>
@@ -146,11 +146,15 @@ const TwoDGraph = (props) => {
               : 'rgba(255,160,0,0.8)'
             : node.color
         }
-        linkDirectionalArrowLength={(link) =>
-          highlightLinks.has(link) ? 20 : 10
+        linkDirectionalParticles={4}
+        linkDirectionalParticleWidth={(link) =>
+          highlightLinks.has(link) ? 4 : 0
         }
-        linkDirectionalArrowRelPos={0.95}
-        linkDirectionalArrowResolution={10}
+        // linkDirectionalArrowLength={(link) =>
+        //   highlightLinks.has(link) ? 20 : 10
+        // }
+        // linkDirectionalArrowRelPos={0.95}
+        // linkDirectionalArrowResolution={10}
         onNodeHover={onNodeHover}
         onLinkHover={onLinkHover}
         onNodeClick={(node) => {
