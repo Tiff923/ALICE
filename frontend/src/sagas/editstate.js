@@ -104,7 +104,7 @@ export function* setNer({ data }) {
 }
 
 export function* setSummary({ data }) {
-  yield put({ type: types.UPLOADED_SUMMARY_DATA, payload: data.summary });
+  yield put({ type: types.UPLOADED_SUMMARY_DATA, payload: data.summary.summary });
 }
 
 export function* setRelationHelper({ data }) {

@@ -249,6 +249,10 @@ export function getClassifierData(store) {
   return store.editstate.classifierData;
 }
 
+export function getSummaryData(store) {
+  return store.editstate.summaryData;
+}
+
 export function getKeyData(store) {
   return store.editstate.keyData;
 }

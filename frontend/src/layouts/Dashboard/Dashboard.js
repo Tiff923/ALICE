@@ -8,9 +8,9 @@ import './dashboard.css';
 import RelationTable from '../../components/RelationExtraction/RelationTable';
 import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
 import SentimentGraph from '../../components/SentimentGraph/SentimentGraph';
-import NerTable from '../../components/NerTable/NerTable';
 import NerDisplacy from '../../components/NerDisplacy/NerDisplacy';
 import TopicBubble from '../../components/TopicModelling/TopicBubble';
+import EntityDisplay from '../../components/NerTable/EntityDisplay'
 import { SizeMe } from 'react-sizeme';
 
 const Dashboard = (props) => {
@@ -20,6 +20,7 @@ const Dashboard = (props) => {
     sentimentData,
     networkData,
     topicData,
+    summaryData,
     keyData,
     nerSearch,
   } = props;
@@ -55,6 +56,16 @@ const Dashboard = (props) => {
             bigIcon={<FaDatabase color="#1dc7ea" />}
             statsText="Classifier"
             statsValue={keyData.topic_classifier}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+        <VisualCard
+            id="text-summary"
+            title="Summary of document"
+            category="PLACEHOLDER"
+            content={summaryData}
           />
         </Col>
       </Row>
@@ -142,8 +153,8 @@ const Dashboard = (props) => {
             title="Named Entities"
             category="Key entities and types"
             content={
-              <div style={{ width: '100%', overflowX: 'hidden' }}>
-                <NerTable data={nerData} setSelectedNode={setSelectedNode} />
+              <div style={{ height: 400,width: '100%', overflowX: 'hidden' }}>
+                <EntityDisplay data={nerData} setSelectedNode={setSelectedNode} />
               </div>
             }
           />

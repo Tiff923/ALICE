@@ -15,6 +15,7 @@ import {
   getTopicData,
   getNerSearch,
     getKeyData,
+    getSummaryData,
   getUploadStatus,
   isUploadingData
 } from './reducers/editstate';
@@ -31,6 +32,7 @@ const App = (props) => {
     sentimentData,
     networkData,
     topicData,
+    summaryData,
     keyData,
     nerSearch,
     uploadStatus,
@@ -118,6 +120,7 @@ const App = (props) => {
               sentimentData={sentimentData}
               networkData={networkData}
               topicData={topicData}
+              summaryData={summaryData}
               keyData={keyData}
               nerSearch={nerSearch}
             />
@@ -149,6 +152,7 @@ const mapStateToProps = (store) => ({
   relationData: getRelationData(store),
   networkData: getNetworkData(store),
   sentimentData: getSentimentData(store),
+  summaryData: getSummaryData(store),
   keyData: getKeyData(store),
   topicData: getTopicData(store),
   nerSearch: getNerSearch(store),
