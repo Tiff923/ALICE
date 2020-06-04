@@ -6,8 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
-import testSend from './testSend.js';
-import testReceive from './testReceive.js';
+
 import upload from './upload.js';
 
 import { createStore, applyMiddleware } from 'redux';
@@ -22,24 +21,23 @@ const sagaMiddleware = createSagaMiddleware();
 // mount it on the Store
 const store = createStore(reducer, applyMiddleware(sagaMiddleware));
 
+sagaMiddleware.run(rootSaga);
+
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route path="/dashboard" component={App} />
-        {/* <Route path="/dashboard" render={(props) => <App {...props} />} /> */}
-        <Route path="/testSend" component={testSend} />
-        <Route path="/testReceive" component={testReceive} />
+      <Route path="/dashboard">
+<App/>
+</Route>
+
         <Route path="/upload" component={upload} />
         <Redirect from="/" to="/upload" />
-        {/* <Route path="/" render={() => <Dashboard />} /> */}
       </Switch>
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );
-
-sagaMiddleware.run(rootSaga);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

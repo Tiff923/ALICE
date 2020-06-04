@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import './App.css';
 import { Nav, Tab, Navbar, Tabs } from 'react-bootstrap';
 import Dashboard from './layouts/Dashboard/Dashboard';
@@ -14,10 +14,15 @@ import {
   getSentimentData,
   getTopicData,
   getNerSearch,
+    getKeyData,
+  getUploadStatus,
+  isUploadingData
 } from './reducers/editstate';
-import Divider from '@material-ui/core/Divider';
 
 import routes from './routes.js';
+
+
+import Loader from 'react-loader-spinner';
 
 const App = (props) => {
   const {
@@ -26,7 +31,10 @@ const App = (props) => {
     sentimentData,
     networkData,
     topicData,
+    keyData,
     nerSearch,
+    uploadStatus,
+    isUploading
   } = props;
 
   const getRoutes = (routes) => {
@@ -48,17 +56,17 @@ const App = (props) => {
   const [key, setKey] = React.useState('dashboard');
 
   const handleSelect = (eventKey) => {
-    console.log(eventKey, 'key');
     setKey(eventKey);
   };
-
-  return (
-    <div className="wrapper">
-      <Tab.Container activeKey={key}>
+//(!uploadStatus && !isUploading) ? <Redirect to="/upload" /> : 
+  return ( uploadStatus === 'SUCCESS' ? (
+         <div className="wrapper"> 
+         <Tab.Container activeKey={key}>
         <Navbar bg="light" expand="lg" className="navbar-alice">
           <div className="navbar-alice sticky">
             <Navbar.Brand className="navbrand-alice">
               <img
+              href="/"
                 src="/logo.png"
                 width="60"
                 className="d-inline-block align-top"
@@ -110,6 +118,7 @@ const App = (props) => {
               sentimentData={sentimentData}
               networkData={networkData}
               topicData={topicData}
+              keyData={keyData}
               nerSearch={nerSearch}
             />
           </Tab.Pane>
@@ -124,10 +133,14 @@ const App = (props) => {
             bye
           </Tab.Pane>
         </Tab.Content>
-      </Tab.Container>
-
-      {/* <Switch>{getRoutes(routes)}</Switch> */}
-    </div>
+      </Tab.Container>    
+      </div> ) : ( <div className="loader-container"><Loader
+      type="Grid"
+      color="#00BFFF"
+      height={100}
+      width={100}
+   /></div>)
+      
   );
 };
 
@@ -136,8 +149,12 @@ const mapStateToProps = (store) => ({
   relationData: getRelationData(store),
   networkData: getNetworkData(store),
   sentimentData: getSentimentData(store),
+  keyData: getKeyData(store),
   topicData: getTopicData(store),
   nerSearch: getNerSearch(store),
+  
+  uploadStatus: getUploadStatus(store),
+  isUploading: isUploadingData(store)
 });
 
 export default connect(mapStateToProps, null)(App);

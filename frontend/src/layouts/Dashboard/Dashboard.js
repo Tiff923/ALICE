@@ -13,8 +13,6 @@ import NerDisplacy from '../../components/NerDisplacy/NerDisplacy';
 import TopicBubble from '../../components/TopicModelling/TopicBubble';
 import { SizeMe } from 'react-sizeme';
 
-import Loader from 'react-loader-spinner';
-
 const Dashboard = (props) => {
   const {
     nerData,
@@ -22,6 +20,7 @@ const Dashboard = (props) => {
     sentimentData,
     networkData,
     topicData,
+    keyData,
     nerSearch,
   } = props;
   const [selectedNode, setSelectedNode] = useState('');
@@ -34,28 +33,28 @@ const Dashboard = (props) => {
           <StatsCard
             bigIcon={<MdDescription color="#ff9500" />}
             statsText="Word count"
-            statsValue="10248"
+            statsValue={keyData.num_words}
           />
         </Col>
         <Col md={6} sm={6}>
           <StatsCard
             bigIcon={<MdTagFaces color="#87cb16" />}
             statsText="Sentiment"
-            statsValue="Positive"
+            statsValue={keyData.sentiment}
           />
         </Col>
         <Col md={6} sm={6}>
           <StatsCard
             bigIcon={<MdCenterFocusStrong color="#ff4a55" />}
             statsText="Legitimacy"
-            statsValue="Trusted"
+            statsValue={keyData.legitimacy}
           />
         </Col>
         <Col md={6} sm={6}>
           <StatsCard
             bigIcon={<FaDatabase color="#1dc7ea" />}
             statsText="Classifier"
-            statsValue="Politics"
+            statsValue={keyData.topic_classifier}
           />
         </Col>
       </Row>

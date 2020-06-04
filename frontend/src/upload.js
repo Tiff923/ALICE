@@ -1,87 +1,97 @@
-import React from 'react'
-import './upload.css'
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button'
-import axios from 'axios'
+import React from "react";
+import { withRouter, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import "./upload.css";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { uploadingData } from "./reducers/editstate";
 
+const fs = require("fs");
 
-class upload extends React.Component{
+class upload extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      uploadedFile: null,
+      uploadedText: "",
+    };
+  }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            uploadedFile: null,
-            uploadedText: ""
+  handleOnChangeFile = (event) => {
+    var file = event.target.files[0];
+    this.setState({
+      uploadedFile: file,
+    });
+  };
+
+  handleOnChangeText = (event) => {
+    this.setState({
+      uploadedText: String(event.target.value),
+    });
+  };
+
+  onClickHandler = () => {
+    if (this.state.uploadedText !== "") {
+      this.props.uploadingData(this.state.uploadedText);
+      this.props.history.push("/dashboard");
+    } else if (this.state.uploadedFile !== null) {
+      fs.readFile(this.state.uploadedFile, "utf-8", (err, data) => {
+        if (err) {
+          throw err;
+        } else {
+          var text = data.toString();
+          this.props.uploadingData(text);
         }
+      });
+      this.props.history.push("/dashboard");
+    } else {
+      alert("error");
     }
+  };
 
-    handleOnChangeFile=event=>{
-        var file = event.target.files[0]
-        this.setState({
-            uploadedFile: file
-        })
-    }
-
-    handleOnChangeText = event => {
-        this.setState({
-            uploadedText: String(event.target.value)
-        })
-    }
-
-    onClickHandler = () => {
-        if (this.state.uploadedText != "") {
-            axios.post("http://localhost:5000/uploadText", {request:"textUpload",
-                data: this.state.uploadedText}).then(res => {
-
-                })
-            console.log(this.state.uploadedText)
-        }
-        else if (this.state.uploadedFile != null) {
-            var formData = new FormData()
-            formData.append('file', this.state.uploadedFile)
-            axios.post("http://localhost:5000/uploadFile", formData).then(res => {
-                
-            })
-            console.log("file")
-        }
-        else {
-            alert("Error")
-        }
-    }
-
-    render() {
-        return (
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <form method="post" action="#" id="#">
-                            <div class="form-group files">
-                                <label>Upload Your '.txt' File </label>
-                                <input type="file" class="form-control" multiple="" 
-                                onChange={this.handleOnChangeFile}
-                                ></input>
-                            </div>
-                            <TextField  id="text-input"
-                                        label="Or Copy your text here"
-                                        margin="auto"
-                                        fullWidth="true"
-                                        multiline="true"
-                                        rowsMax="15"
-                                        onChange={this.handleOnChangeText}
-                                        >
-                            </TextField>
-                            <div class="upload-button">
-                                <Button variant="contained" 
-                                color="primary"
-                                onClick={this.onClickHandler}>
-                                    Upload</Button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div> 
-        )
-    }
+  render() {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6">
+            <form method="post" action="#" id="#">
+              <div className="form-group files">
+                <label>Upload Your '.txt' File </label>
+                <input
+                  type="file"
+                  className="form-control"
+                  multiple=""
+                  onChange={this.handleOnChangeFile}
+                ></input>
+              </div>
+              <TextField
+                id="text-input"
+                label="Or Copy your text here"
+                margin="auto"
+                fullWidth="true"
+                multiline="true"
+                rowsMax="15"
+                onChange={this.handleOnChangeText}
+              ></TextField>
+              <div className="upload-button">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.onClickHandler}
+                >
+                  Upload
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
-export default upload
+const mapDispatchToProps = (dispatch) => ({
+  uploadingData: (payload) => dispatch(uploadingData(payload)),
+});
+
+export default connect(null, mapDispatchToProps)(withRouter(upload));
