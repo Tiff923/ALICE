@@ -23,15 +23,13 @@ const Upload = (props) => {
     setText(String(event.target.value));
   };
 
-  var redirectTo = '/dashboard?' + new Date().getTime();
-
   const onClickHandler = () => {
     if (text !== '') {
       props.uploadingData([text, 'STRING']);
-      props.history.push(redirectTo);
+      props.history.push('/dashboard');
     } else if (file !== null) {
       props.uploadingData([file, 'TXT']);
-      props.history.push(redirectTo);
+      props.history.push('/dashboard');
     } else {
       alert('error');
     }
