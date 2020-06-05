@@ -27,7 +27,7 @@ const Dashboard = (props) => {
   } = props;
   const [selectedNode, setSelectedNode] = useState('');
   const [selectedLink, setSelectedLink] = useState({});
-  const wordCloudURL = "data:image/png;base64,"+wordCloud;
+  const wordCloudURL = 'data:image/png;base64,' + wordCloud;
 
   return (
     <Container fluid style={{ marginTop: 20 }}>
@@ -90,12 +90,20 @@ const Dashboard = (props) => {
             title="Word Cloud"
             category="Word cloud placeholder"
             content={
-              <div style={{display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 400,
-                width: '100%'}}>
-                <img src={wordCloudURL} alt="word cloud" style={{maxWidth: '100%', maxHeight: '100%'}}/>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: 400,
+                  width: '100%',
+                }}
+              >
+                <img
+                  src={wordCloudURL}
+                  alt="word cloud"
+                  style={{ maxWidth: '100%', maxHeight: '100%' }}
+                />
               </div>
             }
           />
@@ -164,7 +172,7 @@ const Dashboard = (props) => {
             title="Named Entities"
             category="Key entities and types"
             content={
-              <div style={{ height: 400, width: '100%', overflowX: 'hidden' }}>
+              <div style={{ height: 500, width: '100%', overflowX: 'hidden' }}>
                 <EntityDisplay
                   data={nerData}
                   setSelectedNode={setSelectedNode}

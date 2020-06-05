@@ -46,18 +46,24 @@ const RelationTable = (props) => {
   const editable = {
     onRowUpdate: (newData, oldData) =>
       new Promise((resolve, reject) => {
+        setSelectedRow(null);
+        props.setSelectedLink({});
         const dataUpdate = [...data];
         const index = oldData.tableData.id;
         dataUpdate[index] = newData;
+        // console.log(dataUpdate, 'data update');
         props.updateRelation(dataUpdate);
         resolve();
       }),
     onRowDelete: (oldData) =>
       new Promise((resolve, reject) => {
         setTimeout(() => {
+          setSelectedRow(null);
+          props.setSelectedLink({});
           const dataDelete = [...data];
           const index = oldData.tableData.id;
           dataDelete.splice(index, 1);
+          // console.log(dataDelete, 'data delete');
           props.updateRelation(dataDelete);
           resolve();
         }, 1000);

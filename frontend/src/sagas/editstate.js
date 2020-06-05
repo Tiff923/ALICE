@@ -5,6 +5,7 @@ import $ from 'jquery';
 import axios from 'axios';
 
 export function* updateNetwork({ data }) {
+  // console.log(data, 'data');
   const links = [];
   const links_template = {
     source: '',
