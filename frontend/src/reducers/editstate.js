@@ -26,7 +26,7 @@ export const initialState = {
   summaryData: null,
   keyData: null,
   wordCloud: null,
-
+  fileUploaded: false,
   uploadingData: false,
   uploadStatus: null, // SUCCESS/FAILURE/null
   updatingRelationData: false,
@@ -47,6 +47,8 @@ export const types = {
   UPLOADING_DATA: 'UPLOADING_DATA',
   UPLOAD_SUCCESS: 'UPLOAD_SUCCESS',
   UPLOAD_FAILURE: 'UPLOAD_FAILURE',
+  FILE_UPLOADED: "FILE_UPLOADED",
+  FILE_RESET: "FILE_RESET",
 
   UPLOADED_SENTIMENT_DATA: 'UPLOADED_SENTIMENT_DATA',
   UPLOADED_TOPIC_DATA: 'UPLOADED_TOPIC_DATA',
@@ -102,7 +104,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         uploadingData: true,
+        fileUploaded: true,
       };
+    case types.FILE_RESET:
+      return {
+        ...state,
+        fileUploaded: false
+      }
     case types.UPLOAD_SUCCESS:
       return {
         ...state,
@@ -195,6 +203,15 @@ export function uploadingData(payload) {
   };
 }
 
+export function resetFile() {
+  return {
+    type: types.FILE_RESET
+  }
+}
+
+
+
+
 // Selectors
 export function getNerData(store) {
   return store.editstate.nerData;
@@ -242,4 +259,8 @@ export function getUploadStatus(store) {
 
 export function isUploadingData(store) {
   return store.editstate.isUploadingData;
+}
+
+export function getFileStatus(store) {
+  return store.editstate.fileUploaded;
 }
