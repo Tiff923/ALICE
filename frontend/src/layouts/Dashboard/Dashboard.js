@@ -33,18 +33,18 @@ const largeLayout = [
 ];
 
 const medLayout = [
-  { i: 'key-data-1', x: 0, y: 0, w: 2.5, h: 4 },
-  { i: 'key-data-2', x: 2.5, y: 0, w: 2.5, h: 4 },
-  { i: 'key-data-3', x: 5, y: 0, w: 2.5, h: 4 },
-  { i: 'key-data-4', x: 7.5, y: 0, w: 2.5, h: 4 },
-  { i: 'summary', x: 0, y: 4, w: 10, h: 6 },
-  { i: 'topic-modelling', x: 0, y: 10, w: 5, h: 12 },
-  { i: 'word-cloud', x: 5, y: 10, w: 5, h: 12 },
-  { i: 'sentiment-graph', x: 0, y: 22, w: 5, h: 12 },
+  { i: 'key-data-1', x: 0, y: 0, w: 3, h: 4 },
+  { i: 'key-data-2', x: 3, y: 0, w: 3, h: 4 },
+  { i: 'key-data-3', x: 6, y: 0, w: 3, h: 4 },
+  { i: 'key-data-4', x: 9, y: 0, w: 3, h: 4 },
+  { i: 'summary', x: 0, y: 4, w: 12, h: 6 },
+  { i: 'topic-modelling', x: 0, y: 10, w: 4, h: 12 },
+  { i: 'word-cloud', x: 4, y: 10, w: 4, h: 12 },
+  { i: 'sentiment-graph', x: 8, y: 10, w: 4, h: 12 },
+  { i: 'ner-text', x: 0, y: 22, w: 7, h: 12 },
   { i: 'ner-table', x: 7, y: 22, w: 5, h: 12 },
-  { i: 'ner-text', x: 0, y: 44, w: 10, h: 15 },
-  { i: 'network-graph', x: 0, y: 59, w: 10, h: 12 },
-  { i: 'relation-table', x: 0, y: 71, w: 10, h: 15 },
+  { i: 'relation-table', x: 0, y: 44, w: 5, h: 16 },
+  { i: 'network-graph', x: 0, y: 44, w: 7, h: 16 },
 ];
 
 const smallLayout = [
@@ -132,7 +132,7 @@ const Dashboard = (props) => {
       isResizable={true}
       // onLayoutChange={onLayoutChange}
       breakpoints={{ lg: 1200, md: 991, sm: 768, xs: 480, xxs: 0 }}
-      cols={{ lg: 12, md: 10, sm: 6, xs: 3, xxs: 2 }}
+      cols={{ lg: 12, md: 12, sm: 6, xs: 3, xxs: 2 }}
     >
       <div key="key-data-1">
         <StatsCard
