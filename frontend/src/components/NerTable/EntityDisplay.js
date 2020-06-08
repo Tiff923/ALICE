@@ -1,36 +1,57 @@
-import { useState } from "react"
+import { useState } from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import NerPieChart from "./NerPieChart"
-import NerTable from "./NerTable"
-import React from "react"
+// import ButtonGroup from '@material-ui/core/ButtonGroup';
+// import Button from '@material-ui/core/Button';
+import NerPieChart from './NerPieChart';
+import NerTable from './NerTable';
+import React from 'react';
 
 const EntityDisplay = (props) => {
-    const {data, setSelectedNode} = props
-    const [isPieChart, setPCorTB] = useState(true)
+  const { data, setSelectedNode } = props;
+  const [isPieChart, setPCorTB] = useState(true);
 
-    const handleToggle = (event) => {
-        setPCorTB(!isPieChart)
-    }
+  const handleToggle = (event) => {
+    setPCorTB(!isPieChart);
+  };
 
-    return(
-        <>
-        <FormControlLabel
-            label='PieChart'
-            control = {<Switch checked={isPieChart} onChange={handleToggle} />}
-        />
-        { isPieChart ? (
-            <NerPieChart
-                data = {data}
-            />
-        ) : (
-            <NerTable
-                data = {data}
-                setSelectedNode={setSelectedNode}
-            />
-        )}
-        </>
-    )
-}
+  return (
+    <>
+      {/* <ButtonGroup color="primary" aria-label="button group" size="small">
+        <Button
+          onClick={() => {
+            setPCorTB(true);
+          }}
+          variant={isPieChart ? 'contained' : 'outlined'}
+        >
+          Entity Breakdown
+        </Button>
+        <Button
+          onClick={() => {
+            setPCorTB(false);
+          }}
+          variant={isPieChart ? 'outlined' : 'contained'}
+        >
+          Entity Table
+        </Button>
+      </ButtonGroup> */}
+      <FormControlLabel
+        label="PieChart"
+        control={
+          <Switch
+            color="primary"
+            checked={isPieChart}
+            onChange={handleToggle}
+          />
+        }
+      />
+      {isPieChart ? (
+        <NerPieChart data={data} />
+      ) : (
+        <NerTable data={data} setSelectedNode={setSelectedNode} />
+      )}
+    </>
+  );
+};
 
-export default EntityDisplay
+export default EntityDisplay;

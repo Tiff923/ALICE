@@ -1,30 +1,30 @@
-// import rdat from '../components/RelationExtraction/relationdata.json';
-// import ndat from '../components/NerTable/nerdata.json';
-// import ntwkdat from '../components/NetworkGraph/networkdata.json';
-// import sentimentdat from '../components/SentimentGraph/sentimentdata.json';
-// import topicdat from '../components/TopicModelling/topicdata.json';
+import rdat from '../components/RelationExtraction/relationdata.json';
+import ndat from '../components/NerTable/nerdata.json';
+import ntwkdat from '../components/NetworkGraph/networkdata.json';
+import sentimentdat from '../components/SentimentGraph/sentimentdata.json';
+import topicdat from '../components/TopicModelling/topicdata.json';
 
 export const initialState = {
-  // relationData: rdat,
-  // nerData: ndat,
-  // networkData: ntwkdat,
-  // sentimentData: sentimentdat,
-  // topicData: topicdat,
-  // summaryData: 'HIHIHIHI',
-  // keyData: {
-  //   num_words: 10,
-  //   topic_classifier: 'crime',
-  //   sentiment: 'positive',
-  //   legitimacy: 'trusted',
-  // },
-  relationData: null,
-  nerData: null,
-  networkData: null,
-  sentimentData: null,
-  topicData: null,
-  classifierData: null,
-  summaryData: null,
-  keyData: null,
+  relationData: rdat,
+  nerData: ndat,
+  networkData: ntwkdat,
+  sentimentData: sentimentdat,
+  topicData: topicdat,
+  summaryData: 'HIHIHIHI',
+  keyData: {
+    num_words: 10,
+    topic_classifier: 'crime',
+    sentiment: 'positive',
+    legitimacy: 'trusted',
+  },
+  // relationData: null,
+  // nerData: null,
+  // networkData: null,
+  // sentimentData: null,
+  // topicData: null,
+  // classifierData: null,
+  // summaryData: null,
+  // keyData: null,
   wordCloud: null,
 
   uploadingData: false,
@@ -64,7 +64,7 @@ export const types = {
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case types.RESET_STATE:
-      return {...initialState}
+      return { ...initialState };
     case types.UPDATING_RELATION_DATA:
       return {
         ...state,
@@ -154,8 +154,8 @@ export default function reducer(state = initialState, action) {
     case types.UPLOADED_WORD_CLOUD:
       return {
         ...state,
-        wordCloud: action.payload
-      }
+        wordCloud: action.payload,
+      };
     default:
       return state;
   }
@@ -163,8 +163,7 @@ export default function reducer(state = initialState, action) {
 
 // Action Creators
 export function resetState(payload) {
-return {type: types.RESET_STATE,
-payload};
+  return { type: types.RESET_STATE, payload };
 }
 
 export function updateRelation(payload) {
@@ -229,7 +228,7 @@ export function getKeyData(store) {
 }
 
 export function getWordCloud(store) {
-  return store.editstate.wordCloud
+  return store.editstate.wordCloud;
 }
 
 export function getNerSearch(store) {

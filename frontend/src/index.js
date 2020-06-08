@@ -10,7 +10,7 @@ import App from './App';
 import Upload from './Upload.js';
 
 import { createStore, applyMiddleware } from 'redux';
-import {composeWithDevTools} from 'redux-devtools-extension'
+import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import { Provider } from 'react-redux';
 
@@ -20,7 +20,10 @@ import rootSaga from './sagas';
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
 // mount it on the Store
-const store = createStore(reducers, composeWithDevTools(applyMiddleware(sagaMiddleware)));
+const store = createStore(
+  reducers,
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
+);
 
 sagaMiddleware.run(rootSaga);
 
@@ -30,19 +33,19 @@ sagaMiddleware.run(rootSaga);
 // const PrivateRoute = ({...props }) =>
 //   redirect
 //     ? <Redirect to="/upload" />
-//     : <Route { ...props } /> 
+//     : <Route { ...props } />
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-      {/* <PrivateRoute redirect={redirect} path="/dashboard" component={App} /> */}
+        {/* <PrivateRoute redirect={redirect} path="/dashboard" component={App} /> */}
         <Route path="/dashboard">
           <App />
         </Route>
 
         <Route path="/upload" component={Upload} />
-        <Redirect from="/" to="/upload" />
+        <Redirect from="/" to="/dashboard" />
       </Switch>
     </BrowserRouter>
   </Provider>,
