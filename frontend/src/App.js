@@ -20,6 +20,8 @@ import {
   getWordCloud,
   getUploadStatus,
   isUploadingData,
+  changeLayout,
+  getLayout,
 } from './reducers/editstate';
 import Loader from 'react-loader-spinner';
 
@@ -54,6 +56,8 @@ const App = (props) => {
     nerSearch,
     uploadStatus,
     isUploading,
+    changeLayout,
+    layout,
   } = props;
 
   const [key, setKey] = React.useState('dashboard');
@@ -70,7 +74,7 @@ const App = (props) => {
 
   //(!uploadStatus && !isUploading) ? <Redirect to="/upload" /> :
 
-  return isUploading ? (
+  return isUploading || uploadStatus !== 'SUCCESS' ? (
     <div className="loader-container">
       <Loader type="Grid" color="#00BFFF" height={100} width={100} />
     </div>
@@ -195,6 +199,8 @@ const App = (props) => {
               wordCloud={wordCloud}
               keyData={keyData}
               nerSearch={nerSearch}
+              layout={layout}
+              changeLayout={changeLayout}
             />
           </Tab.Pane>
           <Tab.Pane eventKey="network" className="main-panel">
@@ -223,9 +229,13 @@ const mapStateToProps = (store) => ({
   wordCloud: getWordCloud(store),
   topicData: getTopicData(store),
   nerSearch: getNerSearch(store),
-
+  layout: getLayout(store),
   uploadStatus: getUploadStatus(store),
   isUploading: isUploadingData(store),
 });
 
-export default connect(mapStateToProps, null)(App);
+const mapDispatchToProps = (dispatch) => ({
+  changeLayout: (payload) => dispatch(changeLayout(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

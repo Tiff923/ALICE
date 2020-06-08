@@ -149,21 +149,21 @@ export function* setWordCloud({ data }) {
 
 const apiPost = (payload) => {
   if (payload[1] === 'STRING') {
-    return axios.post('http://23caaf796822.ngrok.io/uploadText', {
+    return axios.post('http://0ee4fc55f51d.ngrok.io/uploadText', {
       data: payload[0],
     });
   } else if (payload[1] === 'TXT') {
     var formData = new FormData();
     formData.append('file', payload[0]);
-    return axios.post('http://23caaf796822.ngrok.io/uploadFile', formData);
+    return axios.post('http://0ee4fc55f51d.ngrok.io/uploadFile', formData);
   }
 };
 
 export function* uploadData({ payload }) {
   try {
     const res = yield call(apiPost, payload);
+    console.log(res.data);
     const args = { data: res.data };
-    console.log(res.data, 'LOGGER');
     yield all([
       call(setSentiment, args),
       call(setTopic, args),
