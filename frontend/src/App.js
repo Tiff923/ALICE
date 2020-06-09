@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import clsx from 'clsx';
 import './App.css';
 import { Nav, Tab, Navbar } from 'react-bootstrap';
@@ -22,6 +22,7 @@ import {
   isUploadingData,
   changeLayout,
   getLayout,
+  getFileStatus,
 } from './reducers/editstate';
 import Loader from 'react-loader-spinner';
 
@@ -58,6 +59,7 @@ const App = (props) => {
     isUploading,
     changeLayout,
     layout,
+    fileStatus,
   } = props;
 
   const [key, setKey] = React.useState('dashboard');
@@ -73,9 +75,16 @@ const App = (props) => {
   };
 
   //(!uploadStatus && !isUploading) ? <Redirect to="/upload" /> :
+  const checkStatus = () => {
+    if (fileStatus === false && uploadStatus !== 'SUCCESS') {
+      console.log('Redirecting');
+      return <Redirect to="/upload?x=file" />;
+    }
+  };
 
   return isUploading || uploadStatus !== 'SUCCESS' ? (
     <div className="loader-container">
+      {checkStatus()}
       <Loader type="Grid" color="#00BFFF" height={100} width={100} />
     </div>
   ) : (
@@ -230,6 +239,7 @@ const mapStateToProps = (store) => ({
   topicData: getTopicData(store),
   nerSearch: getNerSearch(store),
   layout: getLayout(store),
+  fileStatus: getFileStatus(store),
   uploadStatus: getUploadStatus(store),
   isUploading: isUploadingData(store),
 });

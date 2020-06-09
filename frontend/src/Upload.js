@@ -35,8 +35,13 @@ const Upload = (props) => {
     }
   };
 
+  const newLoad = () => {
+    props.resetFile();
+  }
+
   return (
     <div className="upload-container">
+      {newLoad}
       <div className="logo-container">
         <img src="./logo.png" width="400" alt="A.L.I.C.E. logo" />
       </div>
