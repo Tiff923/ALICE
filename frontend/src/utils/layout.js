@@ -10,7 +10,7 @@ const largeLayout = [
   { i: 'ner-text', x: 0, y: 22, w: 7, h: 12 },
   { i: 'ner-table', x: 7, y: 22, w: 5, h: 12 },
   { i: 'relation-table', x: 0, y: 44, w: 5, h: 16 },
-  { i: 'network-graph', x: 0, y: 44, w: 7, h: 16 },
+  { i: 'network-graph', x: 5, y: 44, w: 7, h: 16 },
 ];
 
 const medLayout = [
@@ -25,7 +25,7 @@ const medLayout = [
   { i: 'ner-text', x: 0, y: 22, w: 7, h: 12 },
   { i: 'ner-table', x: 7, y: 22, w: 5, h: 12 },
   { i: 'relation-table', x: 0, y: 44, w: 5, h: 16 },
-  { i: 'network-graph', x: 0, y: 44, w: 7, h: 16 },
+  { i: 'network-graph', x: 5, y: 44, w: 7, h: 16 },
 ];
 
 const smallLayout = [
