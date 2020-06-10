@@ -23,6 +23,5 @@ def runAlice(text):
     jsonToReact['classify'] = classify
     jsonToReact['ner'] = ner
     jsonToReact['relation'] = relation
-    print(jsonToReact, "RES")
     return jsonToReact
 

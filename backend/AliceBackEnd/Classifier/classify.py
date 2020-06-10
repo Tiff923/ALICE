@@ -42,7 +42,6 @@ def final_class(predictions):
 
     predictions_list = list(predictions.values())
     index = maximumSum(predictions_list)
-    returnJson = {"classify": keys[index]}
 
-    return returnJson
+    return keys[index]
 

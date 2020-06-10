@@ -1,5 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sklearn.decomposition import NMF, LatentDirichletAllocation
+from sklearn.decomposition import NMF
 import random
 
 def topic_modelling(documents,no_topics,no_top_words):
@@ -30,15 +30,17 @@ def topic_modelling(documents,no_topics,no_top_words):
     'children': []
     }
 
+    t = 0
     for topic in topics_words:
+        t = t + 1
         topic_vis = {
-                    "name": "Topic 1",
+                    "name": f"Topic{t}",
                     "color": "hsl(50, 70%, 50%)",
                     "children": []
                     }
 
         for word in topic:
-            loc = random.randint(500, 100000)
+            loc = random.randint(5000, 100000)
             word_vis = {
                         "name": word,
                         "color": "hsl(196, 70%, 50%)",

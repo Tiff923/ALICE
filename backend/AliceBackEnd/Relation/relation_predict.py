@@ -29,6 +29,8 @@ def main(ner_output):
     pos_vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor.restore(position_path)
     test_p1 = np.array(list(pos_vocab_processor.transform(test_pos1)))
     test_p2 = np.array(list(pos_vocab_processor.transform(test_pos2)))
+    print("test_p1 = {0}".format(test_p1.shape))
+    print("test_p2 = {0}".format(test_p2.shape))
     print("\nPosition Vocabulary Size: {:d}".format(len(pos_vocab_processor.vocabulary_)))
 
     # Get model path

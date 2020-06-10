@@ -44,8 +44,8 @@ def textSummarizer(text, no_of_sentences = 2):
     summary = ""
     for index in sentenceIndexList:
         summary = summary + doc[index] + "\n\n"
-    returnJson = {"summary": summary}
-    return returnJson
+    
+    return summary
 
 
 
