@@ -6,6 +6,8 @@ import './App.css';
 import { Nav, Tab, Navbar } from 'react-bootstrap';
 import Dashboard from './layouts/Dashboard/Dashboard';
 import NetworkDashboard from './layouts/NetworkDashboard/NetworkDashboard';
+import Settings from './layouts/Settings/Settings';
+import Loader from 'react-loader-spinner';
 import { MdDashboard, MdSettings } from 'react-icons/md';
 import { GiMeshNetwork } from 'react-icons/gi';
 import {
@@ -20,11 +22,11 @@ import {
   getWordCloud,
   getUploadStatus,
   isUploadingData,
+  getFileStatus,
+  saveConfig,
   changeLayout,
   getLayout,
-  getFileStatus,
 } from './reducers/editstate';
-import Loader from 'react-loader-spinner';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { RiMenu3Line } from 'react-icons/ri';
@@ -57,13 +59,15 @@ const App = (props) => {
     nerSearch,
     uploadStatus,
     isUploading,
+    fileStatus,
+    saveConfig,
     changeLayout,
     layout,
-    fileStatus,
   } = props;
 
-  const [key, setKey] = React.useState('dashboard');
+  const [isLoading, setIsLoading] = useState(false);
 
+  const [key, setKey] = useState('dashboard');
   const handleSelect = (eventKey) => {
     setKey(eventKey);
   };
@@ -74,7 +78,6 @@ const App = (props) => {
     toggleDrawer(!open);
   };
 
-  //(!uploadStatus && !isUploading) ? <Redirect to="/upload" /> :
   const checkStatus = () => {
     if (fileStatus === false && uploadStatus !== 'SUCCESS') {
       console.log('Redirecting');
@@ -89,6 +92,11 @@ const App = (props) => {
     </div>
   ) : (
     <div className="wrapper">
+      {isLoading ? (
+        <div className="settings-loader-container">
+          <Loader type="Oval" color="#00BFFF" height={100} width={100} />
+        </div>
+      ) : null}
       <Tab.Container activeKey={key}>
         <Navbar bg="light" expand="lg" className="navbar-alice">
           <div className="navbar-alice sticky">
@@ -102,8 +110,6 @@ const App = (props) => {
                 />
               </Link>
             </Navbar.Brand>
-            {/* <Navbar.Toggle /> */}
-
             <div className="navbar-drawer">
               <Button onClick={handleDrawerToggle}>
                 <RiMenu3Line size={35} />
@@ -197,6 +203,7 @@ const App = (props) => {
         </Navbar>
 
         <Tab.Content className="main-panel">
+          <div className="header">{key}</div>
           <Tab.Pane eventKey="dashboard" className="main-panel">
             <Dashboard
               nerData={nerData}
@@ -218,9 +225,19 @@ const App = (props) => {
               networkData={networkData}
             />
           </Tab.Pane>
-
           <Tab.Pane eventKey="settings" className="main-panel">
-            bye
+            <Settings
+              setIsLoading={setIsLoading}
+              nerData={nerData}
+              relationData={relationData}
+              sentimentData={sentimentData}
+              networkData={networkData}
+              topicData={topicData}
+              summaryData={summaryData}
+              wordCloud={wordCloud}
+              keyData={keyData}
+              saveConfig={saveConfig}
+            />
           </Tab.Pane>
         </Tab.Content>
       </Tab.Container>
@@ -245,6 +262,7 @@ const mapStateToProps = (store) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  saveConfig: (payload) => dispatch(saveConfig(payload)),
   changeLayout: (payload) => dispatch(changeLayout(payload)),
 });
 

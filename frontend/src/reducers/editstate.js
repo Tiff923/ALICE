@@ -27,13 +27,16 @@ export const initialState = {
   summaryData: null,
   keyData: null,
   wordCloud: null,
+
   fileUploaded: false,
   uploadingData: false,
   uploadStatus: null, // SUCCESS/FAILURE/null
+
   updatingRelationData: false,
   updatingNerData: false,
-
   nerSearch: new Set(),
+
+  aliceID: null,
   layout: initialLayout,
 };
 
@@ -62,6 +65,7 @@ export const types = {
   UPLOADED_WORD_CLOUD: 'UPLOADED_WORD_CLOUD',
 
   SEARCH_NER: 'SEARCH_NER',
+  SAVE_CONFIG: 'SAVE_CONFIG',
   CHANGE_LAYOUT: 'CHANGE_LAYOUT',
 };
 
@@ -166,6 +170,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         wordCloud: action.payload,
       };
+    case types.SAVE_CONFIG:
+      return {
+        ...state,
+        aliceID: action.payload,
+      };
     case types.CHANGE_LAYOUT:
       return {
         ...state,
@@ -205,6 +214,13 @@ export function udpateNerSearch(payload) {
 export function uploadingData(payload) {
   return {
     type: types.UPLOADING_DATA,
+    payload,
+  };
+}
+
+export function saveConfig(payload) {
+  return {
+    type: types.SAVE_CONFIG,
     payload,
   };
 }
