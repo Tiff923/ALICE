@@ -36,12 +36,19 @@ const NetworkDashboard = (props, { size }) => {
                 <div className="options-container">
                   <FormControlLabel
                     label="3D"
-                    control={<Switch checked={!is3D} onChange={handleToggle} />}
+                    control={
+                      <Switch
+                        color="primary"
+                        checked={!is3D}
+                        onChange={handleToggle}
+                      />
+                    }
                   />
                   <FormControlLabel
                     label="Fullscreen"
                     control={
                       <Switch
+                        color="primary"
                         checked={isFullScreen}
                         onChange={handleFullScreen}
                       />

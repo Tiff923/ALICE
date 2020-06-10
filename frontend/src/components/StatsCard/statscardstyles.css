@@ -5,6 +5,7 @@
   margin-bottom: 30px;
   word-wrap: break-word;
   height: 100%;
+  overflow: scroll;
 }
 
 .card-content {
@@ -30,4 +31,8 @@
   margin: 0;
   font-size: 16px;
   line-height: 1.5;
+}
+
+.card-subcontent {
+  margin-top: 10px;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
+import Divider from '@material-ui/core/Divider';
 import './statscardstyles.css';
 
 const StatsCard = (props) => {
@@ -17,6 +18,8 @@ const StatsCard = (props) => {
             </div>
           </Col>
         </Row>
+        <Divider />
+        <div className="card-subcontent">Subcontent:</div>
       </div>
     </div>
   );
