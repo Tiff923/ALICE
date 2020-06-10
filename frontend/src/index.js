@@ -47,7 +47,7 @@ ReactDOM.render(
         </Route>
 
         <Route path="/upload" component={Upload} />
-        <Redirect from="/" to="/dashboard" />
+        <Redirect from="/" to="/upload" />
       </Switch>
     </BrowserRouter>
   </Provider>,

@@ -1,30 +1,31 @@
-import rdat from '../components/RelationExtraction/relationdata.json';
-import ndat from '../components/NerTable/nerdata.json';
-import ntwkdat from '../components/NetworkGraph/networkdata.json';
-import sentimentdat from '../components/SentimentGraph/sentimentdata.json';
-import topicdat from '../components/TopicModelling/topicdata.json';
+// import rdat from '../components/RelationExtraction/relationdata.json';
+// import ndat from '../components/NerTable/nerdata.json';
+// import ntwkdat from '../components/NetworkGraph/networkdata.json';
+// import sentimentdat from '../components/SentimentGraph/sentimentdata.json';
+// import topicdat from '../components/TopicModelling/topicdata.json';
+import { initialLayout } from '../utils/layout';
 
 export const initialState = {
-  relationData: rdat,
-  nerData: ndat,
-  networkData: ntwkdat,
-  sentimentData: sentimentdat,
-  topicData: topicdat,
-  summaryData: 'HIHIHIHI',
-  keyData: {
-    num_words: 10,
-    topic_classifier: 'crime',
-    sentiment: 'positive',
-    legitimacy: 'trusted',
-  },
-  // relationData: null,
-  // nerData: null,
-  // networkData: null,
-  // sentimentData: null,
-  // topicData: null,
-  // classifierData: null,
-  // summaryData: null,
-  // keyData: null,
+  // relationData: rdat,
+  // nerData: ndat,
+  // networkData: ntwkdat,
+  // sentimentData: sentimentdat,
+  // topicData: topicdat,
+  // summaryData: 'HIHIHIHI',
+  // keyData: {
+  //   num_words: 10,
+  //   topic_classifier: 'crime',
+  //   sentiment: 'positive',
+  //   legitimacy: 'trusted',
+  // },
+  relationData: null,
+  nerData: null,
+  networkData: null,
+  sentimentData: null,
+  topicData: null,
+  classifierData: null,
+  summaryData: null,
+  keyData: null,
   wordCloud: null,
 
   fileUploaded: false,
@@ -36,6 +37,7 @@ export const initialState = {
   nerSearch: new Set(),
 
   aliceID: null,
+  layout: initialLayout,
 };
 
 // Actions
@@ -64,6 +66,7 @@ export const types = {
 
   SEARCH_NER: 'SEARCH_NER',
   SAVE_CONFIG: 'SAVE_CONFIG',
+  CHANGE_LAYOUT: 'CHANGE_LAYOUT',
 };
 
 // Reducers
@@ -162,7 +165,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         keyData: action.payload,
       };
-
     case types.UPLOADED_WORD_CLOUD:
       return {
         ...state,
@@ -172,6 +174,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         aliceID: action.payload,
+      };
+    case types.CHANGE_LAYOUT:
+      return {
+        ...state,
+        layout: action.payload,
       };
     default:
       return state;
@@ -211,16 +218,23 @@ export function uploadingData(payload) {
   };
 }
 
-export function resetFile() {
-  return {
-    type: types.FILE_RESET,
-  };
-}
-
 export function saveConfig(payload) {
   return {
     type: types.SAVE_CONFIG,
     payload,
+  };
+}
+
+export function changeLayout(payload) {
+  return {
+    type: types.CHANGE_LAYOUT,
+    payload,
+  };
+}
+
+export function resetFile() {
+  return {
+    type: types.FILE_RESET,
   };
 }
 
@@ -271,6 +285,10 @@ export function getUploadStatus(store) {
 
 export function isUploadingData(store) {
   return store.editstate.isUploadingData;
+}
+
+export function getLayout(store) {
+  return store.editstate.layout;
 }
 
 export function getFileStatus(store) {

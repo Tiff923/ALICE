@@ -24,6 +24,8 @@ import {
   isUploadingData,
   getFileStatus,
   saveConfig,
+  changeLayout,
+  getLayout,
 } from './reducers/editstate';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -59,11 +61,13 @@ const App = (props) => {
     isUploading,
     fileStatus,
     saveConfig,
+    changeLayout,
+    layout,
   } = props;
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [key, setKey] = useState('settings');
+  const [key, setKey] = useState('dashboard');
   const handleSelect = (eventKey) => {
     setKey(eventKey);
   };
@@ -81,7 +85,7 @@ const App = (props) => {
     }
   };
 
-  return isUploading && uploadStatus !== 'SUCCESS' ? (
+  return isUploading || uploadStatus !== 'SUCCESS' ? (
     <div className="loader-container">
       {checkStatus()}
       <Loader type="Grid" color="#00BFFF" height={100} width={100} />
@@ -211,6 +215,8 @@ const App = (props) => {
               wordCloud={wordCloud}
               keyData={keyData}
               nerSearch={nerSearch}
+              layout={layout}
+              changeLayout={changeLayout}
             />
           </Tab.Pane>
           <Tab.Pane eventKey="network" className="main-panel">
@@ -249,6 +255,7 @@ const mapStateToProps = (store) => ({
   wordCloud: getWordCloud(store),
   topicData: getTopicData(store),
   nerSearch: getNerSearch(store),
+  layout: getLayout(store),
   fileStatus: getFileStatus(store),
   uploadStatus: getUploadStatus(store),
   isUploading: isUploadingData(store),
@@ -256,6 +263,7 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   saveConfig: (payload) => dispatch(saveConfig(payload)),
+  changeLayout: (payload) => dispatch(changeLayout(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
