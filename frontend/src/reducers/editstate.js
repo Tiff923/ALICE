@@ -3,6 +3,7 @@
 // import ntwkdat from '../components/NetworkGraph/networkdata.json';
 // import sentimentdat from '../components/SentimentGraph/sentimentdata.json';
 // import topicdat from '../components/TopicModelling/topicdata.json';
+import { initialLayout } from '../utils/layout';
 
 export const initialState = {
   // relationData: rdat,
@@ -33,6 +34,7 @@ export const initialState = {
   updatingNerData: false,
 
   nerSearch: new Set(),
+  layout: initialLayout,
 };
 
 // Actions
@@ -47,8 +49,8 @@ export const types = {
   UPLOADING_DATA: 'UPLOADING_DATA',
   UPLOAD_SUCCESS: 'UPLOAD_SUCCESS',
   UPLOAD_FAILURE: 'UPLOAD_FAILURE',
-  FILE_UPLOADED: "FILE_UPLOADED",
-  FILE_RESET: "FILE_RESET",
+  FILE_UPLOADED: 'FILE_UPLOADED',
+  FILE_RESET: 'FILE_RESET',
 
   UPLOADED_SENTIMENT_DATA: 'UPLOADED_SENTIMENT_DATA',
   UPLOADED_TOPIC_DATA: 'UPLOADED_TOPIC_DATA',
@@ -60,13 +62,14 @@ export const types = {
   UPLOADED_WORD_CLOUD: 'UPLOADED_WORD_CLOUD',
 
   SEARCH_NER: 'SEARCH_NER',
+  CHANGE_LAYOUT: 'CHANGE_LAYOUT',
 };
 
 // Reducers
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case types.RESET_STATE:
-      return {...initialState}
+      return { ...initialState };
     case types.UPDATING_RELATION_DATA:
       return {
         ...state,
@@ -109,8 +112,8 @@ export default function reducer(state = initialState, action) {
     case types.FILE_RESET:
       return {
         ...state,
-        fileUploaded: false
-      }
+        fileUploaded: false,
+      };
     case types.UPLOAD_SUCCESS:
       return {
         ...state,
@@ -158,12 +161,16 @@ export default function reducer(state = initialState, action) {
         ...state,
         keyData: action.payload,
       };
-
     case types.UPLOADED_WORD_CLOUD:
       return {
         ...state,
-        wordCloud: action.payload
-      }
+        wordCloud: action.payload,
+      };
+    case types.CHANGE_LAYOUT:
+      return {
+        ...state,
+        layout: action.payload,
+      };
     default:
       return state;
   }
@@ -171,8 +178,7 @@ export default function reducer(state = initialState, action) {
 
 // Action Creators
 export function resetState(payload) {
-return {type: types.RESET_STATE,
-payload};
+  return { type: types.RESET_STATE, payload };
 }
 
 export function updateRelation(payload) {
@@ -203,14 +209,18 @@ export function uploadingData(payload) {
   };
 }
 
-export function resetFile() {
+export function changeLayout(payload) {
   return {
-    type: types.FILE_RESET
-  }
+    type: types.CHANGE_LAYOUT,
+    payload,
+  };
 }
 
-
-
+export function resetFile() {
+  return {
+    type: types.FILE_RESET,
+  };
+}
 
 // Selectors
 export function getNerData(store) {
@@ -246,7 +256,7 @@ export function getKeyData(store) {
 }
 
 export function getWordCloud(store) {
-  return store.editstate.wordCloud
+  return store.editstate.wordCloud;
 }
 
 export function getNerSearch(store) {
@@ -259,6 +269,10 @@ export function getUploadStatus(store) {
 
 export function isUploadingData(store) {
   return store.editstate.isUploadingData;
+}
+
+export function getLayout(store) {
+  return store.editstate.layout;
 }
 
 export function getFileStatus(store) {

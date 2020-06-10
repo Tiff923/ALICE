@@ -106,6 +106,8 @@ const NetworkDashboardTable = (props) => {
   const editable = {
     onRowUpdate: (newData, oldData) =>
       new Promise((resolve, reject) => {
+        setSelectedRow(null);
+        props.setSelectedLink({});
         const dataUpdate = [...data];
         const index = oldData.tableData.id;
         dataUpdate[index] = newData;
@@ -115,6 +117,8 @@ const NetworkDashboardTable = (props) => {
     onRowDelete: (oldData) =>
       new Promise((resolve, reject) => {
         setTimeout(() => {
+          setSelectedRow(null);
+          props.setSelectedLink({});
           const dataDelete = [...data];
           const index = oldData.tableData.id;
           dataDelete.splice(index, 1);

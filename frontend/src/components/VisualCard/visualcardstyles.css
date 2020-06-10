@@ -1,12 +1,10 @@
 .card {
-  /* height: 100%; */
-  max-height: 600px;
+  height: 100%;
+  /* max-height: 600px; */
   overflow: hidden;
-  margin-top: 30px;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(63, 63, 68, 0.1);
   background-color: #ffffff;
-  margin-bottom: 30px;
 }
 
 .card .content {
@@ -49,7 +47,7 @@
 }
 
 .card .ct-chart {
-  height: "100%";
+  height: '100%';
   margin: 30px 0 30px;
 }
 
