@@ -4,19 +4,19 @@ import './visualcardstyles.css';
 
 const VisualCard = (props) => {
   return (
-    <div className="card" id={props.id} style={props.style}>
+    <div className="viscard" id={props.id} style={props.style}>
       <Row>
         <Col xs={9}>
-          <div className="header">
-            <h4 className="title">{props.title}</h4>
-            <p className="category">{props.category}</p>
+          <div className="viscard-header">
+            <h4 className="viscard-title">{props.title}</h4>
+            <p className="viscard-category">{props.category}</p>
           </div>
         </Col>
         <Col xs={3}>{props.summary}</Col>
       </Row>
-      <div className="content">
+      <div className="viscard-content">
         {props.content}
-        <div className="footer">{props.legend}</div>
+        {/* <div className="card-footer">{props.legend}</div> */}
       </div>
     </div>
   );
