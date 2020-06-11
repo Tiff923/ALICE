@@ -37,7 +37,7 @@ const Upload = (props) => {
 
   const newLoad = () => {
     props.resetFile();
-  }
+  };
 
   return (
     <div className="upload-container">
