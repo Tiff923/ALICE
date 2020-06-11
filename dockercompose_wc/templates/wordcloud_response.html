@@ -1,0 +1,15 @@
+<!doctype html>
+<title>WordCloud Analysis</title> 
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<div class="page">
+ <a href="/"><h1>WordCloud API</h1></a>
+  <div>
+	<p><h5>Word Cloud Output</h5></p>
+  </div>
+
+<body>
+<p>{{value}}</p>
+	<img src="data:image;base64,{{imgvalue}}" alt="wordcloud_output"> 
+</body>
+
+</div>

@@ -1,0 +1,34 @@
+version: '3'
+services:
+  web:
+    build: .
+    hostname: main_web
+    ports:
+     - "5000:5000"
+    volumes:
+     - .:/code
+    networks:
+     - dock_net
+    links:
+     - entitiesextraction
+     - wordclouddocker
+
+    wordclouddocker: 
+    build: ./wordclouddocker
+    hostname: dockercompose_wordclouddocker
+    ports:
+     - "8001:8080"
+    tty: true
+    volumes:
+     - ./wordclouddocker:/code
+    networks:
+     - dock_net
+
+networks:
+  dock_net:
+    driver: bridge
+
+
+
+
+
