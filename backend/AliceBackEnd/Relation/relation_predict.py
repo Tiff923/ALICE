@@ -70,8 +70,8 @@ def main(ner_output):
                 }
             pred = sess.run(predictions, feed_dict)
             ner_output[i]['relation'] = utils.label2class[pred[0]]
-    returnJson = {"relation": ner_output}
-    return returnJson
+
+    return ner_output
 
 
 

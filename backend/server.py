@@ -6,6 +6,7 @@ from RunAlice import runAlice
 from AliceBackEnd.TopicModelling.WordCloud import show_wordcloud
 import io
 import base64
+import json
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -26,23 +27,20 @@ def mainPage():
 
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
-    file = request.files['file']
-    text = file.read()
-    print("type", type(text))
-    text = text.decode('cp1251')
-    returnJson= runAlice(text)
-    returnJson['wordcloud'] = getWordCloud(text)
+    length = int(request.form['length'])
+    returnJson = {}
+    fileNames = json.loads(request.form['fileNames'])
+    for i in range(length):
+        file =  request.files[f'file{i}']
+        text = file.read()
+        text = text.decode('cp1251')
+        tempJson = runAlice(text)
+        tempJson['wordcloud'] = getWordCloud(text)
+        fileName = fileNames[i]
+        returnJson[fileName] = tempJson 
     returnJson = jsonify(returnJson)
     return returnJson
 
-@app.route("/uploadText", methods=["GET","POST"])
-def receiveText():
-    data = request.get_json()
-    text = data['data']
-    returnJson = runAlice(text)
-    returnJson['wordcloud'] = getWordCloud(text)
-    returnJson = jsonify(returnJson)
-    return returnJson
 
 @app.route("/saveConfig", methods=["GET","POST"])
 def saveConfig():
