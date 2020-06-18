@@ -10,6 +10,8 @@ import * as serviceWorker from './serviceWorker';
 import App from './App';
 
 import Upload from './Upload.js';
+import About from './components/FrontPage/About'
+import Login from './components/Account/Login.js'
 
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -45,8 +47,10 @@ ReactDOM.render(
         <Route path="/dashboard">
           <App />
         </Route>
-
+        <Route path = '/about' component = {About} />
         <Route path="/upload" component={Upload} />
+        <Route path="/login" component={Login} />
+
         <Redirect from="/" to="/upload" />
       </Switch>
     </BrowserRouter>

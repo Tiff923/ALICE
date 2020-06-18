@@ -5,6 +5,7 @@ import './upload.css';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { uploadingData, resetState } from './reducers/editstate';
+import Header from './components/Header/Header.js'
 
 const Upload = (props) => {
   const [file, setFile] = useState(null);
@@ -42,6 +43,7 @@ const Upload = (props) => {
   return (
     <div className="upload-container">
       {newLoad}
+      <Header></Header>
       <div className="logo-container">
         <img src="./logo.png" width="400" alt="A.L.I.C.E. logo" />
       </div>
