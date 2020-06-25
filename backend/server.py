@@ -272,7 +272,7 @@ def runAlice(text):
 
     # Topic Modelling
     print("Sending topic")
-    topicJson = postTopicRequest([text], 3, 10)
+    topicJson = postTopicRequest([text], 1, 10)
     topics = topicJson['topics']
     print("receive topic")
 
