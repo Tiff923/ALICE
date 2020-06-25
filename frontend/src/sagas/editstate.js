@@ -113,7 +113,7 @@ const apiPost = (payload) => {
   //   headers: headers,
   // });
   return axios.post(
-    'https://blooming-peak-51391.herokuapp.com/https://2602f2f5cd25.ngrok.io/uploadFile',
+    'https://blooming-peak-51391.herokuapp.com/https://a5d995de4d5a.ngrok.io/uploadFile',
     formData,
     {
       headers: headers,
