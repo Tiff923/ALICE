@@ -4,10 +4,31 @@ import spacy
 from nltk.tokenize import sent_tokenize
 from nltk.stem import WordNetLemmatizer
 import json
+from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS, cross_origin
 
-#This textSummarizer uses the text rank algorithm
-def textSummarizer(text, no_of_sentences = 2):
-    #Tokenize the text into sentences and lemmatize it
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def run():
+    return 'Summary running'
+
+
+@app.route("/textSummarizer", methods=["GET", "POST"])
+def textSummaryAPI():
+    data = request.get_json()
+    text = data["text"]
+    no_of_sentence = data["no_of_sentence"]
+    summary = textSummarizer(text, no_of_sentence)
+    returnJson = {"summary": summary}
+    return returnJson
+
+
+# This textSummarizer uses the text rank algorithm
+def textSummarizer(text, no_of_sentences=2):
+    # Tokenize the text into sentences and lemmatize it
     text = text.replace("\n", " ")
     doc = sent_tokenize(text)
     lemmatizer = WordNetLemmatizer()
@@ -19,36 +40,33 @@ def textSummarizer(text, no_of_sentences = 2):
             lemma = lemmatizer.lemmatize(word)
             newSentence = newSentence + word + " "
         lemmaDoc.append(newSentence)
-    #VectorizedText is a matrix containing the tfidf scores 
-    vectorizer = TfidfVectorizer(min_df= 0, max_df=1.0)
+    # VectorizedText is a matrix containing the tfidf scores
+    vectorizer = TfidfVectorizer(min_df=0, max_df=1.0)
     vectorizedText = vectorizer.fit_transform(doc)
 
-    #Compute similarity matrix by multiplying the tfidf matrix with its transpose
+    # Compute similarity matrix by multiplying the tfidf matrix with its transpose
     similarityMatrix = (vectorizedText * vectorizedText.T)
 
-    #Get the graph
+    # Get the graph
     graph = networkx.from_scipy_sparse_matrix(similarityMatrix)
 
-    #Obtain the scores 
+    # Obtain the scores
     scores = networkx.pagerank(graph)
 
-    #Sort from highest scores to lowest
-    ranking = ((score, index) for index,score in scores.items())
-    rankingSorted = sorted(ranking,reverse = True)
+    # Sort from highest scores to lowest
+    ranking = ((score, index) for index, score in scores.items())
+    rankingSorted = sorted(ranking, reverse=True)
 
-    #Get the index of the sentences to be included in the summary
+    # Get the index of the sentences to be included in the summary
     sentenceIndexList = [rankingSorted[index][1] for index in range(0, no_of_sentences)]
     sentenceIndexList.sort()
 
-    #Get the final summary
+    # Get the final summary
     summary = ""
     for index in sentenceIndexList:
         summary = summary + doc[index] + "\n\n"
-    
+
     return summary
-
-
-
 
 
 text1 = """The Multi-Ministry Taskforce announced on 19 May 2020 its decision to exit the Circuit Breaker and resume activities in phases from 2 June 2020. 
@@ -81,19 +99,21 @@ Many European countries and US states have taken steps in recent weeks to lift l
 """
 #textSummarizer(text1, 3)
 
+
 def load_json(filepath):
     with open(filepath) as f:
         data = json.load(f)
     return data
 
 
-def writeToFile(filepath = "noName.txt", text = ""):
+def writeToFile(filepath="noName.txt", text=""):
     with open(filepath, "a") as f:
         f.write(text)
 
+
 def testCorpus():
     writeTo = "terrorismSummary.txt"
-    f = open(writeTo,"w")
+    f = open(writeTo, "w")
     f.close()
     data = load_json("/Users/cornelius/Documents/ISTD/ALICE Internship/Corpus/terrorism (2).json")
     counter = 0
@@ -101,17 +121,20 @@ def testCorpus():
     while counter < 10:
         article = data[x]["text"]
         if article == "":
-            x+=1
+            x += 1
             continue
         articleNo = x + 1
         print(articleNo)
-        writeToFile(writeTo, "\n Article %d:\n\n" %articleNo)
+        writeToFile(writeTo, "\n Article %d:\n\n" % articleNo)
         writeToFile(writeTo, article)
         print("\nSummary:\n")
-        writeToFile(writeTo,"\nSummary:\n")
+        writeToFile(writeTo, "\nSummary:\n")
         writeToFile(writeTo, textSummarizer(article, 3))
         writeToFile(writeTo, "##################################################\n")
         print("##################################################\n")
-        x+=1
-        counter +=1
+        x += 1
+        counter += 1
 
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True, port=5060)

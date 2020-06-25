@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import Table from '../Table/Table';
+import Table from '../../layouts/Header/Table/Table';
 import { updateNer, udpateNerSearch } from '../../reducers/editstate';
 import { nercolors } from '../../utils/colors';
 
 const NerTable = (props) => {
   const data = props.data.ents;
-  const [selectedRow, setSelectedRow] = useState(null);
+  const {
+    currentFileName,
+    setSelectedNode,
+    selectedNerRow,
+    setSelectedNerRow,
+  } = props;
+
+  useEffect(() => {
+    setSelectedNerRow(null);
+    setSelectedNode(null);
+  }, [data]);
 
   const columns = [
     { title: 'Entity', field: 'text', editable: 'never' },
@@ -43,8 +53,8 @@ const NerTable = (props) => {
   const editable = {
     onRowUpdate: (newData, oldData) =>
       new Promise((resolve, reject) => {
-        setSelectedRow(null);
-        props.setSelectedNode('');
+        setSelectedNerRow(null);
+        setSelectedNode(null);
         const dataUpdate = data;
         const index = oldData.tableData.id;
         dataUpdate[index] = newData;
@@ -56,14 +66,15 @@ const NerTable = (props) => {
             dataUpdate[index].type,
             'UPDATE',
           ],
+          currentFileName: currentFileName,
         });
         resolve();
       }),
     onRowDelete: (oldData) =>
       new Promise((resolve, reject) => {
         setTimeout(() => {
-          setSelectedRow(null);
-          props.setSelectedNode('');
+          setSelectedNerRow(null);
+          setSelectedNode(null);
           const dataDelete = [...data];
           const index = oldData.tableData.id;
           dataDelete.splice(index, 1);
@@ -75,6 +86,7 @@ const NerTable = (props) => {
               data[index].type,
               'DELETE',
             ],
+            currentFileName: currentFileName,
           });
           resolve();
         }, 1000);
@@ -88,19 +100,19 @@ const NerTable = (props) => {
       set.add(e.text);
     });
     if (s === '') {
-      props.udpateNerSearch(new Set());
+      props.udpateNerSearch([new Set(), null]);
     } else {
-      props.udpateNerSearch(set);
+      props.udpateNerSearch([set, s]);
     }
   };
 
   const onRowClick = (evt, row) => {
-    if (selectedRow === row.tableData.id) {
-      setSelectedRow(null);
-      props.setSelectedNode('');
+    if (selectedNerRow === row.tableData.id) {
+      setSelectedNerRow(null);
+      setSelectedNode(null);
     } else {
-      setSelectedRow(row.tableData.id);
-      props.setSelectedNode(row.text);
+      setSelectedNerRow(row.tableData.id);
+      setSelectedNode(row.text);
     }
   };
 
@@ -121,7 +133,8 @@ const NerTable = (props) => {
     filtering: true,
     search: true,
     rowStyle: (rowData) => ({
-      backgroundColor: selectedRow === rowData.tableData.id ? '#EEE' : '#FFF',
+      backgroundColor:
+        selectedNerRow === rowData.tableData.id ? '#EEE' : '#FFF',
     }),
   };
 
@@ -134,7 +147,7 @@ const NerTable = (props) => {
       tableRef={tableRef}
       onSearchChange={onSearchChange}
       onRowClick={onRowClick}
-      selectedRow={selectedRow}
+      selectedRow={selectedNerRow}
       onFilterChange={onFilterChange}
     />
   );

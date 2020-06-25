@@ -10,8 +10,10 @@ import * as serviceWorker from './serviceWorker';
 import App from './App';
 
 import Upload from './Upload.js';
-import About from './components/FrontPage/About'
-import Login from './components/Account/Login.js'
+import About from './components/FrontPage/About';
+import Login from './components/Account/Login.js';
+import CreateAcc from './components/Account/CreateAcc.js';
+import testLogin from './testLogin.js';
 
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -20,6 +22,7 @@ import { Provider } from 'react-redux';
 
 import reducers from './reducers';
 import rootSaga from './sagas';
+import jwt from 'jsonwebtoken';
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
@@ -29,27 +32,60 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 
+const secretKey = 'a very secret key';
+
+const authenticate = () => {
+  const userID = localStorage.getItem('userID') || '';
+  const userToken = localStorage.getItem('token') || '';
+  var cred = '';
+  if (userToken === '' || userID === '') {
+    alert('Please sign in');
+    return false;
+  } else {
+    try {
+      cred = jwt.verify(userToken, secretKey, { algorithms: ['HS256'] });
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+    if (userID === cred['user']) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+};
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const status = authenticate();
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        status === true ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/login?err=invalid" />
+        )
+      }
+    />
+  );
+};
+
 sagaMiddleware.run(rootSaga);
-
-// const uploading = store.getState().editstate.uploadingData;
-// const uploadStatus = store.getState().editstate.uploadStatus;
-
-// const PrivateRoute = ({...props }) =>
-//   redirect
-//     ? <Redirect to="/upload" />
-//     : <Route { ...props } />
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        {/* <PrivateRoute redirect={redirect} path="/dashboard" component={App} /> */}
         <Route path="/dashboard">
           <App />
         </Route>
-        <Route path = '/about' component = {About} />
+        <Route path="/about" component={About} />
         <Route path="/upload" component={Upload} />
         <Route path="/login" component={Login} />
+        <Route path="/create" component={CreateAcc} />
+        <PrivateRoute path="/test" component={testLogin} />
 
         <Redirect from="/" to="/upload" />
       </Switch>

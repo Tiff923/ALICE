@@ -8,7 +8,13 @@ import NerTable from './NerTable';
 import React from 'react';
 
 const EntityDisplay = (props) => {
-  const { data, setSelectedNode } = props;
+  const {
+    data,
+    setSelectedNode,
+    currentFileName,
+    selectedNerRow,
+    setSelectedNerRow,
+  } = props;
   const [isPieChart, setPCorTB] = useState(true);
 
   const handleToggle = (event) => {
@@ -48,7 +54,13 @@ const EntityDisplay = (props) => {
       {isPieChart ? (
         <NerPieChart data={data} />
       ) : (
-        <NerTable data={data} setSelectedNode={setSelectedNode} />
+        <NerTable
+          data={data}
+          setSelectedNode={setSelectedNode}
+          currentFileName={currentFileName}
+          selectedNerRow={selectedNerRow}
+          setSelectedNerRow={setSelectedNerRow}
+        />
       )}
     </>
   );

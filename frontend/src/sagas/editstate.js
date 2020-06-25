@@ -3,9 +3,10 @@ import { types, getNerData, getRelationData } from '../reducers/editstate';
 import { nercolors } from '../utils/colors';
 import $ from 'jquery';
 import axios from 'axios';
+import { initialLayout } from '../utils/layout';
+import { initialOverviewLayout } from '../utils/overviewLayout';
 
-export function* updateNetwork({ data }) {
-  // console.log(data, 'data');
+export function* updateNetwork({ data, currentFileName }) {
   const links = [];
   const links_template = {
     source: '',
@@ -22,19 +23,20 @@ export function* updateNetwork({ data }) {
     } else {
       temp['source'] = el['e1'];
       temp['target'] = el['e2'];
+      temp['relation'] = el['relation'];
     }
     var node_t = temp['target'];
     var node_t_label = node_t === el['e1'] ? el['e1_label'] : el['e2_label'];
     var node_s = temp['source'];
     var node_s_label = node_s === el['e2'] ? el['e2_label'] : el['e1_label'];
     if (node_t in nodes_temp) {
-      nodes_temp[node_t]['val'] += 4;
+      nodes_temp[node_t]['val'] += 2;
       nodes_temp[node_t]['neighbors'].add(node_s);
     } else {
       nodes_temp[node_t] = {
         id: node_t,
         name: node_t,
-        val: 4,
+        val: 2,
         color: nercolors[node_t_label],
         neighbors: new Set(node_s),
       };
@@ -61,118 +63,70 @@ export function* updateNetwork({ data }) {
   yield put({
     type: types.UPDATED_NETWORK_DATA,
     payload: { nodes: nodes, links: links },
+    currentFileName: currentFileName,
   });
 }
 
-export function* setSentiment({ data }) {
-  const { negativity, positivity, subjectivity } = data.sentiment;
-
+function* setCorpusData({ data }) {
   yield put({
-    type: types.UPLOADED_SENTIMENT_DATA,
-    payload: [
-      {
-        sentiment: 'sentiment',
-        positivity: positivity * 100,
-        negativity: negativity * 100,
-      },
-      {
-        sentiment: 'subjective',
-        subjectivity: subjectivity * 100,
-      },
-    ],
-  });
-}
-
-export function* setTopic({ data }) {
-  yield put({
-    type: types.UPLOADED_TOPIC_DATA,
-    payload: data.topics,
-  });
-}
-
-export function* setClassifier({ data }) {
-  yield put({
-    type: types.UPLOADED_CLASSIFIER_DATA,
-    payload: data.classify.classify,
-  });
-}
-
-export function* setNer({ data }) {
-  yield put({
-    type: types.UPLOADED_NER_DATA,
-    payload: data.ner,
-  });
-}
-
-export function* setSummary({ data }) {
-  yield put({
-    type: types.UPLOADED_SUMMARY_DATA,
-    payload: data.summary.summary,
-  });
-}
-
-export function* setRelationHelper({ data }) {
-  yield put({
-    type: types.UPLOADED_RELATION_DATA,
+    type: types.UPLOADED_CORPUS_DATA,
     payload: data,
   });
 }
 
-export function* setRelation({ data }) {
-  const args = { data: data.relation.relation };
-  yield all([call(setRelationHelper, args), call(updateNetwork, args)]);
-}
-
-export function* setKeyData({ data }) {
-  const num_words = data.ner.text.split(' ').length;
-  const topic_classifier = data.classify.classify;
-  const sentiment = data.sentiment.sentiment;
-  const legitimacy = 'Trusted';
+function* setFileNames({ data }) {
+  const fileNames = Object.keys(data);
   yield put({
-    type: types.UPLOADED_KEY_DATA,
-    payload: {
-      num_words: num_words,
-      topic_classifier: topic_classifier,
-      sentiment: sentiment,
-      legitimacy: legitimacy,
-    },
+    type: types.SET_FILENAMES,
+    payload: fileNames,
   });
-}
-
-export function* setWordCloud({ data }) {
-  const wordcloud = data.wordcloud;
+  var layouts = {};
+  if (fileNames.length > 1) {
+    fileNames
+      .filter((e) => e !== 'Overview')
+      .forEach((e) => (layouts[e] = initialLayout));
+    layouts['Overview'] = initialOverviewLayout;
+  } else {
+    layouts[fileNames[0]] = initialLayout;
+  }
   yield put({
-    type: types.UPLOADED_WORD_CLOUD,
-    payload: wordcloud,
+    type: types.CHANGE_LAYOUT,
+    payload: layouts,
   });
 }
 
 const apiPost = (payload) => {
-  if (payload[1] === 'STRING') {
-    return axios.post('http://0baa7e5aada7.ngrok.io/uploadText', {
-      data: payload[0],
-    });
-  } else if (payload[1] === 'TXT') {
-    var formData = new FormData();
-    formData.append('file', payload[0]);
-    return axios.post('http://0baa7e5aada7.ngrok.io/uploadFile', formData);
+  const formData = new FormData();
+  var fileNames = [];
+  for (var i = 0; i < payload.length; i++) {
+    formData.append('file'.concat(i.toString()), payload[i]);
+    fileNames.push(payload[i].name);
   }
+  fileNames = JSON.stringify(fileNames);
+  formData.append('fileNames', fileNames);
+  formData.append('length', payload.length);
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+  };
+  // return axios.post('https://2602f2f5cd25.ngrok.io/uploadFile', formData, {
+  //   headers: headers,
+  // });
+  return axios.post(
+    'https://blooming-peak-51391.herokuapp.com/https://2602f2f5cd25.ngrok.io/uploadFile',
+    formData,
+    {
+      headers: headers,
+    }
+  );
 };
 
 export function* uploadData({ payload }) {
   try {
     const res = yield call(apiPost, payload);
-    console.log(res.data);
+    console.log('DATA', res.data);
     const args = { data: res.data };
-    yield all([
-      call(setSentiment, args),
-      call(setTopic, args),
-      call(setWordCloud, args),
-      call(setSummary, args),
-      call(setRelation, args),
-      call(setNer, args),
-      call(setKeyData, args),
-    ]);
+    yield all([call(setCorpusData, args), call(setFileNames, args)]);
     yield put({
       type: types.UPLOAD_SUCCESS,
     });
@@ -185,11 +139,10 @@ export function* uploadData({ payload }) {
 }
 
 export function* updateNer({ payload }) {
-  const { newNer, nerToRelation } = payload;
-
-  const currentNerData = yield select(getNerData);
+  const { newNer, nerToRelation, currentFileName } = payload;
+  const currentNerData = yield select(getNerData, [currentFileName]);
   const text = currentNerData.text;
-  const currentRelationData = yield select(getRelationData);
+  const currentRelationData = yield select(getRelationData, currentFileName);
   var newRelationData;
   if (nerToRelation[3] === 'DELETE') {
     newRelationData = currentRelationData.filter((e) => {
@@ -215,20 +168,23 @@ export function* updateNer({ payload }) {
       text: text,
       ents: newNer,
     },
+    currentFileName: currentFileName,
   });
-  const args = { data: newRelationData };
+  const args = { data: newRelationData, currentFileName: currentFileName };
   yield all([call(updateRelationHelper, args), call(updateNetwork, args)]);
 }
 
-export function* updateRelationHelper({ data }) {
+export function* updateRelationHelper({ data, currentFileName }) {
   yield put({
     type: types.UPDATED_RELATION_DATA,
     payload: data,
+    currentFileName: currentFileName,
   });
 }
 
 export function* updateRelation({ payload }) {
-  const args = { data: payload };
+  const { newRelation, currentFileName } = payload;
+  const args = { data: newRelation, currentFileName: currentFileName };
   yield all([call(updateRelationHelper, args), call(updateNetwork, args)]);
 }
 

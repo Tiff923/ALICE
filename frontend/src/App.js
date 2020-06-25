@@ -1,25 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
-import clsx from 'clsx';
+import { Tab } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import './App.css';
-import { Nav, Tab, Navbar } from 'react-bootstrap';
-import Dashboard from './layouts/Dashboard/Dashboard';
-import NetworkDashboard from './layouts/NetworkDashboard/NetworkDashboard';
-import Settings from './layouts/Settings/Settings';
+
+import Header from './layouts/Header/Header';
+import DashboardNav from './components/DashboardNav/DashboardNav';
+import Dashboard from './components/Dashboard/Dashboard';
+import OverviewDashboard from './components/Dashboard/OverviewDashboard';
+import Settings from './components/Settings/Settings';
 import Loader from 'react-loader-spinner';
-import { MdDashboard, MdSettings } from 'react-icons/md';
-import { GiMeshNetwork } from 'react-icons/gi';
+
 import {
-  getNerData,
-  getRelationData,
-  getNetworkData,
-  getSentimentData,
-  getTopicData,
   getNerSearch,
-  getKeyData,
-  getSummaryData,
-  getWordCloud,
+  getFileNames,
+  getCorpusData,
   getUploadStatus,
   isUploadingData,
   getFileStatus,
@@ -28,34 +23,10 @@ import {
   getLayout,
 } from './reducers/editstate';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { RiMenu3Line } from 'react-icons/ri';
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-
-const useStyles = makeStyles({
-  list: {
-    height: '100vh',
-    width: 250,
-    backgroundColor: '#f5f5f5',
-  },
-});
-
 const App = (props) => {
   const {
-    nerData,
-    relationData,
-    sentimentData,
-    networkData,
-    topicData,
-    summaryData,
-    keyData,
-    wordCloud,
+    corpusData,
+    fileNames,
     nerSearch,
     uploadStatus,
     isUploading,
@@ -66,28 +37,18 @@ const App = (props) => {
   } = props;
 
   const [isLoading, setIsLoading] = useState(false);
+  const [key, setKey] = useState('Dashboard');
+  const [currentFileName, setCurrentFileName] = useState('Overview');
 
-  const [key, setKey] = useState('dashboard');
-  const handleSelect = (eventKey) => {
-    setKey(eventKey);
-  };
+  useEffect(() => {
+    var title = fileNames.length > 1 ? 'Overview' : fileNames[0];
+    setCurrentFileName(title);
+  }, [fileNames]);
 
-  const classes = useStyles();
-  const [open, toggleDrawer] = useState(false);
-  const handleDrawerToggle = () => {
-    toggleDrawer(!open);
-  };
-
-  const checkStatus = () => {
-    if (fileStatus === false && uploadStatus !== 'SUCCESS') {
-      console.log('Redirecting');
-      return <Redirect to="/upload?x=file" />;
-    }
-  };
-
-  return isUploading || uploadStatus !== 'SUCCESS' ? (
+  return fileStatus === false && uploadStatus !== 'SUCCESS' ? (
+    <Redirect to="/upload?x=file" />
+  ) : isUploading || uploadStatus !== 'SUCCESS' ? (
     <div className="loader-container">
-      {checkStatus()}
       <Loader type="Grid" color="#00BFFF" height={100} width={100} />
     </div>
   ) : (
@@ -98,144 +59,53 @@ const App = (props) => {
         </div>
       ) : null}
       <Tab.Container activeKey={key}>
-        <Navbar bg="light" expand="lg" className="navbar-alice">
-          <div className="navbar-alice sticky">
-            <Navbar.Brand className="navbrand-alice">
-              <Link to="/">
-                <img
-                  src="/logo.png"
-                  width="60"
-                  className="d-inline-block align-top"
-                  alt="React Bootstrap logo"
-                />
-              </Link>
-            </Navbar.Brand>
-            <div className="navbar-drawer">
-              <Button onClick={handleDrawerToggle}>
-                <RiMenu3Line size={35} />
-              </Button>
-              <Drawer anchor={'left'} open={open} onClose={handleDrawerToggle}>
-                <div
-                  className={clsx(classes.list)}
-                  onClick={() => toggleDrawer(false)}
-                  onKeyDown={() => toggleDrawer(false)}
-                >
-                  <List>
-                    <div className="navbar-drawer-logo">
-                      <img
-                        src="/logo.png"
-                        width="200"
-                        className="d-inline-block align-top"
-                        alt="React Bootstrap logo"
-                      />
-                    </div>
-                    <Divider />
-                    {[
-                      {
-                        text: 'Dashboard',
-                        key: 'dashboard',
-                        icon: <MdDashboard size={28} color="black" />,
-                      },
-                      {
-                        text: 'Network',
-                        key: 'network',
-                        icon: <GiMeshNetwork size={28} color="black" />,
-                      },
-                      {
-                        text: 'Settings',
-                        key: 'settings',
-                        icon: <MdSettings size={28} color="black" />,
-                      },
-                    ].map((el, index) => (
-                      <ListItem
-                        button
-                        key={el.key}
-                        onClick={() => handleSelect(el.key)}
-                        // selected={true}
-                        className={clsx(classes.selected_item)}
-                      >
-                        <ListItemIcon>{el.icon}</ListItemIcon>
-                        <ListItemText
-                          primary={el.text}
-                          style={{ color: 'black' }}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </div>
-              </Drawer>
-            </div>
-
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav
-                variant="pills"
-                fill={true}
-                navbar={true}
-                className="sidebar"
-                onSelect={handleSelect}
-                role="tablist"
-              >
-                <Nav.Item>
-                  <Nav.Link
-                    style={{ padding: '1rem 1rem' }}
-                    eventKey="dashboard"
-                  >
-                    <MdDashboard size={28} />
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link style={{ padding: '1rem 1rem' }} eventKey="network">
-                    <GiMeshNetwork size={28} />
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link
-                    style={{ padding: '1rem 1rem' }}
-                    eventKey="settings"
-                    href="#settings"
-                  >
-                    <MdSettings size={28} />
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </Navbar.Collapse>
-          </div>
-        </Navbar>
-
+        <DashboardNav setKey={setKey} />
         <Tab.Content className="main-panel">
-          <div className="header">{key}</div>
-          <Tab.Pane eventKey="dashboard" className="main-panel">
-            <Dashboard
-              nerData={nerData}
-              relationData={relationData}
-              sentimentData={sentimentData}
-              networkData={networkData}
-              topicData={topicData}
-              summaryData={summaryData}
-              wordCloud={wordCloud}
-              keyData={keyData}
-              nerSearch={nerSearch}
-              layout={layout}
-              changeLayout={changeLayout}
-            />
+          <Header
+            currentKey={key}
+            fileNames={fileNames}
+            currentFileName={currentFileName}
+            setCurrentFileName={setCurrentFileName}
+          />
+
+          <Tab.Pane eventKey="Dashboard" className="main-panel">
+            {currentFileName === 'Overview' ? (
+              <OverviewDashboard
+                nerData={corpusData['Overview'].ner}
+                relationData={corpusData[currentFileName].relation}
+                networkData={corpusData['Overview'].network}
+                sentimentData={corpusData['Overview'].sentiment}
+                topicData={corpusData['Overview'].topics}
+                wordCloud={corpusData['Overview'].wordcloud}
+                keyData={corpusData['Overview'].keyData}
+                clusterData={corpusData['Overview'].cluster}
+                layout={layout['Overview']}
+                changeLayout={changeLayout}
+                currentFileName={currentFileName}
+                setCurrentFileName={setCurrentFileName}
+              />
+            ) : (
+              <Dashboard
+                nerData={corpusData[currentFileName].ner}
+                relationData={corpusData[currentFileName].relation}
+                networkData={corpusData[currentFileName].network}
+                sentimentData={corpusData[currentFileName].sentiment}
+                topicData={corpusData[currentFileName].topics}
+                summaryData={corpusData[currentFileName].summary}
+                wordCloud={corpusData[currentFileName].wordcloud}
+                keyData={corpusData[currentFileName].keyData}
+                nerSearch={nerSearch}
+                layout={layout[currentFileName]}
+                changeLayout={changeLayout}
+                currentFileName={currentFileName}
+              />
+            )}
           </Tab.Pane>
-          <Tab.Pane eventKey="network" className="main-panel">
-            <NetworkDashboard
-              relationData={relationData}
-              networkData={networkData}
-            />
-          </Tab.Pane>
-          <Tab.Pane eventKey="settings" className="main-panel">
+          <Tab.Pane eventKey="Settings" className="main-panel">
             <Settings
+              corpus={corpusData}
+              layout={layout}
               setIsLoading={setIsLoading}
-              nerData={nerData}
-              relationData={relationData}
-              sentimentData={sentimentData}
-              networkData={networkData}
-              topicData={topicData}
-              summaryData={summaryData}
-              wordCloud={wordCloud}
-              keyData={keyData}
               saveConfig={saveConfig}
             />
           </Tab.Pane>
@@ -246,19 +116,13 @@ const App = (props) => {
 };
 
 const mapStateToProps = (store) => ({
-  nerData: getNerData(store),
-  relationData: getRelationData(store),
-  networkData: getNetworkData(store),
-  sentimentData: getSentimentData(store),
-  summaryData: getSummaryData(store),
-  keyData: getKeyData(store),
-  wordCloud: getWordCloud(store),
-  topicData: getTopicData(store),
   nerSearch: getNerSearch(store),
   layout: getLayout(store),
   fileStatus: getFileStatus(store),
   uploadStatus: getUploadStatus(store),
   isUploading: isUploadingData(store),
+  corpusData: getCorpusData(store),
+  fileNames: getFileNames(store),
 });
 
 const mapDispatchToProps = (dispatch) => ({

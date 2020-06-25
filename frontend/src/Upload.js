@@ -2,48 +2,54 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './upload.css';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Progress from './components/Progress/Progress';
 import { uploadingData, resetState } from './reducers/editstate';
-import Header from './components/Header/Header.js'
+import Header from './components/Header/Header.js';
 
 const Upload = (props) => {
-  const [file, setFile] = useState(null);
-  const [text, setText] = useState('');
+  const [file, setFile] = useState([]);
   const { resetState } = props;
 
   useEffect(() => {
     resetState();
   }, [resetState]);
 
-  const handleOnChangeFile = (event) => {
-    var file = event.target.files[0];
-    setFile(file);
+  const checkMimeType = (event) => {
+    let files = event.target.files;
+    var err = '';
+
+    const fileTypes = ['text/plain', 'application/pdf'];
+
+    for (var x = 0; x < files.length; x++) {
+      var file = files[x];
+      if (!fileTypes.includes(file.type)) {
+        err = file.type + 'is not a supported format. Only use txt and pdf';
+        alert(err);
+        return false;
+      }
+    }
+    return true;
   };
-  const handleOnChangeText = (event) => {
-    setText(String(event.target.value));
+
+  const handleOnChangeFile = (event) => {
+    var files = event.target.files;
+    if (checkMimeType(event)) {
+      setFile(files);
+    }
   };
 
   const onClickHandler = () => {
-    if (text !== '') {
-      props.uploadingData([text, 'STRING']);
-      props.history.push('/dashboard');
-    } else if (file !== null) {
-      props.uploadingData([file, 'TXT']);
+    if (file !== null) {
+      props.uploadingData(file);
       props.history.push('/dashboard');
     } else {
       alert('error');
     }
   };
 
-  const newLoad = () => {
-    props.resetFile();
-  };
-
   return (
     <div className="upload-container">
-      {newLoad}
-      <Header></Header>
       <div className="logo-container">
         <img src="./logo.png" width="400" alt="A.L.I.C.E. logo" />
       </div>
@@ -52,25 +58,13 @@ const Upload = (props) => {
         <input
           type="file"
           className="form-control"
-          multiple=""
+          multiple={true}
           onChange={handleOnChangeFile}
         ></input>
       </div>
-      <form noValidate autoComplete="on">
-        <TextField
-          id="text-input"
-          variant="outlined"
-          label="Or Copy your text here"
-          // margin="auto"
-          fullWidth={true}
-          multiline={true}
-          rowsMax={15}
-          onChange={handleOnChangeText}
-        />
-      </form>
       <div className="upload-button">
         <Button variant="contained" color="primary" onClick={onClickHandler}>
-          Upload
+          <span>Upload</span>
         </Button>
       </div>
     </div>

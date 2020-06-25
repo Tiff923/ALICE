@@ -1,7 +1,7 @@
 import re
 import unicodedata
 from bs4 import BeautifulSoup
-from AliceBackEnd.NER.contractions import CONTRACTION_MAP
+from contractions import CONTRACTION_MAP
 import spacy
 import nltk
 import textract

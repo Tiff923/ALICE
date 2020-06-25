@@ -1,0 +1,12 @@
+.header-text {
+  font-weight: 800;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(203, 203, 210, 0.15);
+  padding: 20px;
+}

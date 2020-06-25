@@ -1,124 +1,138 @@
 .container {
-    max-width: 960px;
-  }
+  max-width: 960px;
+}
 
-  .wholeThing {
-    background-color: #151934;
-  }
-  
-  /*
+.wholeThing {
+  background-color: #151934;
+}
+
+.main-text {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.alice-name {
+  max-width: 100%;
+  max-height: 100%;
+  margin-bottom: 20px;
+}
+
+/*
    * Custom translucent site header
    */
-  
-  .site-header {
-    background-color: rgba(0, 0, 0, .85);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-    height:53px;
-  }
-  .site-header a {
-    color: #999;
-    transition: ease-in-out color .15s;
-  }
-  .site-header a:hover {
-    color: #fff;
-    text-decoration: none;
-  }
 
-  .background-image{
-    background-image: url('../../aboutImage.png');
-    background-size: contain;
-    height:720px;
-    margin:0;
-    background-attachment: fixed;
-    padding-top:120px;
-    padding-left:40px;
-    padding-right:40px;
-    text-align:center;
-   }
+.site-header {
+  background-color: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  height: 53px;
+}
+.site-header a {
+  color: #999;
+  transition: ease-in-out color 0.15s;
+}
+.site-header a:hover {
+  color: #fff;
+  text-decoration: none;
+}
 
-   #HeaderDescription {
-       font-size:15px
-   }
+.background-image {
+  background-image: url('../../images/aboutImage.png');
+  background-size: contain;
+  /* height: 720px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 120px 40px;
+  margin: 0;
+  background-attachment: fixed;
+  /* padding-top: 120px; */
+  /* padding-left: 40px; */
+  /* padding-right: 40px; */
+  text-align: center;
+}
 
-   .sticky-top-1 {
-       top:53px;
-       height:100px;
-       background-color: #151934;
-       color:#FFFFFF
-   }
+#HeaderDescription {
+  font-size: 15px;
+}
 
+.sticky-top-1 {
+  top: 70px;
+  height: 100px;
+  background-color: #151934;
+  color: #ffffff;
+}
 
-   .sticky-top-2 {
-       height:100px;
-       top:53px;
-       background-color: #151934;
-       color: #FFFFFF;
-   }
-   #FeaturesText:hover{
-       transform: scale(1.15)
-   }
-  
-  /*
+.sticky-top-2 {
+  height: 100px;
+  top: 53px;
+  background-color: #151934;
+  color: #ffffff;
+}
+#FeaturesText:hover {
+  transform: scale(1.15);
+}
+
+/*
    * Dummy devices (replace them with your own or something else entirely!)
    */
 
-  .product-device::before {
-    position: absolute;
-    top: 10%;
-    right: 10px;
-    bottom: 10%;
-    left: 10px;
-    content: "";
-    background-color: rgba(255, 255, 255, .1);
-    border-radius: 5px;
-  }
-  
-  .product-device-2 {
-    top: -25%;
-    right: auto;
-    bottom: 0;
-    left: 5%;
-    background-color: #e5e5e5;
-  }
-  
-  
-  /*
+.product-device::before {
+  position: absolute;
+  top: 10%;
+  right: 10px;
+  bottom: 10%;
+  left: 10px;
+  content: '';
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+
+.product-device-2 {
+  top: -25%;
+  right: auto;
+  bottom: 0;
+  left: 5%;
+  background-color: #e5e5e5;
+}
+
+/*
    * Extra utilities
    */
-  
-  .flex-equal > * {
+
+.flex-equal > * {
+  -ms-flex: 1;
+  flex: 1;
+}
+@media (min-width: 768px) {
+  .flex-md-equal > * {
     -ms-flex: 1;
     flex: 1;
   }
-  @media (min-width: 768px) {
-    .flex-md-equal > * {
-      -ms-flex: 1;
-      flex: 1;
-    }
-  }
+}
 
-  .alignleft {
-    float: left;
-  }
+.alignleft {
+  float: left;
+}
 
-  .alignright {
-    float: right;
-    max-width: 300px;
-    min-width: 300px;
-  }
+.alignright {
+  float: right;
+  max-width: 300px;
+  min-width: 300px;
+}
 
-  .container {
-    display: flex;
-    max-width: 1500px
-  }
+.container {
+  display: flex;
+  max-width: 1500px;
+}
 
-  .container > div {
-    flex: 1; /*grow*/
-  }
+.container > div {
+  flex: 1; /*grow*/
+}
 
-  .benefitsImage{
-    height: 600px;
-    width: 100%;
-  }
-
+.benefitsImage {
+  height: 600px;
+  width: 100%;
+}

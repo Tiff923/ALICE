@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import './networkgraph.css';
 import { ForceGraph3D } from 'react-force-graph';
 import SpriteText from 'three-spritetext';
@@ -12,37 +6,70 @@ import $ from 'jquery';
 // var three = window.THREE ? window.THREE : require('three');
 
 const ThreeDGraph = (props) => {
-  const { width, height, data, selectedNode, selectedLink } = props;
+  const {
+    width,
+    height,
+    data,
+    selectedNode,
+    selectedLink,
+    highlightNodes,
+    setHighlightNodes,
+    highlightLinks,
+    setHighlightLinks,
+    hoverObject,
+    setHoverObject,
+    showRelationorEntity,
+    setShow,
+    linkDistance,
+    chargeStrength,
+  } = props;
   const fgRef3D = useRef(null);
-  console.log(data);
-
-  const [highlightNodes, setHighlightNodes] = useState(new Set());
-  const [highlightLinks, setHighlightLinks] = useState(new Set());
-  const [hoverObject, setHoverObject] = useState([null, null, null]);
-  const [showRelationorEntity, setShow] = useState('');
 
   useEffect(() => {
-    fgRef3D.current.d3Force('link').distance(100);
-    fgRef3D.current.d3Force('charge').strength(-50);
-  }, []);
+    // if (fgRef3D) {
+    //   fgRef3D.current.d3ReheatSimulation();
+    // }
+    fgRef3D.current.d3Force('link').distance(linkDistance ? linkDistance : 500);
+  }, [linkDistance]);
+
+  useEffect(() => {
+    // if (fgRef3D) {
+    //   fgRef3D.current.d3ReheatSimulation();
+    // }
+    fgRef3D.current
+      .d3Force('charge')
+      .strength(chargeStrength ? chargeStrength : -200);
+  }, [chargeStrength]);
 
   const highlightNode = (node) => {
-    var nodeArr = [];
-    node.neighbors.forEach((neighbor) => nodeArr.push(neighbor));
-    nodeArr.push(node.id);
-    setHighlightNodes(new Set(nodeArr));
-    var linkArr = data['links'].filter((link) => {
-      return link.source.id === node.id || link.target.id === node.id;
-    });
-    setHighlightLinks(new Set(linkArr));
+    if (node) {
+      var nodeArr = [];
+      node.neighbors.forEach((neighbor) => nodeArr.push(neighbor));
+      nodeArr.push(node.id);
+      setHighlightNodes(new Set(nodeArr));
+      var linkArr = data['links'].filter((link) => {
+        return link.source.id === node.id || link.target.id === node.id;
+      });
+      setHighlightLinks(new Set(linkArr));
+    } else {
+      setHighlightNodes(new Set());
+      setHighlightLinks(new Set());
+      setShow('');
+    }
   };
 
   const highlightLink = (link) => {
-    setHighlightLinks(new Set([link]));
-    var nodeArr = [];
-    nodeArr.push(link.source.id);
-    nodeArr.push(link.target.id);
-    setHighlightNodes(new Set(nodeArr));
+    if (link) {
+      setHighlightLinks(new Set([link]));
+      var nodeArr = [];
+      nodeArr.push(link.source.id);
+      nodeArr.push(link.target.id);
+      setHighlightNodes(new Set(nodeArr));
+    } else {
+      setHighlightNodes(new Set());
+      setHighlightLinks(new Set());
+      setShow('');
+    }
   };
 
   useEffect(() => {
@@ -130,6 +157,18 @@ const ThreeDGraph = (props) => {
     if (link) {
       highlightLink(link);
       newHoverObject[2] = link;
+    } else if (showRelationorEntity === 'NODE') {
+      var newNode = data.nodes.find(({ id }) => id === hoverObject[0]);
+      newHoverObject[2] = null;
+      highlightNode(newNode);
+    } else if (showRelationorEntity === 'LINK') {
+      var newLink = data.links.find(({ source, target }) => {
+        return (
+          source.id === selectedLink.source && target.id === selectedLink.target
+        );
+      });
+      newHoverObject[2] = null;
+      highlightLink(newLink);
     } else {
       setHighlightNodes(new Set());
       setHighlightLinks(new Set());
@@ -162,6 +201,11 @@ const ThreeDGraph = (props) => {
         width={width}
         backgroundColor={'#f5f5f5'}
         graphData={data}
+        onNodeDragEnd={(node) => {
+          node.fx = node.x;
+          node.fy = node.y;
+          node.fz = node.z;
+        }}
         nodeOpacity={0.9}
         nodeColor={(node) =>
           highlightNodes.has(node.id)
@@ -171,37 +215,31 @@ const ThreeDGraph = (props) => {
             : node.color
         }
         nodeThreeObject={(node) => {
-          const sprite = new SpriteText(node.id);
+          const sprite = new SpriteText(node.name);
           sprite.color = node.color;
           sprite.textHeight = 8;
           sprite.position.y = -node.val;
           return sprite;
         }}
         nodeThreeObjectExtend={true}
-        linkWidth={(link) => (highlightLinks.has(link) ? 5 : 1)}
-        linkDirectionalParticles={4}
-        linkDirectionalParticleWidth={(link) =>
-          highlightLinks.has(link) ? 4 : 0
-        }
-        linkDirectionalParticles={(link) => (highlightLinks.has(link) ? 2 : 0)}
-        linkDirectionalParticleWidth={4}
-        linkThreeObjectExtend={true}
-        linkThreeObject={(link) => {
-          const sprite = new SpriteText(
-            `${link.source.id} > ${link.target.id}`
-          );
-          sprite.color = 'black';
-          sprite.textHeight = 3;
-          return sprite;
-        }}
-        linkPositionUpdate={(sprite, { start, end }) => {
-          const middlePos = Object.assign(
-            ...['x', 'y', 'z'].map((c) => ({
-              [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
-            }))
-          );
-          Object.assign(sprite.position, middlePos);
-        }}
+        linkWidth={(link) => (highlightLinks.has(link) ? 5 : 2)}
+        // linkThreeObjectExtend={true}
+        // linkThreeObject={(link) => {
+        //   const sprite = new SpriteText(
+        //     `${link.source.name} > ${link.target.name}`
+        //   );
+        //   sprite.color = 'black';
+        //   sprite.textHeight = 3;
+        //   return sprite;
+        // }}
+        // linkPositionUpdate={(sprite, { start, end }) => {
+        //   const middlePos = Object.assign(
+        //     ...['x', 'y', 'z'].map((c) => ({
+        //       [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
+        //     }))
+        //   );
+        //   Object.assign(sprite.position, middlePos);
+        // }}
         onNodeClick={handleClick}
         onNodeHover={onNodeHover}
         onLinkHover={onLinkHover}
@@ -210,34 +248,46 @@ const ThreeDGraph = (props) => {
         (hoverObject[2] && typeof hoverObject[2] === 'string' ? (
           <div className="object-details">
             <div>
-              <b>id</b>: {hoverObject[2]}
+              <b>Entity</b>:{' '}
+              {hoverObject[2].indexOf('_') === -1
+                ? hoverObject[2]
+                : hoverObject[2].slice(0, hoverObject[2].indexOf('_'))}
             </div>
           </div>
         ) : hoverObject[2] && typeof hoverObject[2] === 'object' ? (
           <div className="object-details">
             <div>
-              <b>Source</b>: {hoverObject[2].source.id}
+              <b>Source</b>: {hoverObject[2].source.name}
             </div>
             <div>
-              <b>Target</b>: {hoverObject[2].target.id}
+              <b>Target</b>: {hoverObject[2].target.name}
+            </div>
+            <div>
+              <b>Relation</b>: {hoverObject[2].relation}
             </div>
           </div>
-        ) : showRelationorEntity === 'NODE' ? (
+        ) : hoverObject[0] && showRelationorEntity === 'NODE' ? (
           <div className="object-details">
             <div>
-              <b>id</b>: {hoverObject[0]}
+              <b>Entity</b>:{' '}
+              {hoverObject[0].indexOf('_') === -1
+                ? hoverObject[0]
+                : hoverObject[0].slice(0, hoverObject[0].indexOf('_'))}
             </div>
           </div>
-        ) : (
+        ) : hoverObject[1] && showRelationorEntity === 'LINK' ? (
           <div className="object-details">
             <div>
-              <b>Source</b>: {hoverObject[1].source.id}
+              <b>Source</b>: {hoverObject[1].source.name}
             </div>
             <div>
-              <b>Target</b>: {hoverObject[1].target.id}
+              <b>Target</b>: {hoverObject[1].target.name}
+            </div>
+            <div>
+              <b>Relation</b>: {hoverObject[1].relation}
             </div>
           </div>
-        ))}
+        ) : null)}
     </>
   );
 };

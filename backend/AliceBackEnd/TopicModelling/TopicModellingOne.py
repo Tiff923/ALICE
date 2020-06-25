@@ -2,7 +2,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.decomposition import NMF
 import random
 
-def topic_modelling(documents,no_topics,no_top_words):
+
+def topic_modelling(documents, no_topics, no_top_words):
     no_features = 1000
 
     # NMF is able to use tf-idf
@@ -16,40 +17,39 @@ def topic_modelling(documents,no_topics,no_top_words):
     list_of_topics = []
     for topic_idx, topic in enumerate(nmf.components_):
         words_of_topic = " ".join([tfidf_feature_names[i]
-                            for i in topic.argsort()[:-no_top_words - 1:-1]])
+                                   for i in topic.argsort()[:-no_top_words - 1:-1]])
         list_of_topics.append(words_of_topic)
-    
+
     topics_words = []
     for topics in list_of_topics:
         words = topics.split()
         topics_words.append(words)
 
     outJson = {
-    'name': 'Topics', 
-    'color': "hsl(13, 70%, 50%)", 
-    'children': []
+        'name': 'Topics',
+        'color': "hsl(13, 70%, 50%)",
+        'children': []
     }
 
     t = 0
     for topic in topics_words:
         t = t + 1
         topic_vis = {
-                    "name": f"Topic{t}",
+            "name": f"Topic{t}",
                     "color": "hsl(50, 70%, 50%)",
                     "children": []
-                    }
+        }
 
         for word in topic:
             loc = random.randint(5000, 100000)
             word_vis = {
-                        "name": word,
-                        "color": "hsl(196, 70%, 50%)",
-                        "loc": loc
-                        }
+                "name": word,
+                "color": "hsl(196, 70%, 50%)",
+                "loc": loc
+            }
             topic_vis['children'].append(word_vis)
         outJson['children'].append(topic_vis)
     return outJson
-    
-    
+
     # returnJson = {"topics": list_of_topics}
     # return returnJson

@@ -1,8 +1,11 @@
 import React from 'react';
 import { nercolors } from '../../utils/colors';
+import Highlighter from 'react-highlight-words';
 
 const Taggy = (props) => {
   const { spans, text, nerSearch } = props;
+  const entitySearch = nerSearch[0];
+  const nonEntitySearch = nerSearch[1];
   // Initialize an empty array that will hold the text and entities
   let jsx = [];
 
@@ -55,7 +58,14 @@ const Taggy = (props) => {
   // Loop through our 'elements' array. Push strings directly to the 'jsx' array. Convert entity objects to jsx markup, then push to the 'jsx' array.}
   elements.forEach((t) => {
     if (typeof t === 'string') {
-      jsx.push(t);
+      jsx.push(
+        <Highlighter
+          highlightStyle={{ background: 'yellow' }}
+          searchWords={[nonEntitySearch]}
+          autoEscape={true}
+          textToHighlight={t}
+        />
+      );
     } else {
       var category = t.type;
       var token = t.token;
@@ -68,18 +78,16 @@ const Taggy = (props) => {
             display: 'inline-block',
             borderRadius: '0.25em',
             border: '1px solid',
-            background:
-              nerSearch.size === 0
-                ? `${nercolors[category]}90`
-                : nerSearch.has(token)
-                ? 'yellow'
-                : 'grey',
-            borderColor:
-              nerSearch.size === 0
-                ? `${nercolors[category]}`
-                : nerSearch.has(token)
-                ? 'yellow'
-                : 'grey',
+            background: !nonEntitySearch
+              ? `${nercolors[category]}90`
+              : entitySearch.has(token)
+              ? 'yellow'
+              : 'grey',
+            borderColor: !nonEntitySearch
+              ? `${nercolors[category]}`
+              : entitySearch.has(token)
+              ? 'yellow'
+              : 'grey',
             id: token,
           }}
         >
@@ -95,12 +103,11 @@ const Taggy = (props) => {
               display: 'inline-block',
               verticalAlign: 'middle',
               margin: '0px 0px 0.1rem 0.5rem',
-              background:
-                nerSearch.size === 0
-                  ? `${nercolors[category]}`
-                  : nerSearch.has(token)
-                  ? 'yellow'
-                  : 'grey',
+              background: !nonEntitySearch
+                ? `${nercolors[category]}`
+                : entitySearch.has(token)
+                ? 'yellow'
+                : 'grey',
             }}
           >
             {category}
@@ -114,7 +121,7 @@ const Taggy = (props) => {
   return (
     <div
       style={{
-        backgroundColor: nerSearch.size === 0 ? null : 'rgb(0,0,0,0.5)',
+        backgroundColor: nonEntitySearch ? 'rgb(0,0,0,0.5)' : null,
       }}
     >
       {jsx.map((j, i) => {

@@ -3,6 +3,24 @@ body,
 #root,
 .App {
   height: 100%;
+  /* font-family: 'Poppins', sans-serif; */
+}
+
+@font-face {
+  font-family: 'Nexa';
+  font-weight: 300;
+  src: local('Nexa'), url(./fonts/Nexa_Light_300.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Nexa';
+  font-weight: 600;
+  src: local('Nexa'), url(./fonts/Nexa_Bold_600.otf) format('opentype');
+}
+
+.alice {
+  font-family: 'Nexa';
+  font-weight: 600;
 }
 
 html {
@@ -54,37 +72,9 @@ html {
   width: 100%;
 }
 
-.header {
-  background: rgba(203, 203, 210, 0.15);
-  padding: 20px;
-  font-weight: 800;
-}
-
-.sticky {
-  position: sticky;
-  top: 0;
-}
-
 .sidebar {
   display: flex;
   flex-direction: column !important;
-}
-
-.navbar-alice {
-  display: flex;
-  flex-direction: column;
-}
-
-.navbrand-alice {
-  margin-right: 0;
-  padding-bottom: 20px;
-  border-bottom: 1px solid grey;
-}
-
-#basic-navbar-nav {
-  width: 50px;
-  align-items: flex-start !important;
-  margin-top: 20px;
 }
 
 .sidebar,
@@ -98,54 +88,8 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-.nav-item {
-  flex: none !important;
-}
-
-.drawer-container {
-  width: 250px;
-  background-color: '#3358f4';
-}
-
-.drawer-text {
-  color: white;
-}
-
-.navbar-drawer {
-  display: none;
-}
-
-.navbar-drawer-logo {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
 /* Changes for small display */
 @media (max-width: 991px) {
-  .navbar-drawer {
-    display: block;
-  }
-
-  .navbar-alice {
-    flex-direction: row;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 99;
-  }
-
-  .navbrand-alice {
-    padding-bottom: none;
-    border-bottom: none;
-  }
-
-  .sticky {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-
   .wrapper {
     flex-direction: column;
   }

@@ -1,39 +1,78 @@
 import React, { useState } from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import TwoDGraph from './TwoDGraph';
 import ThreeDGraph from './ThreeDGraph';
+import NetworkGraphHeader from './NetworkGraphHeader';
 
 const NetworkGraph = (props) => {
-  const { height, width, data, selectedNode, selectedLink } = props;
-  const [is3D, set2Dor3D] = useState(true);
+  const {
+    height,
+    width,
+    data,
+    selectedNode,
+    selectedLink,
+    isFullScreen,
+    handleFullScreen,
+    handleNetworkToggle,
+    is2D,
+    linkDistance,
+    setLinkDistance,
+    chargeStrength,
+    setChargeStrength,
+  } = props;
+  const [highlightNodes, setHighlightNodes] = useState(new Set());
+  const [highlightLinks, setHighlightLinks] = useState(new Set());
+  const [hoverObject, setHoverObject] = useState([
+    selectedNode,
+    selectedLink,
+    null,
+  ]);
+  const [showRelationorEntity, setShow] = useState('');
 
-  const handleToggle = (event) => {
-    set2Dor3D(!is3D);
-  };
   return (
     <div className="network-graph-container">
-      <FormControlLabel
-        label="3D"
-        control={
-          <Switch color="primary" checked={!is3D} onChange={handleToggle} />
-        }
+      <NetworkGraphHeader
+        is2D={is2D}
+        isFullScreen={isFullScreen}
+        handleFullScreen={handleFullScreen}
+        handleNetworkToggle={handleNetworkToggle}
+        linkDistance={linkDistance}
+        setLinkDistance={setLinkDistance}
+        chargeStrength={chargeStrength}
+        setChargeStrength={setChargeStrength}
       />
-      {!is3D ? (
-        <ThreeDGraph
-          height={height}
-          width={width}
-          data={data}
-          selectedNode={selectedNode}
-          selectedLink={selectedLink}
-        />
-      ) : (
+      {is2D ? (
         <TwoDGraph
           height={height}
           width={width}
           data={data}
           selectedNode={selectedNode}
           selectedLink={selectedLink}
+          highlightNodes={highlightNodes}
+          setHighlightNodes={setHighlightNodes}
+          highlightLinks={highlightLinks}
+          setHighlightLinks={setHighlightLinks}
+          hoverObject={hoverObject}
+          setHoverObject={setHoverObject}
+          showRelationorEntity={showRelationorEntity}
+          setShow={setShow}
+          linkDistance={linkDistance}
+          chargeStrength={chargeStrength}
+        />
+      ) : (
+        <ThreeDGraph
+          height={height}
+          width={width}
+          data={data}
+          selectedNode={selectedNode}
+          selectedLink={selectedLink}
+          highlightNodes={highlightNodes}
+          setHighlightNodes={setHighlightNodes}
+          highlightLinks={highlightLinks}
+          setHighlightLinks={setHighlightLinks}
+          hoverObject={hoverObject}
+          setHoverObject={setHoverObject}
+          showRelationorEntity={showRelationorEntity}
+          setShow={setShow}
         />
       )}
     </div>
