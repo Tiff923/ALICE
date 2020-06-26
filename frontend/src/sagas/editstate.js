@@ -112,13 +112,9 @@ const apiPost = (payload) => {
   // return axios.post('https://2602f2f5cd25.ngrok.io/uploadFile', formData, {
   //   headers: headers,
   // });
-  return axios.post(
-    'https://blooming-peak-51391.herokuapp.com/https://a5d995de4d5a.ngrok.io/uploadFile',
-    formData,
-    {
-      headers: headers,
-    }
-  );
+  return axios.post('http://backend:5000/uploadFile', formData, {
+    headers: headers,
+  });
 };
 
 export function* uploadData({ payload }) {

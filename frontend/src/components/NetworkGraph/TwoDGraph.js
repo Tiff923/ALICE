@@ -25,12 +25,12 @@ const TwoDGraph = (props) => {
 
   useEffect(() => {
     fgRef2D.current.d3Force('link').distance(linkDistance);
-    fgRef2D.current.d3ReheatSimulation();
+    // fgRef2D.current.d3ReheatSimulation();
   }, [linkDistance]);
 
   useEffect(() => {
     fgRef2D.current.d3Force('charge').strength(chargeStrength);
-    fgRef2D.current.d3ReheatSimulation();
+    // fgRef2D.current.d3ReheatSimulation();
   }, [chargeStrength]);
 
   const highlightNode = (node) => {

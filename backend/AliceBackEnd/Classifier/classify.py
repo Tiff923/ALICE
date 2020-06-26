@@ -108,7 +108,7 @@ def multi_final_class(data):
                           './tech_selector.pickle']
 
     classes = []
-    keys = {0: 'health', 1: 'crime', 2: 'terrorism', 3: 'finance', 4: 'politics', 5: 'tech'}
+    keys = {0: 'Health', 1: 'Crime', 2: 'Terrorism', 3: 'Finance', 4: 'Politics', 5: 'Tech'}
     for i in range(6):
         key = keys[i]
         prediction = classify_one_category(model_path_list[i], vectorizer_path_list[i], selector_path_list[i], data)
