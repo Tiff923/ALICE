@@ -145,7 +145,7 @@ def receiveFile():
             print('Unknown error in'+fileName)
     if length > 1:
         returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, fileNames)
-    print('RESULT', returnJson)
+    print('RESULT', json.dumps(returnJson))
     returnJson = jsonify(returnJson)
     return returnJson
 
