@@ -49,6 +49,8 @@ const NetworkGraphHeader = (props) => {
     setLinkDistance,
     chargeStrength,
     setChargeStrength,
+    cooldownTicks,
+    handleFreeze,
   } = props;
   return (
     <>
@@ -70,6 +72,16 @@ const NetworkGraphHeader = (props) => {
               color="primary"
               checked={isFullScreen}
               onChange={handleFullScreen}
+            />
+          }
+        />
+        <FormControlLabel
+          label="Freeze"
+          control={
+            <Switch
+              color="primary"
+              checked={cooldownTicks === 0}
+              onChange={handleFreeze}
             />
           }
         />

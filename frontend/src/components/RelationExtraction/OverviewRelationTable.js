@@ -7,7 +7,6 @@ import { updateRelation } from '../../reducers/editstate';
 const OverviewRelationTable = (props) => {
   const {
     data,
-    currentFileName,
     setSelectedLink,
     selectedRelationRow,
     setSelectedRelationRow,

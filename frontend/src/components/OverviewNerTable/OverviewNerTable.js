@@ -38,6 +38,7 @@ const OverviewNerTable = (props) => {
         return {
           source: link.source.id,
           target: link.target.id,
+          relation: link.relation,
         };
       });
     var newNodes = [];

@@ -39,9 +39,9 @@ const OverviewDashboard = (props) => {
   const [is2D, set2Dor3D] = useState(true);
   const [linkDistance, setLinkDistance] = useState(500);
   const [chargeStrength, setChargeStrength] = useState(-200);
+  const [cooldownTicks, setCooldownTicks] = useState(undefined);
   const [isFullScreen, setFullScreen] = useState(false);
   const [networkData, setNetworkData] = useState(props.networkData);
-
   const wordCloudURL = 'data:image/png;base64,' + wordCloud;
 
   useEffect(() => {
@@ -65,6 +65,14 @@ const OverviewDashboard = (props) => {
     set2Dor3D(!is2D);
   };
 
+  const handleFreeze = (event) => {
+    if (cooldownTicks === 0) {
+      setCooldownTicks(undefined);
+    } else {
+      setCooldownTicks(0);
+    }
+  };
+
   if (isFullScreen) {
     return (
       <SizeMe monitorHeight>
@@ -76,7 +84,7 @@ const OverviewDashboard = (props) => {
             >
               <VisualCard
                 title="Network Graph"
-                category="Relationship between Entities"
+                category={`${networkData.nodes.length} Nodes, ${networkData.links.length} Links`}
                 content={
                   <NetworkGraph
                     height={size.height * 0.8}
@@ -93,6 +101,8 @@ const OverviewDashboard = (props) => {
                     setLinkDistance={setLinkDistance}
                     chargeStrength={chargeStrength}
                     setChargeStrength={setChargeStrength}
+                    cooldownTicks={cooldownTicks}
+                    handleFreeze={handleFreeze}
                   />
                 }
               />
@@ -144,7 +154,9 @@ const OverviewDashboard = (props) => {
           <StatsCard
             bigIcon={<FaDatabase color="#1dc7ea" />}
             statsText="Classification"
-            statsValue={keyData.topic_classifier}
+            statsValue={keyData.topic_classifier.map((e) => (
+              <p key={e}>{e}</p>
+            ))}
           />
         </div>
 
@@ -272,7 +284,6 @@ const OverviewDashboard = (props) => {
               <div style={{ width: '100%', overflowX: 'hidden' }}>
                 <OverviewRelationTable
                   data={relationData}
-                  currentFileName={currentFileName}
                   setSelectedLink={setSelectedLink}
                   selectedRelationRow={selectedRelationRow}
                   setSelectedRelationRow={setSelectedRelationRow}
@@ -289,7 +300,7 @@ const OverviewDashboard = (props) => {
               return (
                 <VisualCard
                   title="Network Graph"
-                  category="Relationship between Entities"
+                  category={`${networkData.nodes.length} Nodes, ${networkData.links.length} Links`}
                   content={
                     <NetworkGraph
                       height={size.height ? size.height * 0.75 : 0}
@@ -306,6 +317,8 @@ const OverviewDashboard = (props) => {
                       setLinkDistance={setLinkDistance}
                       chargeStrength={chargeStrength}
                       setChargeStrength={setChargeStrength}
+                      cooldownTicks={cooldownTicks}
+                      handleFreeze={handleFreeze}
                     />
                   }
                 />

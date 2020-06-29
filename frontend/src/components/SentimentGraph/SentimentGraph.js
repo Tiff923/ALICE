@@ -9,7 +9,7 @@ const barGraphProps = {
   maxValue: 100,
   enableGridX: true,
   enableGridY: false,
-  label: (d) => Math.abs(d.value),
+  label: (d) => Math.abs(d.value.toFixed(2)),
   labelTextColor: 'inherit:darker(1.2)',
   axisTop: {
     tickSize: 0,
@@ -59,7 +59,7 @@ const SentimentGraph = ({ data /* see data tab */ }) => (
     margin={{ top: 50, right: 40, bottom: 70, left: 0 }}
     padding={0.3}
     colors={['#97e3d5', '#f47560', 'hsl(49, 70%, 50%)']}
-    labelFormat={(v) => `${v}%`}
+    labelFormat={(v) => `${v.toFixed(2)}%`}
     legends={[
       {
         dataFrom: 'keys',
@@ -87,6 +87,9 @@ const SentimentGraph = ({ data /* see data tab */ }) => (
     animate={true}
     motionStiffness={90}
     motionDamping={15}
+    tooltip={({ id, value, color }) => (
+      <strong style={{ color }}>{`${value.toFixed(2)}%`}</strong>
+    )}
   />
 );
 

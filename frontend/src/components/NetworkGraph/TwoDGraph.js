@@ -20,17 +20,18 @@ const TwoDGraph = (props) => {
     setShow,
     linkDistance,
     chargeStrength,
+    cooldownTicks,
   } = props;
   const fgRef2D = useRef(null);
 
   useEffect(() => {
     fgRef2D.current.d3Force('link').distance(linkDistance);
-    // fgRef2D.current.d3ReheatSimulation();
+    fgRef2D.current.d3ReheatSimulation();
   }, [linkDistance]);
 
   useEffect(() => {
     fgRef2D.current.d3Force('charge').strength(chargeStrength);
-    // fgRef2D.current.d3ReheatSimulation();
+    fgRef2D.current.d3ReheatSimulation();
   }, [chargeStrength]);
 
   const highlightNode = (node) => {
@@ -178,6 +179,8 @@ const TwoDGraph = (props) => {
         width={width}
         backgroundColor={'#f5f5f5'}
         graphData={data}
+        cooldownTicks={cooldownTicks}
+        // onEngineStop={() => setCooldownTicks(0)}
         onNodeDragEnd={(node) => {
           node.fx = node.x;
           node.fy = node.y;

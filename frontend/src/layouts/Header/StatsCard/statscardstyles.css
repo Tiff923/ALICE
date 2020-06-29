@@ -23,7 +23,7 @@
 }
 
 .stats {
-  font-size: 1.7em;
+  font-size: 1.2em;
   text-align: right;
 }
 
@@ -31,6 +31,11 @@
   margin: 0;
   font-size: 16px;
   line-height: 1.5;
+}
+
+.stats span {
+  font-size: 1.2em;
+  text-align: right;
 }
 
 .card-subcontent {

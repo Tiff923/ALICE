@@ -23,6 +23,7 @@ const updateNetwork = (data) => {
     } else {
       temp['source'] = el['e1'];
       temp['target'] = el['e2'];
+      temp['relation'] = el['relation'];
     }
     var node_t = temp['target'];
     var node_t_label = node_t === el['e1'] ? el['e1_label'] : el['e2_label'];

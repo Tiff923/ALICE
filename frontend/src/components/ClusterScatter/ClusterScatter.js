@@ -56,7 +56,7 @@ const ClusterScatter = (props) => {
 
   var annotations = [];
   var i = 0;
-  var annotations_fn = data.forEach((cluster, index) => {
+  data.forEach((cluster, index) => {
     cluster['data'].forEach((point, loc) => {
       annotations.push({
         type: 'circle',

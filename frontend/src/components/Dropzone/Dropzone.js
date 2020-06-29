@@ -1,88 +1,45 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Dropzone.css';
+import { FaCloudUploadAlt } from 'react-icons/fa';
+import Dropzone from 'react-dropzone';
 
-class Dropzone extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { hightlight: false };
-    this.fileInputRef = React.createRef();
+const DropzoneContainer = (props) => {
+  return (
+    <Dropzone
+      onDrop={(acceptedFiles) =>
+        props.setFiles([...props.files, ...acceptedFiles])
+      }
+      accept="application/pdf,text/plain"
+    >
+      {({
+        getRootProps,
+        getInputProps,
+        isDragAccept,
+        isDragActive,
+        isDragReject,
+      }) => {
+        const acceptClass = isDragAccept ? 'acceptStyle' : '';
+        const rejectClass = isDragReject ? 'rejectStyle' : '';
+        const activeClass = isDragActive ? 'activeStyle' : '';
+        return (
+          <div
+            {...getRootProps({
+              className: `dropzone ${acceptClass} ${rejectClass} ${activeClass}`,
+            })}
+          >
+            <input {...getInputProps()} />
+            <FaCloudUploadAlt size={60} color="#2ea591" />
+            {isDragAccept && <span>All files will be accepted</span>}
+            {isDragReject && <span>Some files will be rejected</span>}
+            {!isDragActive && <span>Drop some files here!</span>}
+            <div className="footnote-text">
+              <span>Only .pdf and .txt files accepted</span>
+            </div>
+          </div>
+        );
+      }}
+    </Dropzone>
+  );
+};
 
-    this.openFileDialog = this.openFileDialog.bind(this);
-    this.onFilesAdded = this.onFilesAdded.bind(this);
-    this.onDragOver = this.onDragOver.bind(this);
-    this.onDragLeave = this.onDragLeave.bind(this);
-    this.onDrop = this.onDrop.bind(this);
-  }
-
-  openFileDialog() {
-    if (this.props.disabled) return;
-    this.fileInputRef.current.click();
-  }
-
-  onFilesAdded(evt) {
-    if (this.props.disabled) return;
-    const files = evt.target.files;
-    if (this.props.onFilesAdded) {
-      const array = this.fileListToArray(files);
-      this.props.onFilesAdded(array);
-    }
-  }
-
-  onDragOver(event) {
-    event.preventDefault();
-    if (this.props.disabed) return;
-    this.setState({ hightlight: true });
-  }
-
-  onDragLeave(event) {
-    this.setState({ hightlight: false });
-  }
-
-  onDrop(event) {
-    event.preventDefault();
-    if (this.props.disabed) return;
-    const files = event.dataTransfer.files;
-    if (this.props.onFilesAdded) {
-      const array = this.fileListToArray(files);
-      this.props.onFilesAdded(array);
-    }
-    this.setState({ hightlight: false });
-  }
-
-  fileListToArray(list) {
-    const array = [];
-    for (var i = 0; i < list.length; i++) {
-      array.push(list.item(i));
-    }
-    return array;
-  }
-
-  render() {
-    return (
-      <div
-        className={`Dropzone ${this.state.hightlight ? 'Highlight' : ''}`}
-        onDragOver={this.onDragOver}
-        onDragLeave={this.onDragLeave}
-        onDrop={this.onDrop}
-        onClick={this.openFileDialog}
-        style={{ cursor: this.props.disabled ? 'default' : 'pointer' }}
-      >
-        <input
-          ref={this.fileInputRef}
-          className="FileInput"
-          type="file"
-          multiple
-          onChange={this.onFilesAdded}
-        />
-        <img
-          alt="upload"
-          className="Icon"
-          src="baseline-cloud_upload-24px.svg"
-        />
-        <span>Upload Files</span>
-      </div>
-    );
-  }
-}
-
-export default Dropzone;
+export default DropzoneContainer;

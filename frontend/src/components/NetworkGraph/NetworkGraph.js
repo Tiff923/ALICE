@@ -18,6 +18,8 @@ const NetworkGraph = (props) => {
     setLinkDistance,
     chargeStrength,
     setChargeStrength,
+    cooldownTicks,
+    handleFreeze,
   } = props;
   const [highlightNodes, setHighlightNodes] = useState(new Set());
   const [highlightLinks, setHighlightLinks] = useState(new Set());
@@ -39,6 +41,8 @@ const NetworkGraph = (props) => {
         setLinkDistance={setLinkDistance}
         chargeStrength={chargeStrength}
         setChargeStrength={setChargeStrength}
+        cooldownTicks={cooldownTicks}
+        handleFreeze={handleFreeze}
       />
       {is2D ? (
         <TwoDGraph
@@ -57,6 +61,7 @@ const NetworkGraph = (props) => {
           setShow={setShow}
           linkDistance={linkDistance}
           chargeStrength={chargeStrength}
+          cooldownTicks={cooldownTicks}
         />
       ) : (
         <ThreeDGraph
@@ -73,6 +78,9 @@ const NetworkGraph = (props) => {
           setHoverObject={setHoverObject}
           showRelationorEntity={showRelationorEntity}
           setShow={setShow}
+          linkDistance={linkDistance}
+          chargeStrength={chargeStrength}
+          cooldownTicks={cooldownTicks}
         />
       )}
     </div>

@@ -22,6 +22,7 @@ const ThreeDGraph = (props) => {
     setShow,
     linkDistance,
     chargeStrength,
+    cooldownTicks,
   } = props;
   const fgRef3D = useRef(null);
 
@@ -29,16 +30,16 @@ const ThreeDGraph = (props) => {
     // if (fgRef3D) {
     //   fgRef3D.current.d3ReheatSimulation();
     // }
-    fgRef3D.current.d3Force('link').distance(linkDistance ? linkDistance : 500);
+    fgRef3D.current.d3Force('link').distance(linkDistance);
+    fgRef3D.current.d3ReheatSimulation();
   }, [linkDistance]);
 
   useEffect(() => {
     // if (fgRef3D) {
     //   fgRef3D.current.d3ReheatSimulation();
     // }
-    fgRef3D.current
-      .d3Force('charge')
-      .strength(chargeStrength ? chargeStrength : -200);
+    fgRef3D.current.d3Force('charge').strength(chargeStrength);
+    fgRef3D.current.d3ReheatSimulation();
   }, [chargeStrength]);
 
   const highlightNode = (node) => {
@@ -201,6 +202,7 @@ const ThreeDGraph = (props) => {
         width={width}
         backgroundColor={'#f5f5f5'}
         graphData={data}
+        // cooldownTicks={cooldownTicks}
         onNodeDragEnd={(node) => {
           node.fx = node.x;
           node.fy = node.y;

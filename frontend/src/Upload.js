@@ -2,71 +2,105 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './upload.css';
+import { Row, Col } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
-import Progress from './components/Progress/Progress';
 import { uploadingData, resetState } from './reducers/editstate';
-import Header from './components/Header/Header.js';
+import Divider from '@material-ui/core/Divider';
+import { GrDocumentPdf, GrDocumentTxt } from 'react-icons/gr';
+import { TiDeleteOutline } from 'react-icons/ti';
+import DropzoneContainer from './components/Dropzone/Dropzone';
+import FrontPageHeader from './components/FrontPageHeader/FrontPageHeader';
 
 const Upload = (props) => {
-  const [file, setFile] = useState([]);
+  const [files, setFiles] = useState([]);
   const { resetState } = props;
 
   useEffect(() => {
     resetState();
   }, [resetState]);
 
-  const checkMimeType = (event) => {
-    let files = event.target.files;
-    var err = '';
-
-    const fileTypes = ['text/plain', 'application/pdf'];
-
-    for (var x = 0; x < files.length; x++) {
-      var file = files[x];
-      if (!fileTypes.includes(file.type)) {
-        err = file.type + 'is not a supported format. Only use txt and pdf';
-        alert(err);
-        return false;
-      }
-    }
-    return true;
-  };
-
-  const handleOnChangeFile = (event) => {
-    var files = event.target.files;
-    if (checkMimeType(event)) {
-      setFile(files);
-    }
+  const deleteFile = (event) => {
+    setFiles(files.filter((_, i) => i !== event));
   };
 
   const onClickHandler = () => {
-    if (file !== null) {
-      props.uploadingData(file);
+    if (files !== null) {
+      props.uploadingData(files);
       props.history.push('/dashboard');
     } else {
       alert('error');
     }
   };
 
+  console.log('Accepted', files);
   return (
     <div className="upload-container">
-      <div className="logo-container">
-        <img src="./logo.png" width="400" alt="A.L.I.C.E. logo" />
-      </div>
-      <div className="form-group files">
-        <label>Upload Your '.txt' File </label>
-        <input
-          type="file"
-          className="form-control"
-          multiple={true}
-          onChange={handleOnChangeFile}
-        ></input>
-      </div>
-      <div className="upload-button">
-        <Button variant="contained" color="primary" onClick={onClickHandler}>
-          <span>Upload</span>
-        </Button>
-      </div>
+      <FrontPageHeader />
+      <Row className="upload-row" lg={2} md={2} sm={1} xs={1}>
+        <Col className="upload-column" lg={5} md={5} sm={12} xs={12}>
+          <DropzoneContainer files={files} setFiles={setFiles} />
+
+          <div className="upload-button">
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: 'rgb(23, 42, 69)',
+              }}
+              onClick={onClickHandler}
+            >
+              <span>Process Files</span>
+            </Button>
+          </div>
+        </Col>
+
+        <Col className="upload-column" lg={7} md={7} sm={12} xs={12}>
+          <div className="uploaded-files">
+            <div className="uploaded-files-header">
+              <h2>Uploaded Files</h2>
+              <div className="uploaded-files-subheader">
+                <span>{files.length} Files</span>
+                <span>
+                  {(
+                    files.reduce((acc, e) => acc + e.size, 0.0) / 1000000
+                  ).toFixed(2)}{' '}
+                  MB
+                </span>
+              </div>
+            </div>
+            <Divider className="divider" />
+
+            {files.map((file, index) => {
+              return (
+                <div className="uploaded-file-container" key={index}>
+                  <div className="uploaded-file">
+                    {file.name.substring(
+                      file.name.lastIndexOf('.') + 1,
+                      file.name.length
+                    ) === 'pdf' ? (
+                      <GrDocumentPdf size={40} />
+                    ) : (
+                      <GrDocumentTxt size={40} />
+                    )}
+                    <div className="uplaoded-file-details">
+                      <span>File Name: {file.name}</span>
+                      <span>
+                        File Size: {(file.size / 1000000).toFixed(2)}MB
+                      </span>
+                    </div>
+                  </div>
+                  <div className="delete-uploaded-file">
+                    <TiDeleteOutline
+                      size={30}
+                      color="red"
+                      onClick={() => deleteFile(index)}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 };

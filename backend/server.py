@@ -242,7 +242,7 @@ def runAlice(text):
     print("Sending to NER")
     nerJson = postNerRequest(text)
     ner = nerJson['ner']
-    passToRelation = ner['passToRelation']
+    passToRelation = ner.pop('passToRelation')
     print("Receive from NER")
 
     # Relation
