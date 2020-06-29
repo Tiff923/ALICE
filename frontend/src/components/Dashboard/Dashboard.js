@@ -87,8 +87,8 @@ const Dashboard = (props) => {
                 category={`${networkData.nodes.length} Nodes, ${networkData.links.length} Links`}
                 content={
                   <NetworkGraph
-                    height={size.height * 0.8}
-                    width={size.width - 30}
+                    height={size.height ? size.height * 0.9 : 0}
+                    width={size.width ? size.width - 30 : 0}
                     data={networkData}
                     selectedNode={selectedNode}
                     selectedLink={selectedLink}
@@ -287,35 +287,36 @@ const Dashboard = (props) => {
           />
         </div>
         <div key="network-graph">
-          {/* <SizeMe monitorHeight>
+          <SizeMe monitorHeight>
             {({ size }) => {
-              return ( */}
-          <VisualCard
-            title="Network Graph"
-            category={`${networkData.nodes.length} Nodes, ${networkData.links.length} Links`}
-            content={
-              <NetworkGraph
-                height={800}
-                width={800}
-                data={networkData}
-                selectedNode={selectedNode}
-                selectedLink={selectedLink}
-                currentFileName={currentFileName}
-                isFullScreen={isFullScreen}
-                handleFullScreen={handleFullScreen}
-                is2D={is2D}
-                handleNetworkToggle={handleNetworkToggle}
-                linkDistance={linkDistance}
-                setLinkDistance={setLinkDistance}
-                chargeStrength={chargeStrength}
-                setChargeStrength={setChargeStrength}
-                cooldownTicks={cooldownTicks}
-                handleFreeze={handleFreeze}
-              />
-            }
-          />
-          {/* ); }} */}
-          {/* /</SizeMe> */}
+              return (
+                <VisualCard
+                  title="Network Graph"
+                  category={`${networkData.nodes.length} Nodes, ${networkData.links.length} Links`}
+                  content={
+                    <NetworkGraph
+                      height={size.height ? size.height * 0.75 : 0}
+                      width={size.width ? size.width - 30 : 0}
+                      data={networkData}
+                      selectedNode={selectedNode}
+                      selectedLink={selectedLink}
+                      currentFileName={currentFileName}
+                      isFullScreen={isFullScreen}
+                      handleFullScreen={handleFullScreen}
+                      is2D={is2D}
+                      handleNetworkToggle={handleNetworkToggle}
+                      linkDistance={linkDistance}
+                      setLinkDistance={setLinkDistance}
+                      chargeStrength={chargeStrength}
+                      setChargeStrength={setChargeStrength}
+                      cooldownTicks={cooldownTicks}
+                      handleFreeze={handleFreeze}
+                    />
+                  }
+                />
+              );
+            }}
+          </SizeMe>
         </div>
       </ResponsiveGridLayout>
     );

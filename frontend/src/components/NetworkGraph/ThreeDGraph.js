@@ -31,7 +31,7 @@ const ThreeDGraph = (props) => {
     //   fgRef3D.current.d3ReheatSimulation();
     // }
     fgRef3D.current.d3Force('link').distance(linkDistance);
-    fgRef3D.current.d3ReheatSimulation();
+    // fgRef3D.current.d3ReheatSimulation();
   }, [linkDistance]);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const ThreeDGraph = (props) => {
     //   fgRef3D.current.d3ReheatSimulation();
     // }
     fgRef3D.current.d3Force('charge').strength(chargeStrength);
-    fgRef3D.current.d3ReheatSimulation();
+    // fgRef3D.current.d3ReheatSimulation();
   }, [chargeStrength]);
 
   const highlightNode = (node) => {

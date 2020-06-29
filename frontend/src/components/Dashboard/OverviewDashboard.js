@@ -87,8 +87,8 @@ const OverviewDashboard = (props) => {
                 category={`${networkData.nodes.length} Nodes, ${networkData.links.length} Links`}
                 content={
                   <NetworkGraph
-                    height={size.height * 0.8}
-                    width={size.width - 30}
+                    height={size.height ? size.height * 0.9 : 0}
+                    width={size.width ? size.width - 30 : 0}
                     data={networkData}
                     selectedNode={selectedNode}
                     selectedLink={selectedLink}
