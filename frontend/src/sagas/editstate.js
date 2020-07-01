@@ -109,9 +109,6 @@ const apiPost = (payload) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
-  // return axios.post('https://2602f2f5cd25.ngrok.io/uploadFile', formData, {
-  //   headers: headers,
-  // });
   return axios.post('http://backend:5000/uploadFile', formData, {
     headers: headers,
   });

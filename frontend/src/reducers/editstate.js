@@ -1,5 +1,5 @@
 import data from './data.json';
-// import memoirData from './memoir.json';
+import memoirData from './memoir.json';
 import { initialLayout } from '../utils/layout';
 import { initialOverviewLayout } from '../utils/overviewLayout';
 

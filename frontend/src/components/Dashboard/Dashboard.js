@@ -130,7 +130,7 @@ const Dashboard = (props) => {
           <StatsCard
             bigIcon={<MdDescription color="#ff9500" />}
             statsText="Word count"
-            statsValue={keyData.num_words}
+            statsValue={<span>{keyData.num_words}</span>}
           />
         </div>
 
@@ -138,7 +138,7 @@ const Dashboard = (props) => {
           <StatsCard
             bigIcon={<MdTagFaces color="#87cb16" />}
             statsText="Sentiment"
-            statsValue={keyData.sentiment}
+            statsValue={<span>{keyData.sentiment}</span>}
           />
         </div>
 
@@ -146,7 +146,7 @@ const Dashboard = (props) => {
           <StatsCard
             bigIcon={<MdCenterFocusStrong color="#ff4a55" />}
             statsText="Legitimacy"
-            statsValue={keyData.legitimacy}
+            statsValue={<span>{keyData.legitimacy}</span>}
           />
         </div>
 
@@ -154,7 +154,7 @@ const Dashboard = (props) => {
           <StatsCard
             bigIcon={<FaDatabase color="#1dc7ea" />}
             statsText="Classification"
-            statsValue={keyData.topic_classifier}
+            statsValue={keyData.topic_classifier.join(', ')}
           />
         </div>
         <div key="summary">

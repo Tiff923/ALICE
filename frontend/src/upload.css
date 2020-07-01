@@ -7,7 +7,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 110px 20px 10px 20px;
-  background-color: rgb(10, 25, 47);
+  background-color: #151934;
 }
 
 .upload-row {
@@ -87,4 +87,5 @@
 
 .delete-uploaded-file:hover {
   opacity: 0.5;
+  cursor: pointer;
 }

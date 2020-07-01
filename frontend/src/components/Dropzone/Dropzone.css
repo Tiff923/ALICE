@@ -12,18 +12,23 @@
   font-size: 16px;
 }
 
+.dropzone span {
+  text-align: center;
+}
+
 .activeStyle {
   border-color: #2196f3;
 }
 
 .acceptStyle {
-  border-color: #00e676;
+  border: 3px dashed #00e676;
 }
 
 .rejectStyle {
-  border-color: #ff1744;
+  border: 3px dashed #ff1744;
 }
 
 .footnote-text {
   font-size: 10px;
+  text-align: center;
 }

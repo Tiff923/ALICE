@@ -6,10 +6,30 @@ import { Row, Col } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import { uploadingData, resetState } from './reducers/editstate';
 import Divider from '@material-ui/core/Divider';
-import { GrDocumentPdf, GrDocumentTxt } from 'react-icons/gr';
 import { TiDeleteOutline } from 'react-icons/ti';
 import DropzoneContainer from './components/Dropzone/Dropzone';
 import FrontPageHeader from './components/FrontPageHeader/FrontPageHeader';
+import { css, ThemeProvider } from 'styled-components';
+import { base, DocumentPdf, DocumentTxt } from 'grommet-icons';
+import { deepMerge } from 'grommet-icons/utils';
+
+const customColorTheme = deepMerge(base, {
+  global: {
+    colors: {
+      icons: '#333333',
+    },
+  },
+  icon: {
+    extend: css`
+      ${(props) =>
+        props.color === 'brand' &&
+        `
+      fill: #64FFDA;
+      stroke: #64FFDA;
+    `}
+    `,
+  },
+});
 
 const Upload = (props) => {
   const [files, setFiles] = useState([]);
@@ -24,11 +44,11 @@ const Upload = (props) => {
   };
 
   const onClickHandler = () => {
-    if (files !== null) {
+    if (files.length !== 0) {
       props.uploadingData(files);
       props.history.push('/dashboard');
     } else {
-      alert('error');
+      alert('No files uploaded');
     }
   };
 
@@ -73,14 +93,16 @@ const Upload = (props) => {
               return (
                 <div className="uploaded-file-container" key={index}>
                   <div className="uploaded-file">
-                    {file.name.substring(
-                      file.name.lastIndexOf('.') + 1,
-                      file.name.length
-                    ) === 'pdf' ? (
-                      <GrDocumentPdf size={40} />
-                    ) : (
-                      <GrDocumentTxt size={40} />
-                    )}
+                    <ThemeProvider theme={customColorTheme}>
+                      {file.name.substring(
+                        file.name.lastIndexOf('.') + 1,
+                        file.name.length
+                      ) === 'pdf' ? (
+                        <DocumentPdf color="brand" />
+                      ) : (
+                        <DocumentTxt color="brand" />
+                      )}
+                    </ThemeProvider>
                     <div className="uplaoded-file-details">
                       <span>File Name: {file.name}</span>
                       <span>

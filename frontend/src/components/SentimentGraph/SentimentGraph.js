@@ -12,11 +12,12 @@ const barGraphProps = {
   label: (d) => Math.abs(d.value.toFixed(2)),
   labelTextColor: 'inherit:darker(1.2)',
   axisTop: {
+    format: (d) => (d === 'sentiment' ? 'Positive' : 'Objective'),
     tickSize: 0,
     tickPadding: 12,
   },
   axisBottom: {
-    // legend: 'Sentiments',
+    format: (d) => (d === 'sentiment' ? 'Negative' : 'Subjective'),
     legendPosition: 'middle',
     legendOffset: 50,
     tickSize: 0,
@@ -30,19 +31,6 @@ const barGraphProps = {
     {
       axis: 'y',
       value: 0,
-      lineStyle: { strokeOpacity: 0 },
-      textStyle: { fill: '#2ebca6' },
-      legend: 'positive',
-      legendPosition: 'top-left',
-      legendOrientation: 'vertical',
-      legendOffsetY: 120,
-    },
-    {
-      axis: 'y',
-      value: 0,
-      lineStyle: { stroke: '#f47560', strokeWidth: 1 },
-      textStyle: { fill: '#e25c3b' },
-      legend: 'negative',
       legendPosition: 'bottom-left',
       legendOrientation: 'vertical',
       legendOffsetY: 120,
@@ -88,7 +76,7 @@ const SentimentGraph = ({ data /* see data tab */ }) => (
     motionStiffness={90}
     motionDamping={15}
     tooltip={({ id, value, color }) => (
-      <strong style={{ color }}>{`${value.toFixed(2)}%`}</strong>
+      <strong style={{ color }}>{`${id}: ${value.toFixed(2)}%`}</strong>
     )}
   />
 );

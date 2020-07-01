@@ -14,7 +14,7 @@ const StatsCard = (props) => {
           <Col xs={7}>
             <div className="stats">
               <p>{props.statsText}</p>
-              <span>{props.statsValue}</span>
+              {props.statsValue}
             </div>
           </Col>
         </Row>
