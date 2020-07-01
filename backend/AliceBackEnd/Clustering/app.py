@@ -20,7 +20,9 @@ def run():
 def getDEMCluster():
     data = request.json
     corpus = data["corpus"]
+    print('corpus-cluster', corpus, flush=True)
     fileNames = data["fileNames"]
+    print('filenames-cluster', fileNames, flush=True)
     topic_every_cluster, datapoint, centroidpoint, labels = algorithm(corpus)
     returnJson = {'clusterData': {"topic_all_cluster": topic_every_cluster, "dataPoints": datapoint.tolist(),
                                   "centroidPoints": centroidpoint.tolist(), "labels": labels, "fileNames": fileNames}}
@@ -46,6 +48,7 @@ def doc2vec(test_corpus):
 
 def optimal_k(test_doc2vec):
     n = len(test_doc2vec)
+    print(f"Clustering n is {n}", flush=True)
     if n == 2:
         return 2, None
     else:

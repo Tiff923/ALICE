@@ -94,10 +94,12 @@ export const types = {
 
   UPLOADED_CORPUS_DATA: 'UPLOADED_CORPUS_DATA',
   SET_FILENAMES: 'SET_FILENAMES',
+  SET_LAYOUT: 'SET_LAYOUT',
+  CHANGE_LAYOUT: 'CHANGE_LAYOUT',
 
   SEARCH_NER: 'SEARCH_NER',
   SAVE_CONFIG: 'SAVE_CONFIG',
-  CHANGE_LAYOUT: 'CHANGE_LAYOUT',
+  SET_EXISTING_DOCUMENT: 'SET_EXISTING_DOCUMENT',
 };
 
 // Reducers
@@ -192,6 +194,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         aliceID: action.payload,
       };
+    case types.SET_LAYOUT:
+      return {
+        ...state,
+        layout: action.payload,
+      };
     case types.CHANGE_LAYOUT:
       return {
         ...state,
@@ -199,6 +206,14 @@ export default function reducer(state = initialState, action) {
           ...state.layout,
           [action.fileName]: action.layouts,
         },
+      };
+    case types.SET_EXISTING_DOCUMENT:
+      console.log("Action Payload: ", action.payload)
+      return {
+        ...state,
+        corpusData: action.payload.corpusData,
+        fileNames: action.payload.fileNames,
+        layout: action.payload.layout,
       };
     default:
       return state;
@@ -283,7 +298,7 @@ export function getUploadStatus(store) {
 }
 
 export function isUploadingData(store) {
-  return store.editstate.isUploadingData;
+  return store.editstate.uploadingData;
 }
 
 export function getLayout(store) {

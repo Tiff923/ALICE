@@ -89,3 +89,34 @@
   opacity: 0.5;
   cursor: pointer;
 }
+
+.existing-section {
+  width: 100%;
+  height: 100%;
+  color: rgb(168, 178, 209);
+}
+
+.existing-section h2 {
+  margin-left: 14px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.or-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 50px 20px;
+}
+
+.or-section .orDivider {
+  width: calc(50% - 20px);
+  background-color: rgb(168, 178, 209);
+}
+
+.or-section span {
+  margin: 0px 20px;
+  color: rgb(168, 178, 209);
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+}

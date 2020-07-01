@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import OverviewDashboard from './components/Dashboard/OverviewDashboard';
 import Settings from './components/Settings/Settings';
 import Loader from 'react-loader-spinner';
+import ErrorPage from './ErrorPage';
 
 import {
   getNerSearch,
@@ -36,6 +37,7 @@ const App = (props) => {
     layout,
   } = props;
 
+  console.log('cd', corpusData);
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState('Dashboard');
   const [currentFileName, setCurrentFileName] = useState('Overview');
@@ -47,7 +49,9 @@ const App = (props) => {
 
   return fileStatus === false && uploadStatus !== 'SUCCESS' ? (
     <Redirect to="/upload?x=file" />
-  ) : isUploading || uploadStatus !== 'SUCCESS' ? (
+  ) : uploadStatus === 'FAILURE' ? (
+    <ErrorPage />
+  ) : isUploading && uploadStatus !== 'SUCCESS' ? (
     <div className="loader-container">
       <Loader type="Grid" color="#00BFFF" height={100} width={100} />
     </div>
@@ -103,6 +107,7 @@ const App = (props) => {
           </Tab.Pane>
           <Tab.Pane eventKey="Settings" className="main-panel">
             <Settings
+              fileNames={fileNames}
               corpus={corpusData}
               layout={layout}
               setIsLoading={setIsLoading}

@@ -30,12 +30,15 @@ const CreateAcc = (props) => {
     } else {
       const creatorToken = localStorage.getItem('token');
       axios
-        .post('http://localhost:5000/create', {
-          username: username,
-          password: password,
-          role: Role,
-          creator: creatorToken,
-        })
+        .post(
+          'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/create',
+          {
+            username: username,
+            password: password,
+            role: Role,
+            creator: creatorToken,
+          }
+        )
         .then((res) => {
           const data = res.data;
           if (data === 'success') {

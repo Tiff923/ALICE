@@ -11,13 +11,14 @@ import pdfplumber
 import chardet
 import re
 import datetime
+from bson import ObjectId
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['MONGO_URI'] = 'mongodb+srv://alice_guest:aliceandjarvis@alice-onmay.mongodb.net/Alice_Corpus?retryWrites=true&w=majority'
 app.config['SECRET_KEY'] = "a very secret key"
 mongo = PyMongo(app)
-print("server started")
+print("server started", flush=True)
 
 
 @app.route("/")
@@ -82,9 +83,25 @@ def createAcc():
         return "error"
 
 
+@app.route("/getFromDB", methods=["POST"])
+def dbRetrieval():
+    print("Retrieving from Database", flush=True)
+    try:
+        data = request.json
+        id = data["ID"]
+        objectID = ObjectId(id)
+        print(f"Object ID: {objectID}", flush=True)
+        data = mongo.db.Documents.find_one({"_id": objectID})
+        returnJson = data["data"]
+    except Exception as err:
+        print(f"Error retrieving data from database: {err}", flush=True)
+        returnJson = {"Error": err}
+    return returnJson
+
+
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
-    print("Receiving File")
+    print("Receiving File", flush=True)
     length = int(request.form['length'])
     returnJson = {}
     fileNames = json.loads(request.form['fileNames'])
@@ -101,7 +118,7 @@ def receiveFile():
 
         # Get file extension
         name, extension = os.path.splitext(fileName)
-        print('POST SUCCESSFUL', fileName)
+        print('POST SUCCESSFUL', fileName, flush=True)
         try:
             if extension == '.txt':
                 byteString = file.read()
@@ -114,29 +131,30 @@ def receiveFile():
                         text += page.extract_text()
             text = re.sub('\\\\', '', text)
             tempJson = runAlice(text)
-            returnJson[fileName] = tempJson
+            returnJson[name] = tempJson
 
             tempEntity = tempJson['ner']['ents']
             for entity in tempEntity:
                 key = entity['text']+'_'+entity['type']
                 if key in corpusEntity:
                     corpusEntity[key]['value'] += 1
-                    corpusEntity[key]['documents'].add(fileName)
+                    corpusEntity[key]['documents'].add(name)
                 else:
                     corpusEntity[key] = {
                         'id': entity['text'],
                         'label': entity['text'],
                         'value': 1,
-                        'documents': set([fileName]),
+                        'documents': set([name]),
                         'type': entity['type'],
                         'color': nercolors[entity['type']]
                     }
             # corpusPassToRelation.extend(tempJson['ner'].pop('passToRelation'))
             corpus.append(text)
+            print(f"Current Corpus Text: {corpus}", flush=True)
 
             newRelation = tempJson['relation'].copy()
             for relation in newRelation:
-                relation['documents'] = [fileName]
+                relation['documents'] = [name]
                 corpusRelation.append(relation)
 
         except Exception as err:
@@ -144,6 +162,7 @@ def receiveFile():
         except:
             print('Unknown error in'+fileName)
     if length > 1:
+        print(f"Corpus being sent to overview {corpus}", flush=True)
         returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, fileNames)
     print('RESULT', json.dumps(returnJson))
     returnJson = jsonify(returnJson)
@@ -151,7 +170,7 @@ def receiveFile():
 
 
 def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
-    print('Start overview')
+    print('Start overview', flush=True)
     text = ' '.join(corpus)
     text = text.replace("\\x92", "")
     text = text.replace("\\x93", "")
@@ -159,7 +178,7 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     num_words = len(text.split(' '))
 
     # Cluster
-    print("sending cluster")
+    print("sending cluster", flush=True)
     sendJson = {"corpus": corpus, "fileNames": fileNames}
     clusterJson = postCluster(sendJson)
     cluster = clusterJson['clusterData']
@@ -219,14 +238,14 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     jsonToReact['network'] = network
     jsonToReact['wordcloud'] = wordcloud
     jsonToReact["cluster"] = cluster
-    print("Overview finished")
+    print("Overview finished", flush=True)
     return jsonToReact
 
 
 @app.route("/saveConfig", methods=["GET", "POST"])
 def saveConfig():
     data = request.get_json()
-    res = mongo.db.collection.insert_one(data)
+    res = mongo.db.Documents.insert_one(data)
     res_id = str(res.inserted_id)
     print(res_id)
     return res_id
@@ -238,23 +257,11 @@ def runAlice(text):
     text = text.replace("\\x94", "")
     num_words = len(text.split(' '))
 
-    # NER
-    print("Sending to NER")
-    nerJson = postNerRequest(text)
-    ner = nerJson['ner']
-    passToRelation = ner.pop('passToRelation')
-    print("Receive from NER")
-
-    # Relation
-    print("Send to relation")
-    relationJson = postRelationRequest(passToRelation)
-    relation = relationJson['relation']
-    print("Receive from Relation")
-
-    # Network
-    print("start relation network")
-    network = relationToNetwork(relation)
-    print("finished relation network")
+    # Topic Modelling
+    print("Sending topic")
+    topicJson = postTopicRequest([text], 1, 10)
+    topics = topicJson['topics']
+    print("receive topic")
 
     # Sentiment
     sentimentJson = postSentimentRequest(text)
@@ -263,18 +270,6 @@ def runAlice(text):
     key_data_legitimacy = sentimentList[1]["sentiment"]
     sentimentList[0]["sentiment"] = "sentiment"
     sentimentList[1]["sentiment"] = "subjective"
-
-    # Summary
-    print("Sending to summary")
-    summaryJson = postSummaryRequest(text, 3)
-    summary = summaryJson["summary"]
-    print("Receive from summary")
-
-    # Topic Modelling
-    print("Sending topic")
-    topicJson = postTopicRequest([text], 1, 10)
-    topics = topicJson['topics']
-    print("receive topic")
 
     # Classifier
     print("sending classifier")
@@ -287,6 +282,31 @@ def runAlice(text):
     bytestringJson = postWordCloud(text)
     wordcloud = bytestringJson['data']
     print("receive wordcloud")
+
+    # Summary
+    print("Sending to summary")
+    summaryJson = postSummaryRequest(text, 3)
+    summary = summaryJson["summary"]
+    print("Receive from summary")
+
+    # NER
+    print("Sending to NER")
+    nerJson = postNerRequest(text)
+    ner = nerJson['ner']
+    passToRelation = ner.pop('passToRelation')
+    print("Receive from NER")
+
+    # Relation
+    print("Send to relation")
+    relationJson = postRelationRequest(passToRelation)
+    print('Receive in postRelationRequest', relationJson, flush=True)
+    relation = relationJson['relation']
+    print("Receive from Relation")
+
+    # Network
+    print("start relation network")
+    network = relationToNetwork(relation)
+    print("finished relation network")
 
     # Key Data
     print('doing key data stuff')
@@ -308,14 +328,14 @@ def runAlice(text):
 
 
 def postSummaryRequest(text, no_of_sentence):
-    url = "http://summary:5060/textSummarizer"
+    url = "http://summary-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/textSummarizer"
     requestJson = {"text": text, "no_of_sentence": no_of_sentence}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postSentimentRequest(text):
-    url = "http://sentiment:5050/sentiment"
+    url = "http://sentiment-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/sentiment"
     print(f"Sentiment {url}")
     requestJson = {"text": text}
     result = requests.post(url, json=requestJson)
@@ -323,42 +343,47 @@ def postSentimentRequest(text):
 
 
 def postNerRequest(text):
-    url = "http://ner:5020/ner"
+    url = "http://ner-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/ner"
     requestJson = {"text": text}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postRelationRequest(ner):
-    url = "http://relation:5010/relation"
+    url = "http://relation-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/relation"
     requestJson = {"ner": ner}
-    result = requests.post(url, json=requestJson)
+    try:
+        result = requests.post(url, json=requestJson)
+        print('relation model back to server', result, flush=True)
+    except Exception as err:
+        print('error back in server', err, flush=True)
     return result.json()
 
 
 def postTopicRequest(text, no_topic, no_top_words):
-    url = "http://topics:5040/topic_modelling"
+    url = "http://topics-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/topic_modelling"
     requestJson = {"document": text, "no_topic": no_topic, "no_top_words": no_top_words}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postClassifierRequest(text):
-    url = "http://classifier:5030/classifier"
+    url = "http://classifier-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/classifier"
     requestJson = {"document": text}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postWordCloud(text):
-    url = "http://wordcloud:5070/wordcloud"
+    url = "http://wordcloud-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordcloud"
     requestJson = {"data": text}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postCluster(corpus):
-    url = "http://clustering:5080/cluster"
+    url = "http://clustering-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/cluster"
+    print("Corpus is: ", corpus, flush=True)
     result = requests.post(url, json=corpus)
     print("result in server: ", result)
     return result.json()
