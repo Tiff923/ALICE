@@ -10,4 +10,4 @@ RUN python -m nltk.downloader wordnet
 
 EXPOSE 5060
 
-CMD ["python", "./TextRankSummarizer.py"]
+CMD ["python", "app.py"]

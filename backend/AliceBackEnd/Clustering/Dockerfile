@@ -3,4 +3,4 @@ WORKDIR /app
 ADD . /app
 RUN pip install -r requirements.txt
 EXPOSE 5080
-CMD [ "python", "clustering.py" ]
+CMD [ "python", "app.py" ]

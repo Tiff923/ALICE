@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt
 # Port used in container 
 EXPOSE 5030
 
-CMD ["python", "classify.py"]
+CMD ["python", "app.py"]

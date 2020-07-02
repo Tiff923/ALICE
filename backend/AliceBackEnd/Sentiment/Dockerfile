@@ -8,4 +8,4 @@ RUN pip install --upgrade pip
 RUN pip install --default-timeout=100 future
 RUN pip install -r requirements.txt
 EXPOSE 5050
-CMD ["python", "./SentimentAnalysisEP.py"]
+CMD ["python", "app.py"]
