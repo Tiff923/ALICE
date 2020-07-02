@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt
 # Port used in container 
 EXPOSE 5070
 
-CMD ["python", "WordCloud.py"]
+CMD ["python", "app.py"]

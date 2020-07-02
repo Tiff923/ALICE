@@ -19,4 +19,4 @@ RUN cd /app && \
 RUN python -m nltk.downloader punkt
 RUN python setup.py install 
 EXPOSE 5010
-CMD [ "python", "relation_predict.py" ]
+CMD [ "python", "app.py" ]
