@@ -5,7 +5,7 @@ from contractions import CONTRACTION_MAP
 import spacy
 import nltk
 import textract
-nlp = spacy.load("en")
+nlp = spacy.load("en_core_web_sm")
 
 
 def remove_html_tags(text):

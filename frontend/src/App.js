@@ -36,6 +36,7 @@ const App = (props) => {
     layout,
   } = props;
 
+  console.log('cd', corpusData)
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState('Dashboard');
   const [currentFileName, setCurrentFileName] = useState('Overview');

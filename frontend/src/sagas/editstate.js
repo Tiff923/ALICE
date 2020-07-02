@@ -90,7 +90,7 @@ function* setFileNames({ data }) {
     layouts[fileNames[0]] = initialLayout;
   }
   yield put({
-    type: types.CHANGE_LAYOUT,
+    type: types.SET_LAYOUT,
     payload: layouts,
   });
 }
@@ -109,9 +109,13 @@ const apiPost = (payload) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
-  return axios.post('http://backend:5000/uploadFile', formData, {
-    headers: headers,
-  });
+  return axios.post(
+    'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/uploadFile',
+    formData,
+    {
+      headers: headers,
+    }
+  );
 };
 
 export function* uploadData({ payload }) {

@@ -97,6 +97,7 @@ export const types = {
 
   SEARCH_NER: 'SEARCH_NER',
   SAVE_CONFIG: 'SAVE_CONFIG',
+  SET_LAYOUT: 'SET_LAYOUT',
   CHANGE_LAYOUT: 'CHANGE_LAYOUT',
 };
 
@@ -192,6 +193,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         aliceID: action.payload,
       };
+    case types.SET_LAYOUT:
+      return {
+        ...state,
+        layout: action.payload,
+      };
     case types.CHANGE_LAYOUT:
       return {
         ...state,
@@ -200,6 +206,7 @@ export default function reducer(state = initialState, action) {
           [action.fileName]: action.layouts,
         },
       };
+
     default:
       return state;
   }
