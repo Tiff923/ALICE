@@ -7,8 +7,8 @@ import opennre
 app = Flask(__name__)
 cors = CORS(app)
 
-modelCNN = opennre.get_model('wiki80_cnn_softmax')
 modelBERT = opennre.get_model('wiki80_bert_softmax')
+modelCNN = opennre.get_model('wiki80_cnn_softmax')
 
 
 @app.route('/')
