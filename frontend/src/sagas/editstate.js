@@ -109,7 +109,7 @@ const apiPost = (payload) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
-  return axios.post('http://backend:5000/uploadFile', formData, {
+  return axios.post('http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/uploadFile', formData, {
     headers: headers,
   });
 };
