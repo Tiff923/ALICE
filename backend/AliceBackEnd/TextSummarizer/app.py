@@ -1,12 +1,15 @@
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 import networkx
 import spacy
+import nltk
 from nltk.tokenize import sent_tokenize
 from nltk.stem import WordNetLemmatizer
 import json
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS, cross_origin
 
+nltk.download('punkt')
+nltk.download('wordnet')
 
 app = Flask(__name__)
 

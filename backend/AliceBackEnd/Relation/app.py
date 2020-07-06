@@ -37,7 +37,9 @@ def nerToRelation():
     data = request.json
     ner = data['ner']
     res = extract_relation(ner)
-    returnJson = {"relation": res}
+    print('output from relation model', res, flush=True)
+    returnJson = {'relation': res}
+    print('returnJson from Relation', returnJson, flush=True)
     return returnJson
 
 

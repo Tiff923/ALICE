@@ -41,11 +41,11 @@ def analyze_sentiment_pattern_lexicon(text, threshold=0.1):
     if sentiment_subjectivity > 0.5:
         final_subjectivity = "Subjective"
         subjectivityJson["sentiment"] = final_subjectivity
-        subjectivityJson["subjectivity"] = round((sentiment_subjectivity - 0.5) * 100, 3)
+        subjectivityJson["subjectivity"] = round(-(sentiment_subjectivity - 0.5) * 100, 3)
     else:
         final_subjectivity = "Objective"
         subjectivityJson["sentiment"] = final_subjectivity
-        subjectivityJson['subjectivity'] = round(-((1-sentiment_subjectivity) - 0.5) * 100, 3)
+        subjectivityJson['subjectivity'] = round(((1-sentiment_subjectivity) - 0.5) * 100, 3)
     returnList = [sentimentJson, subjectivityJson]
     return returnList
 
