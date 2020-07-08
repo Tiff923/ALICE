@@ -11,6 +11,7 @@ import pdfplumber
 import chardet
 import re
 import datetime
+import threading
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -86,13 +87,17 @@ def createAcc():
 def receiveFile():
     print("Receiving File", flush=True)
     length = int(request.form['length'])
-    returnJson = {}
     fileNames = json.loads(request.form['fileNames'])
-
     corpus = []
+
+    returnJsonLock = threading.Lock
+    returnJson = {}  
     corpusEntity = {}
-    # corpusPassToRelation = []
+    corpusEntityLock = threading.Lock
     corpusRelation = []
+    corpusRelationLock = threading.Lock
+
+    threads = []
     for i in range(length):
         file = request.files[f'file{i}']
 
@@ -102,54 +107,76 @@ def receiveFile():
         # Get file extension
         name, extension = os.path.splitext(fileName)
         print('POST SUCCESSFUL', fileName, flush=True)
-        try:
-            if extension == '.txt':
-                byteString = file.read()
-                encoding = chardet.detect(byteString)['encoding']
-                text = byteString.decode(encoding)
-            elif extension == '.pdf':
-                text = ''
-                with pdfplumber.load(file) as pdf:
-                    for page in pdf.pages:
-                        text += page.extract_text()
-            text = re.sub('\\\\', '', text)
-            tempJson = runAlice(text)
-            returnJson[fileName] = tempJson
+        if extension == '.txt':
+            byteString = file.read()
+            encoding = chardet.detect(byteString)['encoding']
+            text = byteString.decode(encoding)
+        elif extension == '.pdf':
+            text = ''
+            with pdfplumber.load(file) as pdf:
+                for page in pdf.pages:
+                    text += page.extract_text()
+        text = re.sub('\\\\', '', text)
+        corpus.append(text)
+        thread = threading.Thread(target=thread_task(text, fileName, i))
+        thread.start()
+        threads.append(thread)
+    
+    for thread in threads:
+        threads.join()
+    print("All threads finished", flush=True)
 
-            tempEntity = tempJson['ner']['ents']
-            for entity in tempEntity:
-                key = entity['text']+'_'+entity['type']
-                if key in corpusEntity:
-                    corpusEntity[key]['value'] += 1
-                    corpusEntity[key]['documents'].add(fileName)
-                else:
-                    corpusEntity[key] = {
-                        'id': entity['text'],
-                        'label': entity['text'],
-                        'value': 1,
-                        'documents': set([fileName]),
-                        'type': entity['type'],
-                        'color': nercolors[entity['type']]
-                    }
-            # corpusPassToRelation.extend(tempJson['ner'].pop('passToRelation'))
-            corpus.append(text)
-            print(f"Current Corpus Text: {corpus}", flush=True)
-
-            newRelation = tempJson['relation'].copy()
-            for relation in newRelation:
-                relation['documents'] = [fileName]
-                corpusRelation.append(relation)
-
-        except Exception as err:
-            print(err, "occured in"+fileName)
-        except:
-            print('Unknown error in'+fileName)
+    
     if length > 1:
         print(f"Corpus being sent to overview {corpus}", flush=True)
         returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, fileNames)
     print('RESULT', json.dumps(returnJson))
     returnJson = jsonify(returnJson)
     return returnJson
+
+
+def thread_task(text, fileName, number):
+    print(f"Thread {number} running", flush=True)
+    try:
+        tempJson = runAlice(text)
+        newRelation = tempJson['relation'].copy()
+        ##Semaphore this later
+        returnJsonLock.acqure()
+        returnJson[fileName] = tempJson
+        returnJsonLock.release()
+        ##Semaphore this later as well
+        tempEntity = tempJson['ner']['ents']
+        for entity in tempEntity:
+            key = entity['text']+'_'+entity['type']
+            corpusEntityLock.acquire()
+            if key in corpusEntity:
+                corpusEntity[key]['value'] += 1
+                corpusEntity[key]['documents'].add(fileName)
+            else:
+                corpusEntity[key] = {
+                    'id': entity['text'],
+                    'label': entity['text'],
+                    'value': 1,
+                    'documents': set([fileName]),
+                    'type': entity['type'],
+                    'color': nercolors[entity['type']]
+                }
+            corpusEntityLock.release()
+
+        for relation in newRelation:
+            relation['documents'] = [fileName]
+            ##Semaphore this
+            corpusRelationLock.acquire()
+            corpusRelation.append(relation)
+            corpusRelationLock.release()
+        print(f"Thread {number} finish", flush=True)
+
+    except Exception as err:
+        print(err, "occured in "+fileName + " in thread " + number)
+    except:
+        print('Unknown error in'+fileName)
+
+
 
 
 def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
