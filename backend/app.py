@@ -118,7 +118,7 @@ def receiveFile():
                     text += page.extract_text()
         text = re.sub('\\\\', '', text)
         corpus.append(text)
-        thread = threading.Thread(target=thread_task(text, fileName, i))
+        thread = threading.Thread(target=thread_task, args=(text,fileName, i))
         thread.start()
         threads.append(thread)
     
@@ -364,7 +364,6 @@ def postRelationRequest(ner):
     requestJson = {"ner": ner}
     try:
         result = requests.post(url, json=requestJson)
-        print('relation model back to server', result, flush=True)
     except Exception as err:
         print('error back in server', err, flush=True)
     return result.json()
