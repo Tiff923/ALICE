@@ -129,7 +129,7 @@ def receiveFile():
     
     for thread in threads:
         try:
-            threads.join()
+            thread.join()
         except Exception as err:
             print("Error in joining: " + err, flush=True)
     print("All threads finished", flush=True)
