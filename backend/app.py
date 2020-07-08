@@ -96,7 +96,11 @@ def createAcc():
 
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
+    global users
     users += 1
+    global corpusEntity
+    global corpusRelation
+    global returnJson
     print(users, flush=True)
     print("Receiving File", flush=True)
     length = int(request.form['length'])
@@ -147,6 +151,12 @@ def receiveFile():
 
 def thread_task(text, fileName, number):
     print(f"Thread {number} running", flush=True)
+    global corpusEntity
+    global corpusRelation
+    global returnJson
+    global corpusEntityLock
+    global corpusRelationLock
+    global returnJsonLock
     try:
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
