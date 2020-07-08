@@ -144,7 +144,7 @@ def thread_task(text, fileName, number):
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
         ##Semaphore this later
-        returnJsonLock.acqure()
+        returnJsonLock.acquire()
         returnJson[fileName] = tempJson
         returnJsonLock.release()
         ##Semaphore this later as well
