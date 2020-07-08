@@ -18,13 +18,6 @@ cors = CORS(app)
 app.config['MONGO_URI'] = 'mongodb+srv://alice_guest:aliceandjarvis@alice-onmay.mongodb.net/Alice_Corpus?retryWrites=true&w=majority'
 app.config['SECRET_KEY'] = "a very secret key"
 mongo = PyMongo(app)
-returnJsonLock = threading.Lock()
-returnJson = {}  
-corpusEntity = {}
-corpusEntityLock = threading.Lock()
-corpusRelation = []
-corpusRelationLock = threading.Lock()
-users = 0
 print("server started", flush=True)
 
 
@@ -91,24 +84,25 @@ def createAcc():
 
 
 
+class dataClass():
+    returnJsonLock = threading.Lock()
+    returnJson = {}  
+    corpusEntity = {}
+    corpusEntityLock = threading.Lock()
+    corpusRelation = []
+    corpusRelationLock = threading.Lock()
+    users = 0
 
+    
 
 
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
-    global users
-    users += 1
-    global corpusEntity
-    global corpusRelation
-    global returnJson
-    print(users, flush=True)
+    data = dataClass()
     print("Receiving File", flush=True)
     length = int(request.form['length'])
     fileNames = json.loads(request.form['fileNames'])
     corpus = []
-
-
-
     threads = []
     for i in range(length):
         file = request.files[f'file{i}']
@@ -130,7 +124,7 @@ def receiveFile():
                     text += page.extract_text()
         text = re.sub('\\\\', '', text)
         corpus.append(text)
-        thread = threading.Thread(target=thread_task, args=(text,fileName, i))
+        thread = threading.Thread(target=thread_task, args=(text,fileName, i, data))
         thread.start()
         threads.append(thread)
     
@@ -143,36 +137,30 @@ def receiveFile():
 
     
     if length > 1:
-        returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, fileNames)
+        returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
     returnJson = jsonify(returnJson)
     return returnJson
 
 
-def thread_task(text, fileName, number):
+def thread_task(text, fileName, number, data):
     print(f"Thread {number} running", flush=True)
-    global corpusEntity
-    global corpusRelation
-    global returnJson
-    global corpusEntityLock
-    global corpusRelationLock
-    global returnJsonLock
     try:
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
         ##Semaphore this later
-        returnJsonLock.acquire()
-        returnJson[fileName] = tempJson
-        returnJsonLock.release()
+        data.returnJsonLock.acquire()
+        data.returnJson[fileName] = tempJson
+        data.returnJsonLock.release()
         ##Semaphore this later as well
         tempEntity = tempJson['ner']['ents']
         for entity in tempEntity:
             key = entity['text']+'_'+entity['type']
-            corpusEntityLock.acquire()
-            if key in receiveFile.corpusEntity:
-                corpusEntity[key]['value'] += 1
-                corpusEntity[key]['documents'].add(fileName)
+            data.corpusEntityLock.acquire()
+            if key in data.corpusEntity:
+                data.corpusEntity[key]['value'] += 1
+                data.corpusEntity[key]['documents'].add(fileName)
             else:
-                corpusEntity[key] = {
+                data.corpusEntity[key] = {
                     'id': entity['text'],
                     'label': entity['text'],
                     'value': 1,
@@ -180,14 +168,14 @@ def thread_task(text, fileName, number):
                     'type': entity['type'],
                     'color': nercolors[entity['type']]
                 }
-            corpusEntityLock.release()
+            data.corpusEntityLock.release()
 
         for relation in newRelation:
             relation['documents'] = [fileName]
             ##Semaphore this
-            corpusRelationLock.acquire()
-            corpusRelation.append(relation)
-            corpusRelationLock.release()
+            data.corpusRelationLock.acquire()
+            data.corpusRelation.append(relation)
+            data.corpusRelationLock.release()
         print(f"Thread {number} finish", flush=True)
 
     except Exception as err:
