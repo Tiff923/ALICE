@@ -18,6 +18,13 @@ cors = CORS(app)
 app.config['MONGO_URI'] = 'mongodb+srv://alice_guest:aliceandjarvis@alice-onmay.mongodb.net/Alice_Corpus?retryWrites=true&w=majority'
 app.config['SECRET_KEY'] = "a very secret key"
 mongo = PyMongo(app)
+returnJsonLock = threading.Lock
+returnJson = {}  
+corpusEntity = {}
+corpusEntityLock = threading.Lock
+corpusRelation = []
+corpusRelationLock = threading.Lock
+users = 0
 print("server started", flush=True)
 
 
@@ -83,13 +90,7 @@ def createAcc():
         return "error"
 
 
-returnJsonLock = threading.Lock
-returnJson = {}  
-corpusEntity = {}
-corpusEntityLock = threading.Lock
-corpusRelation = []
-corpusRelationLock = threading.Lock
-users = 0
+
 
 
 
