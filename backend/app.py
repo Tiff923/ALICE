@@ -83,24 +83,26 @@ def createAcc():
         return "error"
 
 
-
-
+returnJsonLock = threading.Lock
+returnJson = {}  
+corpusEntity = {}
+corpusEntityLock = threading.Lock
+corpusRelation = []
+corpusRelationLock = threading.Lock
+users = 0
 
 
 
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
+    users += 1
+    print(users, flush=True)
     print("Receiving File", flush=True)
     length = int(request.form['length'])
     fileNames = json.loads(request.form['fileNames'])
     corpus = []
 
-    returnJsonLock = threading.Lock
-    returnJson = {}  
-    corpusEntity = {}
-    corpusEntityLock = threading.Lock
-    corpusRelation = []
-    corpusRelationLock = threading.Lock
+
 
     threads = []
     for i in range(length):
