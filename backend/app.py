@@ -370,6 +370,7 @@ def postRelationRequest(ner):
     requestJson = {"ner": ner}
     try:
         result = requests.post(url, json=requestJson)
+        print(f"Relation: {result}", flush=True)
     except Exception as err:
         print('error back in server', err, flush=True)
     return result.json()
