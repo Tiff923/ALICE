@@ -18,12 +18,12 @@ cors = CORS(app)
 app.config['MONGO_URI'] = 'mongodb+srv://alice_guest:aliceandjarvis@alice-onmay.mongodb.net/Alice_Corpus?retryWrites=true&w=majority'
 app.config['SECRET_KEY'] = "a very secret key"
 mongo = PyMongo(app)
-returnJsonLock = threading.Lock
+returnJsonLock = threading.Lock()
 returnJson = {}  
 corpusEntity = {}
-corpusEntityLock = threading.Lock
+corpusEntityLock = threading.Lock()
 corpusRelation = []
-corpusRelationLock = threading.Lock
+corpusRelationLock = threading.Lock()
 users = 0
 print("server started", flush=True)
 
@@ -143,7 +143,6 @@ def receiveFile():
 
     
     if length > 1:
-        print(f"Corpus being sent to overview {corpus}", flush=True)
         returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, fileNames)
     returnJson = jsonify(returnJson)
     return returnJson
@@ -329,7 +328,6 @@ def runAlice(text):
     # Relation
     print("Send to relation")
     relationJson = postRelationRequest(passToRelation)
-    print('Receive in postRelationRequest', relationJson, flush=True)
     relation = relationJson['relation']
     print("Receive from Relation")
 
@@ -412,9 +410,7 @@ def postWordCloud(text):
 
 def postCluster(corpus):
     url = "http://clustering-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/cluster"
-    print("Corpus is: ", corpus, flush=True)
     result = requests.post(url, json=corpus)
-    print("result in server: ", result)
     return result.json()
 
 
