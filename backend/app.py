@@ -83,6 +83,11 @@ def createAcc():
         return "error"
 
 
+
+
+
+
+
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
     print("Receiving File", flush=True)
@@ -144,19 +149,19 @@ def thread_task(text, fileName, number):
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
         ##Semaphore this later
-        returnJsonLock.acquire()
-        returnJson[fileName] = tempJson
-        returnJsonLock.release()
+        receiveFile.returnJsonLock.acquire()
+        receiveFile.returnJson[fileName] = tempJson
+        receiveFile.returnJsonLock.release()
         ##Semaphore this later as well
         tempEntity = tempJson['ner']['ents']
         for entity in tempEntity:
             key = entity['text']+'_'+entity['type']
-            corpusEntityLock.acquire()
-            if key in corpusEntity:
-                corpusEntity[key]['value'] += 1
-                corpusEntity[key]['documents'].add(fileName)
+            receiveFile.corpusEntityLock.acquire()
+            if key in receiveFile.corpusEntity:
+                receiveFile.corpusEntity[key]['value'] += 1
+                receiveFile.corpusEntity[key]['documents'].add(fileName)
             else:
-                corpusEntity[key] = {
+                recieveFile.corpusEntity[key] = {
                     'id': entity['text'],
                     'label': entity['text'],
                     'value': 1,
@@ -164,20 +169,20 @@ def thread_task(text, fileName, number):
                     'type': entity['type'],
                     'color': nercolors[entity['type']]
                 }
-            corpusEntityLock.release()
+            receiveFile.corpusEntityLock.release()
 
         for relation in newRelation:
             relation['documents'] = [fileName]
             ##Semaphore this
-            corpusRelationLock.acquire()
-            corpusRelation.append(relation)
-            corpusRelationLock.release()
+            receiveFile.corpusRelationLock.acquire()
+            receiveFile.corpusRelation.append(relation)
+            receiveFile.corpusRelationLock.release()
         print(f"Thread {number} finish", flush=True)
 
     except Exception as err:
-        print(err, "occured in "+fileName + " in thread " + number)
+        print(err, "occured in "+fileName + " in thread " + number, flush=True)
     except:
-        print('Unknown error in'+fileName)
+        print('Unknown error in'+fileName, flush=True)
 
 
 
