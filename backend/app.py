@@ -123,7 +123,10 @@ def receiveFile():
         threads.append(thread)
     
     for thread in threads:
-        threads.join()
+        try:
+            threads.join()
+        except Exception as err:
+            print("Error in joining: " + err, flush=True)
     print("All threads finished", flush=True)
 
     
@@ -346,7 +349,6 @@ def postSummaryRequest(text, no_of_sentence):
 
 def postSentimentRequest(text):
     url = "http://sentiment-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/sentiment"
-    print(f"Sentiment {url}")
     requestJson = {"text": text}
     result = requests.post(url, json=requestJson)
     return result.json()
