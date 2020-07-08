@@ -138,7 +138,6 @@ def receiveFile():
     if length > 1:
         print(f"Corpus being sent to overview {corpus}", flush=True)
         returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, fileNames)
-    print('RESULT', json.dumps(returnJson))
     returnJson = jsonify(returnJson)
     return returnJson
 
@@ -180,7 +179,7 @@ def thread_task(text, fileName, number):
         print(f"Thread {number} finish", flush=True)
 
     except Exception as err:
-        print(err, "occured in "+fileName + " in thread " + number, flush=True)
+        print(err, "occured in "+fileName + " in thread " + str(number), flush=True)
     except:
         print('Unknown error in'+fileName, flush=True)
 
