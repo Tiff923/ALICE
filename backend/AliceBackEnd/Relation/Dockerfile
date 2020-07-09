@@ -8,4 +8,4 @@ RUN python3 -m nltk.downloader punkt
 RUN python3 setup.py install
 RUN chmod +x ./start.sh && ./start.sh
 EXPOSE 5010
-CMD ["python3", "app.py" ]
+CMD ["gunicorn", "-w", "5", "-b", "0.0.0.0:5010", "wsgi:app"]

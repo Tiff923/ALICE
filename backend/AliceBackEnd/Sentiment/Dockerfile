@@ -8,4 +8,4 @@ RUN pip install --upgrade pip
 RUN pip install --default-timeout=100 future
 RUN pip install -r requirements.txt
 EXPOSE 5050
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:5050", "wsgi:app"]

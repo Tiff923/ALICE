@@ -3,4 +3,4 @@ WORKDIR /app
 ADD . /app
 RUN pip install -r requirements.txt
 EXPOSE 5080
-CMD [ "python", "app.py" ]
+CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:5080", "wsgi:app"]

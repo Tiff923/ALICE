@@ -12,5 +12,4 @@ RUN pip install -r requirements.txt
 
 # Port used in container 
 EXPOSE 5040
-
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:5040", "wsgi:app"]
