@@ -137,7 +137,8 @@ def receiveFile():
 
     try:
         if length > 1:
-            returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
+            data.returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
+        returnJson = data.returnJson
         returnJson = jsonify(returnJson)
     except Exception as err:
         print(f"Error in completing overview: {err}", flush=True)
