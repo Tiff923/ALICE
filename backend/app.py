@@ -135,10 +135,12 @@ def receiveFile():
             print("Error in joining: " + err, flush=True)
     print("All threads finished", flush=True)
 
-    
-    if length > 1:
-        returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
-    returnJson = jsonify(returnJson)
+    try:
+        if length > 1:
+            returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
+        returnJson = jsonify(returnJson)
+    except Exception as err:
+        print(f"Error in completing overview: {err}", flush=True)
     return returnJson
 
 
