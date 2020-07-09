@@ -99,6 +99,7 @@ class dataClass():
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
     data = dataClass()
+    print(f"New file, creating new dataclass. Data: {data.corpusEntity}", flush=True) 
     print("Receiving File", flush=True)
     length = int(request.form['length'])
     fileNames = json.loads(request.form['fileNames'])
