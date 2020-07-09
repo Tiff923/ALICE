@@ -4,5 +4,5 @@ WORKDIR /code
 RUN pip3 install -r requirements.txt
 RUN pip3 install pymongo[srv]
 EXPOSE 5000
-CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:5000", "wsgi:app"]
+CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:5000","--timeout", "99999","--threads", "10" ,"wsgi:app"]
 
