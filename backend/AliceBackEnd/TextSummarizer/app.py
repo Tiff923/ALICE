@@ -3,7 +3,6 @@ import networkx
 import spacy
 import nltk
 from nltk.tokenize import sent_tokenize
-from textblob import TextBlob, Word
 import json
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS, cross_origin
