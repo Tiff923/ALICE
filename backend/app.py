@@ -137,8 +137,7 @@ def receiveFile():
 
     
     if length > 1:
-        data.returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
-    returnJson = data.returnJson
+        returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
     returnJson = jsonify(returnJson)
     return returnJson
 
