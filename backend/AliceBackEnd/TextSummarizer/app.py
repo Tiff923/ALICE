@@ -3,7 +3,7 @@ import networkx
 import spacy
 import nltk
 from nltk.tokenize import sent_tokenize
-from nltk.stem import WordNetLemmatizer
+from textblob import TextBlob, Word
 import json
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS, cross_origin
@@ -36,15 +36,6 @@ def textSummarizer(text, no_of_sentences=2):
     # Tokenize the text into sentences and lemmatize it
     text = text.replace("\n", " ")
     doc = sent_tokenize(text)
-    lemmatizer = WordNetLemmatizer()
-    lemmaDoc = []
-    for sentence in doc:
-        listOfWords = sentence.split(" ")
-        newSentence = ""
-        for word in listOfWords:
-            lemma = lemmatizer.lemmatize(word)
-            newSentence = newSentence + word + " "
-        lemmaDoc.append(newSentence)
     # VectorizedText is a matrix containing the tfidf scores
     vectorizer = TfidfVectorizer(min_df=0, max_df=1.0)
     vectorizedText = vectorizer.fit_transform(doc)
