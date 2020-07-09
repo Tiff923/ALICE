@@ -12,6 +12,7 @@ from flask_cors import CORS, cross_origin
 
 nltk.download('punkt')
 nltk.download('wordnet')
+lemmatizer = WordNetLemmatizer()
 
 app = Flask(__name__)
 
@@ -41,7 +42,6 @@ def textSummarizer(text, no_of_sentences=2):
         listOfWords = sentence.split(" ")
         newSentence = ""
         for word in listOfWords:
-			lemmatizer = WordNetLemmatizer()
             lemma = lemmatizer.lemmatize(word)
             newSentence = newSentence + word + " "
         lemmaDoc.append(newSentence)
