@@ -11,6 +11,7 @@ import pdfplumber
 import chardet
 import re
 import datetime
+import threading
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -82,17 +83,27 @@ def createAcc():
         return "error"
 
 
+
+class dataClass():
+    returnJsonLock = threading.Lock()
+    returnJson = {}  
+    corpusEntity = {}
+    corpusEntityLock = threading.Lock()
+    corpusRelation = []
+    corpusRelationLock = threading.Lock()
+    users = 0
+
+    
+
+
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
+    data = dataClass()
     print("Receiving File", flush=True)
     length = int(request.form['length'])
-    returnJson = {}
     fileNames = json.loads(request.form['fileNames'])
-
     corpus = []
-    corpusEntity = {}
-    # corpusPassToRelation = []
-    corpusRelation = []
+    threads = []
     for i in range(length):
         file = request.files[f'file{i}']
 
@@ -102,54 +113,78 @@ def receiveFile():
         # Get file extension
         name, extension = os.path.splitext(fileName)
         print('POST SUCCESSFUL', fileName, flush=True)
+        if extension == '.txt':
+            byteString = file.read()
+            encoding = chardet.detect(byteString)['encoding']
+            text = byteString.decode(encoding)
+        elif extension == '.pdf':
+            text = ''
+            with pdfplumber.load(file) as pdf:
+                for page in pdf.pages:
+                    text += page.extract_text()
+        text = re.sub('\\\\', '', text)
+        corpus.append(text)
+        thread = threading.Thread(target=thread_task, args=(text,fileName, i, data))
+        thread.start()
+        threads.append(thread)
+    
+    for thread in threads:
         try:
-            if extension == '.txt':
-                byteString = file.read()
-                encoding = chardet.detect(byteString)['encoding']
-                text = byteString.decode(encoding)
-            elif extension == '.pdf':
-                text = ''
-                with pdfplumber.load(file) as pdf:
-                    for page in pdf.pages:
-                        text += page.extract_text()
-            text = re.sub('\\\\', '', text)
-            tempJson = runAlice(text)
-            returnJson[fileName] = tempJson
-
-            tempEntity = tempJson['ner']['ents']
-            for entity in tempEntity:
-                key = entity['text']+'_'+entity['type']
-                if key in corpusEntity:
-                    corpusEntity[key]['value'] += 1
-                    corpusEntity[key]['documents'].add(fileName)
-                else:
-                    corpusEntity[key] = {
-                        'id': entity['text'],
-                        'label': entity['text'],
-                        'value': 1,
-                        'documents': set([fileName]),
-                        'type': entity['type'],
-                        'color': nercolors[entity['type']]
-                    }
-            # corpusPassToRelation.extend(tempJson['ner'].pop('passToRelation'))
-            corpus.append(text)
-            print(f"Current Corpus Text: {corpus}", flush=True)
-
-            newRelation = tempJson['relation'].copy()
-            for relation in newRelation:
-                relation['documents'] = [fileName]
-                corpusRelation.append(relation)
-
+            thread.join()
         except Exception as err:
-            print(err, "occured in"+fileName)
-        except:
-            print('Unknown error in'+fileName)
+            print("Error in joining: " + err, flush=True)
+    print("All threads finished", flush=True)
+
+    
     if length > 1:
-        print(f"Corpus being sent to overview {corpus}", flush=True)
-        returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, fileNames)
-    print('RESULT', json.dumps(returnJson))
+        data.returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
+    returnJson = data.returnJson
     returnJson = jsonify(returnJson)
     return returnJson
+
+
+def thread_task(text, fileName, number, data):
+    print(f"Thread {number} running", flush=True)
+    try:
+        tempJson = runAlice(text)
+        newRelation = tempJson['relation'].copy()
+        ##Semaphore this later
+        data.returnJsonLock.acquire()
+        data.returnJson[fileName] = tempJson
+        data.returnJsonLock.release()
+        ##Semaphore this later as well
+        tempEntity = tempJson['ner']['ents']
+        for entity in tempEntity:
+            key = entity['text']+'_'+entity['type']
+            data.corpusEntityLock.acquire()
+            if key in data.corpusEntity:
+                data.corpusEntity[key]['value'] += 1
+                data.corpusEntity[key]['documents'].add(fileName)
+            else:
+                data.corpusEntity[key] = {
+                    'id': entity['text'],
+                    'label': entity['text'],
+                    'value': 1,
+                    'documents': set([fileName]),
+                    'type': entity['type'],
+                    'color': nercolors[entity['type']]
+                }
+            data.corpusEntityLock.release()
+
+        for relation in newRelation:
+            relation['documents'] = [fileName]
+            ##Semaphore this
+            data.corpusRelationLock.acquire()
+            data.corpusRelation.append(relation)
+            data.corpusRelationLock.release()
+        print(f"Thread {number} finish", flush=True)
+
+    except Exception as err:
+        print(err, "occured in "+fileName + " in thread " + str(number), flush=True)
+    except:
+        print('Unknown error in'+fileName, flush=True)
+
+
 
 
 def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
@@ -282,7 +317,6 @@ def runAlice(text):
     # Relation
     print("Send to relation")
     relationJson = postRelationRequest(passToRelation)
-    print('Receive in postRelationRequest', relationJson, flush=True)
     relation = relationJson['relation']
     print("Receive from Relation")
 
@@ -319,7 +353,6 @@ def postSummaryRequest(text, no_of_sentence):
 
 def postSentimentRequest(text):
     url = "http://sentiment-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/sentiment"
-    print(f"Sentiment {url}")
     requestJson = {"text": text}
     result = requests.post(url, json=requestJson)
     return result.json()
@@ -337,7 +370,7 @@ def postRelationRequest(ner):
     requestJson = {"ner": ner}
     try:
         result = requests.post(url, json=requestJson)
-        print('relation model back to server', result, flush=True)
+        print(f"Relation: {result}", flush=True)
     except Exception as err:
         print('error back in server', err, flush=True)
     return result.json()
@@ -366,9 +399,7 @@ def postWordCloud(text):
 
 def postCluster(corpus):
     url = "http://clustering-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/cluster"
-    print("Corpus is: ", corpus, flush=True)
     result = requests.post(url, json=corpus)
-    print("result in server: ", result)
     return result.json()
 
 
