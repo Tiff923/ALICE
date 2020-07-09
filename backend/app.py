@@ -85,13 +85,14 @@ def createAcc():
 
 
 class dataClass():
-    self.returnJsonLock = threading.Lock()
-    self.returnJson = {}  
-    self.corpusEntity = {}
-    self.corpusEntityLock = threading.Lock()
-    self.corpusRelation = []
-    self.corpusRelationLock = threading.Lock()
-    self.users = 0
+    def __init__(self):
+        self.returnJsonLock = threading.Lock()
+        self.returnJson = {}  
+        self.corpusEntity = {}
+        self.corpusEntityLock = threading.Lock()
+        self.corpusRelation = []
+        self.corpusRelationLock = threading.Lock()
+        self.users = 0
 
     
 
