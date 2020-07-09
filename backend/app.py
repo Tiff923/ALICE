@@ -160,6 +160,7 @@ def thread_task(text, fileName, number, data):
                 print(f"CorpusEntity with key {key} is: {data.corpusEntity[key]}", flush=True)
                 data.corpusEntity[key]['value'] += 1
                 data.corpusEntity[key]['documents'].add(fileName)
+                print(f"CorpusEntity with key {key} after adding filename is: {data.corpusEntity[key]}", flush=True)
             else:
                 data.corpusEntity[key] = {
                     'id': entity['text'],
