@@ -133,7 +133,7 @@ def receiveFile():
                     text += page.extract_text()
         text = re.sub('\\\\', '', text)
         corpus.append(text)
-        thread = threading.Thread(target=thread_task, args=(text,fileName, i, data))
+        thread = threading.Thread(target=thread_task, args=(text,name, i, data))
         thread.start()
         threads.append(thread)
     
