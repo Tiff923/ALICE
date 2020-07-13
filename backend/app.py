@@ -162,10 +162,8 @@ def thread_task(text, fileName, number, data):
             key = entity['text']+'_'+entity['type']
             data.corpusEntityLock.acquire()
             if key in data.corpusEntity:
-                print(f"CorpusEntity with key {key} is: {data.corpusEntity[key]}", flush=True)
                 data.corpusEntity[key]['value'] += 1
                 data.corpusEntity[key]['documents'].add(fileName)
-                print(f"CorpusEntity with key {key} after adding filename is: {data.corpusEntity[key]}", flush=True)
             else:
                 data.corpusEntity[key] = {
                     'id': entity['text'],
@@ -351,62 +349,90 @@ def runAlice(text):
 
 
 def postSummaryRequest(text, no_of_sentence):
-    url = "http://summary-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/textSummarizer"
-    requestJson = {"text": text, "no_of_sentence": no_of_sentence}
-    result = requests.post(url, json=requestJson)
-    return result.json()
+    try:
+        url = "http://summary-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/textSummarizer"
+        requestJson = {"text": text, "no_of_sentence": no_of_sentence}
+        result = requests.post(url, json=requestJson)
+        result = result.json()
+    except Exception as err:
+        print(f"Error in Summary: {err}", flush=True)
+    return result
 
 
 def postSentimentRequest(text):
-    url = "http://sentiment-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/sentiment"
-    requestJson = {"text": text}
-    result = requests.post(url, json=requestJson)
-    return result.json()
+    try:
+        url = "http://sentiment-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/sentiment"
+        requestJson = {"text": text}
+        result = requests.post(url, json=requestJson)
+        result = result.json()
+    except Exception as err:
+        print(f"Error in Sentiment: {err}", flush=True)
+    return result
 
 
 def postNerRequest(text):
-    url = "http://ner-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/ner"
-    requestJson = {"text": text}
-    result = requests.post(url, json=requestJson)
-    return result.json()
+    try:
+        url = "http://ner-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/ner"
+        requestJson = {"text": text}
+        result = requests.post(url, json=requestJson)
+        result = result.json()
+    except Exception as err:
+        print(f"Error in NER: {err}", flush=True)
+    return result
 
 
 def postRelationRequest(ner):
-    url = "http://relation-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/relation"
-    requestJson = {"ner": ner}
     try:
+        url = "http://relation-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/relation"
+        requestJson = {"ner": ner}
         result = requests.post(url, json=requestJson)
-        print(f"Relation: {result}", flush=True)
+        result = result.json()
     except Exception as err:
-        print('error back in server', err, flush=True)
-    return result.json()
+        print(f"Error in Relation: {err}", flush=True)
+    return result
 
 
 def postTopicRequest(text, no_topic, no_top_words):
-    url = "http://topics-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/topic_modelling"
-    requestJson = {"document": text, "no_topic": no_topic, "no_top_words": no_top_words}
-    result = requests.post(url, json=requestJson)
-    return result.json()
+    try:
+        url = "http://topics-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/topic_modelling"
+        requestJson = {"document": text, "no_topic": no_topic, "no_top_words": no_top_words}
+        result = requests.post(url, json=requestJson)
+        result = result.json()
+    except Exception as err:
+        print(f"Error in Topic: {err}", flush=True)
+    return result
 
 
 def postClassifierRequest(text):
-    url = "http://classifier-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/classifier"
-    requestJson = {"document": text}
-    result = requests.post(url, json=requestJson)
-    return result.json()
+    try:
+        url = "http://classifier-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/classifier"
+        requestJson = {"document": text}
+        result = requests.post(url, json=requestJson)
+        result = result.json()
+    except Exception as err:
+        print(f"Error in Classifier: {err}", flush=True)
+    return result
 
 
 def postWordCloud(text):
-    url = "http://wordcloud-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordcloud"
-    requestJson = {"data": text}
-    result = requests.post(url, json=requestJson)
-    return result.json()
+    try:
+        url = "http://wordcloud-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordcloud"
+        requestJson = {"data": text}
+        result = requests.post(url, json=requestJson)
+        result = result.json()
+    except Exception as err:
+        print(f"Error in WordCloud: {err}", flush=True)
+    return result
 
 
 def postCluster(corpus):
-    url = "http://clustering-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/cluster"
-    result = requests.post(url, json=corpus)
-    return result.json()
+    try:
+        url = "http://clustering-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/cluster"
+        result = requests.post(url, json=corpus)
+        result = result.json()
+    except Exception as err:
+        print(f"Error in Clustering: {err}", flush=True)
+    return result
 
 
 if __name__ == "__main__":
