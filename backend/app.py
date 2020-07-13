@@ -95,6 +95,13 @@ class dataClass():
         self.users = 0
 
     
+def saveResults(data):
+    res = mongo.db.collection.insert_one(data)
+    res_id = res.inserted_id
+    return res_id
+
+
+
 
 
 @app.route("/uploadFile", methods=["GET", "POST"])
@@ -144,6 +151,12 @@ def receiveFile():
         returnJson = jsonify(returnJson)
     except Exception as err:
         print(f"Error in completing overview: {err}", flush=True)
+
+    try:
+        saveResults(returnJson)
+    except Exception as err:
+        print(f"Error in saving to database: {err}", flush=True)
+
     return returnJson
 
 
