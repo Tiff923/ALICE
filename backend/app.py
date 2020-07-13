@@ -147,13 +147,13 @@ def receiveFile():
     try:
         if length > 1:
             data.returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
-        returnJson = data.returnJson
+        returnDict = data.returnJson
         returnJson = jsonify(returnJson)
     except Exception as err:
         print(f"Error in completing overview: {err}", flush=True)
 
     try:
-        saveResults(returnJson)
+        saveResults(returnDict)
     except Exception as err:
         print(f"Error in saving to database: {err}", flush=True)
 
