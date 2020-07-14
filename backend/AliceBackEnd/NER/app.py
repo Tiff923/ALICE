@@ -140,6 +140,7 @@ def textToNer():
     text = data['text']
     res = generateTextToNer(text)
     returnJson = {"ner": res}
+    print('returnJson ner', returnJson, flush=True)
     return returnJson
 
 
