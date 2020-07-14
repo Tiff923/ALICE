@@ -138,6 +138,7 @@ def generateNerToRelation(text):
 def textToNer():
     data = request.json
     text = data['text']
+    print('text ner', text, flush=True)
     res = generateTextToNer(text)
     returnJson = {"ner": res}
     print('returnJson ner', returnJson, flush=True)
