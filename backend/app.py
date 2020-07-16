@@ -12,6 +12,7 @@ import chardet
 import re
 import datetime
 import threading
+from bson import ObjectId
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -81,6 +82,20 @@ def createAcc():
             return "success"
     except:
         return "error"
+    
+@app.route("/getFromDB", methods=["POST"])
+ def dbRetrieval():
+     print("Retrieving from Database", flush=True)
+     try:
+         data = request.json
+         id = data["ID"]
+         objectID = ObjectId(id)
+         data = mongo.db.Documents.find_one({"_id": objectID})
+         returnJson = data['data']
+     except Exception as err:
+         print(f"Error retrieving data from database: {err}", flush=True)
+         returnJson = {"Error": err}
+     return returnJson
 
 
 
@@ -280,7 +295,7 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
 @app.route("/saveConfig", methods=["GET", "POST"])
 def saveConfig():
     data = request.get_json()
-    res = mongo.db.collection.insert_one(data)
+    res = mongo.db.Documents.insert_one(data)
     res_id = str(res.inserted_id)
     print(res_id)
     return res_id
