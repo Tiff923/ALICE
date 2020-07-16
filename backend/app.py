@@ -84,7 +84,7 @@ def createAcc():
         return "error"
     
 @app.route("/getFromDB", methods=["POST"])
- def dbRetrieval():
+def dbRetrieval():
      print("Retrieving from Database", flush=True)
      try:
          data = request.json
