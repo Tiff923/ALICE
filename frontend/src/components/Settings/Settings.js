@@ -26,7 +26,7 @@ const Settings = (props) => {
     };
     await axios
       .post(
-        'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/saveConfig',
+        'http://saveconfig-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/saveConfig',
         {
           data: data,
         }

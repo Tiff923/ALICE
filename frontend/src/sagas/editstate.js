@@ -125,7 +125,7 @@ const apiPostExisting = (payload) => {
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
   return axios.post(
-    'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/getFromDB',
+    'http://getfromdb-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/getFromDB',
     { ID: payload },
     {
       headers: headers,
