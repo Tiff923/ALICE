@@ -11,6 +11,7 @@ import pdfplumber
 import chardet
 import re
 import datetime
+from bson import ObjectId
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -82,6 +83,22 @@ def createAcc():
         return "error"
 
 
+@app.route("/getFromDB", methods=["POST"])
+def dbRetrieval():
+    print("Retrieving from Database", flush=True)
+    try:
+        data = request.json
+        id = data["ID"]
+        objectID = ObjectId(id)
+        print(f"Object ID: {objectID}", flush=True)
+        data = mongo.db.Documents.find_one({"_id": objectID})
+        returnJson = data["data"]
+    except Exception as err:
+        print(f"Error retrieving data from database: {err}", flush=True)
+        returnJson = {"Error": err}
+    return returnJson
+
+
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
     print("Receiving File", flush=True)
@@ -114,20 +131,20 @@ def receiveFile():
                         text += page.extract_text()
             text = re.sub('\\\\', '', text)
             tempJson = runAlice(text)
-            returnJson[fileName] = tempJson
+            returnJson[name] = tempJson
 
             tempEntity = tempJson['ner']['ents']
             for entity in tempEntity:
                 key = entity['text']+'_'+entity['type']
                 if key in corpusEntity:
                     corpusEntity[key]['value'] += 1
-                    corpusEntity[key]['documents'].add(fileName)
+                    corpusEntity[key]['documents'].add(name)
                 else:
                     corpusEntity[key] = {
                         'id': entity['text'],
                         'label': entity['text'],
                         'value': 1,
-                        'documents': set([fileName]),
+                        'documents': set([name]),
                         'type': entity['type'],
                         'color': nercolors[entity['type']]
                     }
@@ -137,7 +154,7 @@ def receiveFile():
 
             newRelation = tempJson['relation'].copy()
             for relation in newRelation:
-                relation['documents'] = [fileName]
+                relation['documents'] = [name]
                 corpusRelation.append(relation)
 
         except Exception as err:
@@ -228,7 +245,7 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
 @app.route("/saveConfig", methods=["GET", "POST"])
 def saveConfig():
     data = request.get_json()
-    res = mongo.db.collection.insert_one(data)
+    res = mongo.db.Documents.insert_one(data)
     res_id = str(res.inserted_id)
     print(res_id)
     return res_id
@@ -239,14 +256,14 @@ def runAlice(text):
     text = text.replace("\\x93", "")
     text = text.replace("\\x94", "")
     num_words = len(text.split(' '))
-    
+
     # Topic Modelling
     print("Sending topic")
     topicJson = postTopicRequest([text], 1, 10)
     topics = topicJson['topics']
     print("receive topic")
-    
-     # Sentiment
+
+    # Sentiment
     sentimentJson = postSentimentRequest(text)
     sentimentList = sentimentJson["sentiment"]
     key_data_sentiment = sentimentList[0]["sentiment"]
@@ -265,20 +282,20 @@ def runAlice(text):
     bytestringJson = postWordCloud(text)
     wordcloud = bytestringJson['data']
     print("receive wordcloud")
-    
-     # Summary
+
+    # Summary
     print("Sending to summary")
     summaryJson = postSummaryRequest(text, 3)
     summary = summaryJson["summary"]
     print("Receive from summary")
-    
+
     # NER
     print("Sending to NER")
     nerJson = postNerRequest(text)
     ner = nerJson['ner']
     passToRelation = ner.pop('passToRelation')
     print("Receive from NER")
-    
+
     # Relation
     print("Send to relation")
     relationJson = postRelationRequest(passToRelation)

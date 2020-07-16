@@ -1,33 +1,39 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+// import FormHelperText from '@material-ui/core/FormHelperText';
+// import FormControl from '@material-ui/core/FormControl';
+// import InputLabel from '@material-ui/core/InputLabel';
+// import MenuItem from '@material-ui/core/MenuItem';
 // import Switch from '@material-ui/core/Switch';
-import Select from '@material-ui/core/Select';
+// import Select from '@material-ui/core/Select';
 import { MdSave } from 'react-icons/md';
 import './settings.css';
 import axios from 'axios';
 
 const Settings = (props) => {
-  const { setIsLoading, layout, corpus, saveConfig } = props;
+  const { setIsLoading, layout, corpus, saveConfig, fileNames } = props;
 
-  const [topic, setTopic] = React.useState(10);
+  // const [topic, setTopic] = React.useState(10);
+  const [documentId, setDocumentId] = React.useState(null);
 
   const saveToDb = async () => {
     setIsLoading(true);
     const data = {
-      corpus: corpus,
+      fileNames: fileNames,
+      corpusData: corpus,
       layout: layout,
     };
     await axios
-      .post('http://5370737854fd.ngrok.io/saveConfig', {
-        data: data,
-      })
+      .post(
+        'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/saveConfig',
+        {
+          data: data,
+        }
+      )
       .then((res) => {
         saveConfig(res.data);
+        setDocumentId(res.data);
         setIsLoading(false);
       });
   };
@@ -39,8 +45,9 @@ const Settings = (props) => {
           <MdSave size={30} />
         </Button>
         Save
+        {documentId ? <text>The Case ID is {documentId}</text> : null}
       </div>
-      <div className="settings-button">
+      {/* <div className="settings-button">
         <FormControl>
           <InputLabel id="topic-select">Number of Topics</InputLabel>
           <Select
@@ -56,7 +63,7 @@ const Settings = (props) => {
             Number of words per topic (topic modelling)
           </FormHelperText>
         </FormControl>
-      </div>
+      </div> */}
     </Container>
   );
 };

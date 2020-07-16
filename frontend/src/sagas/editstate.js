@@ -109,6 +109,7 @@ const apiPost = (payload) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
+
   return axios.post(
     'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/uploadFile',
     formData,
@@ -118,12 +119,36 @@ const apiPost = (payload) => {
   );
 };
 
+const apiPostExisting = (payload) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+  };
+  return axios.post(
+    'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/getFromDB',
+    { ID: payload },
+    {
+      headers: headers,
+    }
+  );
+};
+
 export function* uploadData({ payload }) {
   try {
-    const res = yield call(apiPost, payload);
-    console.log('DATA', res.data);
-    const args = { data: res.data };
-    yield all([call(setCorpusData, args), call(setFileNames, args)]);
+    let res;
+    if (payload.existing) {
+      res = yield call(apiPostExisting, payload.docId);
+      const existingData = res.data;
+      yield put({
+        type: types.SET_EXISTING_DOCUMENT,
+        payload: existingData,
+      });
+    } else {
+      res = yield call(apiPost, payload.files);
+      console.log('DATA', res.data);
+      const args = { data: res.data };
+      yield all([call(setCorpusData, args), call(setFileNames, args)]);
+    }
     yield put({
       type: types.UPLOAD_SUCCESS,
     });
