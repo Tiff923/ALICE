@@ -40,7 +40,7 @@
 
 .background-image {
   background-image: url('../../images/aboutImage.png');
-  background-size: contain;
+  background-size: 100% 100%;
   /* height: 720px; */
   display: flex;
   justify-content: center;
@@ -51,7 +51,7 @@
   /* padding-top: 120px; */
   /* padding-left: 40px; */
   /* padding-right: 40px; */
-  text-align: center;
+  text-align: center; 
 }
 
 #HeaderDescription {
@@ -135,4 +135,42 @@
 .benefitsImage {
   height: 600px;
   width: 100%;
+}
+
+.stepOneBackground{
+  background-image: url('../../images/uploadPage.png');
+  background-size: 100% 100%;
+  height: 300px;
+  position: relative;
+}
+
+.stepTwoBackground{
+  background-image: url('../../images/dashboardZoom.jpg');
+  background-size: 100% 100%;
+  height: 300px;
+  position: relative;
+}
+
+.stepThreeBackground{
+  background-image: url('../../images/save.png');
+  background-size: 100% 100%;
+  height: 300px;
+  position: relative;
+}
+
+.stepLabelWhite{
+  position: absolute;                  
+  bottom:0;                          
+  right:0;
+  color:white;  
+  font-family: fantasy;
+}
+
+.stepLabelBlack{
+  position: absolute;                  
+  bottom:0;                          
+  right:0;
+  color: black; 
+  font-family: fantasy;
+  padding-right: 10px;
 }
