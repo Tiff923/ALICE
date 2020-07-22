@@ -82,42 +82,62 @@ def createAcc():
             return "success"
     except:
         return "error"
-    
-@app.route("/getFromDB", methods=["POST"])
-def dbRetrieval():
-     print("Retrieving from Database", flush=True)
-     try:
-         data = request.json
-         id = data["ID"]
-         objectID = ObjectId(id)
-         data = mongo.db.Documents.find_one({"_id": objectID})
-         returnJson = data['data']
-     except Exception as err:
-         print(f"Error retrieving data from database: {err}", flush=True)
-         returnJson = {"Error": err}
-     return returnJson
 
+
+@app.route("/loadDbFile", methods=["POST"])
+def dbRetrieval():
+    print("Retrieving from Database", flush=True)
+    try:
+        data = request.json
+        id = data["ID"]
+        objectID = ObjectId(id)
+        print(f"Object ID: {objectID}", flush=True)
+        data = mongo.db.Documents.find_one({"_id": objectID})
+        returnJson = data["data"]
+    except Exception as err:
+        print(f"Error retrieving data from database: {err}", flush=True)
+        returnJson = {"Error": err}
+    return returnJson
+
+
+@app.route("/loadExistingFile", methods=["POST"])
+def loadExistingFile():
+    file = request.files['existingFile']
+    jsonData = json.loads(file.read())
+    return jsonData
+
+
+@app.route("/updateNetwork", methods=['POST'])
+def updateNetwork():
+    relationData = json.loads(request.form['relationData'])
+    networkData = relationToNetwork(relationData)
+    return json.JSONEncoder().encode(networkData)
+
+
+@app.route("/saveToDb", methods=["GET", "POST"])
+def saveToDb():
+    data = request.get_json()
+    res = mongo.db.Documents.insert_one(data)
+    res_id = str(res.inserted_id)
+    print(res_id)
+    return res_id
 
 
 class dataClass():
     def __init__(self):
         self.returnJsonLock = threading.Lock()
-        self.returnJson = {}  
+        self.returnJson = {}
         self.corpusEntity = {}
         self.corpusEntityLock = threading.Lock()
         self.corpusRelation = []
         self.corpusRelationLock = threading.Lock()
         self.users = 0
 
-    
-
-
-
 
 @app.route("/uploadFile", methods=["GET", "POST"])
 def receiveFile():
     data = dataClass()
-    print(f"New file, creating new dataclass. Data: {data.corpusEntity}", flush=True) 
+    print(f"New file, creating new dataclass. Data: {data.corpusEntity}", flush=True)
     print("Receiving File", flush=True)
     length = int(request.form['length'])
     fileNames = json.loads(request.form['fileNames'])
@@ -143,10 +163,10 @@ def receiveFile():
                     text += page.extract_text()
         text = re.sub('\\\\', '', text)
         corpus.append(text)
-        thread = threading.Thread(target=thread_task, args=(text,name, i, data))
+        thread = threading.Thread(target=thread_task, args=(text, name, i, data))
         thread.start()
         threads.append(thread)
-    
+
     for thread in threads:
         try:
             thread.join()
@@ -169,11 +189,11 @@ def thread_task(text, fileName, number, data):
     try:
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
-        ##Semaphore this later
+        # Semaphore this later
         data.returnJsonLock.acquire()
         data.returnJson[fileName] = tempJson
         data.returnJsonLock.release()
-        ##Semaphore this later as well
+        # Semaphore this later as well
         tempEntity = tempJson['ner']['ents']
         for entity in tempEntity:
             key = entity['text']+'_'+entity['type']
@@ -194,7 +214,7 @@ def thread_task(text, fileName, number, data):
 
         for relation in newRelation:
             relation['documents'] = [fileName]
-            ##Semaphore this
+            # Semaphore this
             data.corpusRelationLock.acquire()
             data.corpusRelation.append(relation)
             data.corpusRelationLock.release()
@@ -204,8 +224,6 @@ def thread_task(text, fileName, number, data):
         print(err, "occured in "+fileName + " in thread " + str(number), flush=True)
     except:
         print('Unknown error in'+fileName, flush=True)
-
-
 
 
 def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
@@ -281,28 +299,19 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     return jsonToReact
 
 
-@app.route("/saveConfig", methods=["GET", "POST"])
-def saveConfig():
-    data = request.get_json()
-    res = mongo.db.Documents.insert_one(data)
-    res_id = str(res.inserted_id)
-    print(res_id)
-    return res_id
-
-
 def runAlice(text):
     text = text.replace("\\x92", "")
     text = text.replace("\\x93", "")
     text = text.replace("\\x94", "")
     num_words = len(text.split(' '))
-    
+
     # Topic Modelling
     print("Sending topic")
     topicJson = postTopicRequest([text], 1, 10)
     topics = topicJson['topics']
     print("receive topic")
-    
-     # Sentiment
+
+    # Sentiment
     sentimentJson = postSentimentRequest(text)
     sentimentList = sentimentJson["sentiment"]
     key_data_sentiment = sentimentList[0]["sentiment"]
@@ -321,20 +330,20 @@ def runAlice(text):
     bytestringJson = postWordCloud(text)
     wordcloud = bytestringJson['data']
     print("receive wordcloud")
-    
-     # Summary
+
+    # Summary
     print("Sending to summary")
     summaryJson = postSummaryRequest(text, 3)
     summary = summaryJson["summary"]
     print("Receive from summary")
-    
+
     # NER
     print("Sending to NER")
     nerJson = postNerRequest(text)
     ner = nerJson['ner']
     passToRelation = ner.pop('passToRelation')
     print("Receive from NER")
-    
+
     # Relation
     print("Send to relation")
     relationJson = postRelationRequest(passToRelation)
