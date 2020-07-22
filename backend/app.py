@@ -83,7 +83,7 @@ def createAcc():
         return "error"
 
 
-@app.route("/getFromDB", methods=["POST"])
+@app.route("/loadDbFile", methods=["POST"])
 def dbRetrieval():
     print("Retrieving from Database", flush=True)
     try:
@@ -97,6 +97,20 @@ def dbRetrieval():
         print(f"Error retrieving data from database: {err}", flush=True)
         returnJson = {"Error": err}
     return returnJson
+
+
+@app.route("/loadExistingFile", methods=["POST"])
+def loadExistingFile():
+    file = request.files['existingFile']
+    jsonData = json.loads(file.read())
+    return jsonData
+
+
+@app.route("/updateNetwork", methods=['POST'])
+def updateNetwork():
+    relationData = json.loads(request.form['relationData'])
+    networkData = relationToNetwork(relationData)
+    return json.JSONEncoder().encode(networkData)
 
 
 @app.route("/uploadFile", methods=["GET", "POST"])
@@ -242,8 +256,8 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     return jsonToReact
 
 
-@app.route("/saveConfig", methods=["GET", "POST"])
-def saveConfig():
+@app.route("/saveToDb", methods=["GET", "POST"])
+def saveToDb():
     data = request.get_json()
     res = mongo.db.Documents.insert_one(data)
     res_id = str(res.inserted_id)

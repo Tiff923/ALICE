@@ -25,6 +25,10 @@ const TwoDGraph = (props) => {
   const fgRef2D = useRef(null);
 
   useEffect(() => {
+    fgRef2D.current.d3ReheatSimulation();
+  }, [data]);
+
+  useEffect(() => {
     fgRef2D.current.d3Force('link').distance(linkDistance);
     fgRef2D.current.d3ReheatSimulation();
   }, [linkDistance]);

@@ -1,9 +1,14 @@
 #settings-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
+}
+
+#settings-container h2 {
+  font-size: 1.5vw;
+  color: red;
 }
 
 .settings-button {

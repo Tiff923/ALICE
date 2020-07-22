@@ -1,68 +1,31 @@
 import { put, all, call, select, takeEvery } from 'redux-saga/effects';
 import { types, getNerData, getRelationData } from '../reducers/editstate';
-import { nercolors } from '../utils/colors';
-import $ from 'jquery';
 import axios from 'axios';
 import { initialLayout } from '../utils/layout';
 import { initialOverviewLayout } from '../utils/overviewLayout';
 
-export function* updateNetwork({ data, currentFileName }) {
-  const links = [];
-  const links_template = {
-    source: '',
-    target: '',
+const apiPostNetwork = (data) => {
+  const formData = new FormData();
+  formData.append('relationData', JSON.stringify(data));
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST',
   };
-  // Edges
-  const nodes_temp = {};
-  for (var i = 0; i < data.length; i++) {
-    var temp = $.extend(true, {}, links_template);
-    var el = data[i];
-    if (el['relation'].slice(-7) === '(e2,e1)') {
-      temp['source'] = el['e2'];
-      temp['target'] = el['e1'];
-    } else {
-      temp['source'] = el['e1'];
-      temp['target'] = el['e2'];
-      temp['relation'] = el['relation'];
+  return axios.post(
+    'http://updatenetwork-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/updateNetwork',
+    formData,
+    {
+      headers: headers,
     }
-    var node_t = temp['target'];
-    var node_t_label = node_t === el['e1'] ? el['e1_label'] : el['e2_label'];
-    var node_s = temp['source'];
-    var node_s_label = node_s === el['e2'] ? el['e2_label'] : el['e1_label'];
-    if (node_t in nodes_temp) {
-      nodes_temp[node_t]['val'] += 2;
-      nodes_temp[node_t]['neighbors'].add(node_s);
-    } else {
-      nodes_temp[node_t] = {
-        id: node_t,
-        name: node_t,
-        val: 2,
-        color: nercolors[node_t_label],
-        neighbors: new Set(node_s),
-      };
-    }
-    if (node_s in nodes_temp) {
-      nodes_temp[node_s]['val'] += 2;
-      nodes_temp[node_s]['neighbors'].add(node_t);
-    } else {
-      nodes_temp[node_s] = {
-        id: node_s,
-        name: node_s,
-        val: 2,
-        color: nercolors[node_s_label],
-        neighbors: new Set(node_t),
-      };
-    }
-    links.push(temp);
-  }
+  );
+};
 
-  const nodes = $.map(nodes_temp, function (value, key) {
-    value['neighbors'] = Array.from(value['neighbors']);
-    return value;
-  });
+function* updateNetworkHelper({ data, currentFileName }) {
+  const res = yield call(apiPostNetwork, data);
+  const networkData = res.data;
   yield put({
     type: types.UPDATED_NETWORK_DATA,
-    payload: { nodes: nodes, links: links },
+    payload: networkData,
     currentFileName: currentFileName,
   });
 }
@@ -119,13 +82,29 @@ const apiPost = (payload) => {
   );
 };
 
-const apiPostExisting = (payload) => {
+const apiPostJson = (payload) => {
+  const formData = new FormData();
+  formData.append('existingFile', payload);
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
   return axios.post(
-    'http://getfromdb-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/getFromDB',
+    'http://loadexistingfile-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/loadExistingFile',
+    formData,
+    {
+      headers: headers,
+    }
+  );
+};
+
+const apiPostDb = (payload) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+  };
+  return axios.post(
+    'http://loaddbfile-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/loadDbFile',
     { ID: payload },
     {
       headers: headers,
@@ -137,16 +116,67 @@ export function* uploadData({ payload }) {
   try {
     let res;
     if (payload.existing) {
-      res = yield call(apiPostExisting, payload.docId);
+      if (payload.docId) {
+        res = yield call(apiPostDb, payload.docId);
+      } else {
+        res = yield call(apiPostJson, payload.files);
+      }
       const existingData = res.data;
+
+      // Remove bugs related to network graph when loading existing file
+      existingData.fileNames.forEach((document) => {
+        if (existingData.corpusData[document].network.links[0].source.id) {
+          existingData.corpusData[document].network.links.forEach((link) => {
+            link.source = link.source.id;
+            link.target = link.target.id;
+            delete link.__indexColor;
+            delete link.__controlPoints;
+            delete link.__photons;
+            delete link.index;
+          });
+
+          existingData.corpusData[document].network.nodes.forEach((node) => {
+            delete node.index;
+            delete node.x;
+            delete node.y;
+            delete node.vx;
+            delete node.vy;
+            delete node.__indexColor;
+          });
+        }
+      });
+
       yield put({
         type: types.SET_EXISTING_DOCUMENT,
         payload: existingData,
       });
     } else {
       res = yield call(apiPost, payload.files);
-      console.log('DATA', res.data);
-      const args = { data: res.data };
+      const newData = res.data;
+
+      // Remove bugs related to network graph when generating new data
+      Object.keys(newData).forEach((document) => {
+        if (newData[document].network.links[0].source.id) {
+          newData.corpusData[document].network.links.forEach((link) => {
+            link.source = link.source.id;
+            link.target = link.target.id;
+            delete link.__indexColor;
+            delete link.__controlPoints;
+            delete link.__photons;
+            delete link.index;
+          });
+
+          newData[document].network.nodes.forEach((node) => {
+            delete node.index;
+            delete node.x;
+            delete node.y;
+            delete node.vx;
+            delete node.vy;
+            delete node.__indexColor;
+          });
+        }
+      });
+      const args = { data: newData };
       yield all([call(setCorpusData, args), call(setFileNames, args)]);
     }
     yield put({
@@ -160,7 +190,7 @@ export function* uploadData({ payload }) {
   }
 }
 
-export function* updateNer({ payload }) {
+function* updateNer({ payload }) {
   const { newNer, nerToRelation, currentFileName } = payload;
   const currentNerData = yield select(getNerData, [currentFileName]);
   const text = currentNerData.text;
@@ -193,10 +223,13 @@ export function* updateNer({ payload }) {
     currentFileName: currentFileName,
   });
   const args = { data: newRelationData, currentFileName: currentFileName };
-  yield all([call(updateRelationHelper, args), call(updateNetwork, args)]);
+  yield all([
+    call(updateRelationHelper, args),
+    call(updateNetworkHelper, args),
+  ]);
 }
 
-export function* updateRelationHelper({ data, currentFileName }) {
+function* updateRelationHelper({ data, currentFileName }) {
   yield put({
     type: types.UPDATED_RELATION_DATA,
     payload: data,
@@ -204,10 +237,13 @@ export function* updateRelationHelper({ data, currentFileName }) {
   });
 }
 
-export function* updateRelation({ payload }) {
+function* updateRelation({ payload }) {
   const { newRelation, currentFileName } = payload;
   const args = { data: newRelation, currentFileName: currentFileName };
-  yield all([call(updateRelationHelper, args), call(updateNetwork, args)]);
+  yield all([
+    call(updateRelationHelper, args),
+    call(updateNetworkHelper, args),
+  ]);
 }
 
 export default [

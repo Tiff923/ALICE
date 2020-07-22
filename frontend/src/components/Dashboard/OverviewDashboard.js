@@ -22,6 +22,7 @@ const OverviewDashboard = (props) => {
     nerData,
     relationData,
     sentimentData,
+    networkData,
     topicData,
     keyData,
     wordCloud,
@@ -41,7 +42,7 @@ const OverviewDashboard = (props) => {
   const [chargeStrength, setChargeStrength] = useState(-200);
   const [cooldownTicks, setCooldownTicks] = useState(undefined);
   const [isFullScreen, setFullScreen] = useState(false);
-  const [networkData, setNetworkData] = useState(props.networkData);
+  const [netData, setNetworkData] = useState(networkData);
   const wordCloudURL = 'data:image/png;base64,' + wordCloud;
 
   useEffect(() => {
@@ -50,8 +51,8 @@ const OverviewDashboard = (props) => {
   }, [currentFileName]);
 
   useEffect(() => {
-    setNetworkData(props.networkData);
-  }, [props.networkData]);
+    setNetworkData(networkData);
+  }, [networkData]);
 
   const onLayoutChange = (layout, layouts) => {
     changeLayout({ layouts: layouts, fileName: 'Overview' });
@@ -84,12 +85,12 @@ const OverviewDashboard = (props) => {
             >
               <VisualCard
                 title="Network Graph"
-                category={`${networkData.nodes.length} Nodes, ${networkData.links.length} Links`}
+                category={`${netData.nodes.length} Nodes, ${netData.links.length} Links`}
                 content={
                   <NetworkGraph
                     height={size.height ? size.height * 0.9 : 0}
                     width={size.width ? size.width - 30 : 0}
-                    data={networkData}
+                    data={netData}
                     selectedNode={selectedNode}
                     selectedLink={selectedLink}
                     currentFileName={currentFileName}
@@ -241,7 +242,7 @@ const OverviewDashboard = (props) => {
                     >
                       <OverviewEntityDisplay
                         data={nerData}
-                        originalNetwork={props.networkData}
+                        originalNetwork={networkData}
                         setSelectedNode={setSelectedNode}
                         selectedNerRow={selectedNerRow}
                         setSelectedNerRow={setSelectedNerRow}
@@ -298,12 +299,12 @@ const OverviewDashboard = (props) => {
               return (
                 <VisualCard
                   title="Network Graph"
-                  category={`${networkData.nodes.length} Nodes, ${networkData.links.length} Links`}
+                  category={`${netData.nodes.length} Nodes, ${netData.links.length} Links`}
                   content={
                     <NetworkGraph
                       height={size.height ? size.height * 0.75 : 0}
                       width={size.width ? size.width - 30 : 0}
-                      data={networkData}
+                      data={netData}
                       selectedNode={selectedNode}
                       selectedLink={selectedLink}
                       currentFileName={currentFileName}

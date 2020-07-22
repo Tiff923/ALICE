@@ -19,9 +19,10 @@ import {
   getUploadStatus,
   isUploadingData,
   getFileStatus,
-  saveConfig,
+  saveDocumentId,
   changeLayout,
   getLayout,
+  getDocumentId,
 } from './reducers/editstate';
 
 const App = (props) => {
@@ -32,12 +33,12 @@ const App = (props) => {
     uploadStatus,
     isUploading,
     fileStatus,
-    saveConfig,
+    documentId,
+    saveDocumentId,
     changeLayout,
     layout,
   } = props;
 
-  console.log('cd', corpusData);
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState('Dashboard');
   const [currentFileName, setCurrentFileName] = useState('Overview');
@@ -108,10 +109,11 @@ const App = (props) => {
           <Tab.Pane eventKey="Settings" className="main-panel">
             <Settings
               fileNames={fileNames}
-              corpus={corpusData}
+              corpusData={corpusData}
               layout={layout}
               setIsLoading={setIsLoading}
-              saveConfig={saveConfig}
+              saveDocumentId={saveDocumentId}
+              documentId={documentId}
             />
           </Tab.Pane>
         </Tab.Content>
@@ -128,10 +130,11 @@ const mapStateToProps = (store) => ({
   isUploading: isUploadingData(store),
   corpusData: getCorpusData(store),
   fileNames: getFileNames(store),
+  documentId: getDocumentId(store),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  saveConfig: (payload) => dispatch(saveConfig(payload)),
+  saveDocumentId: (payload) => dispatch(saveDocumentId(payload)),
   changeLayout: (payload) => dispatch(changeLayout(payload)),
 });
 

@@ -1,41 +1,85 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
-// import FormHelperText from '@material-ui/core/FormHelperText';
-// import FormControl from '@material-ui/core/FormControl';
-// import InputLabel from '@material-ui/core/InputLabel';
-// import MenuItem from '@material-ui/core/MenuItem';
-// import Switch from '@material-ui/core/Switch';
-// import Select from '@material-ui/core/Select';
 import { MdSave } from 'react-icons/md';
 import './settings.css';
 import axios from 'axios';
 
 const Settings = (props) => {
-  const { setIsLoading, layout, corpus, saveConfig, fileNames } = props;
-
-  // const [topic, setTopic] = React.useState(10);
-  const [documentId, setDocumentId] = React.useState(null);
+  const {
+    setIsLoading,
+    layout,
+    corpusData,
+    saveDocumentId,
+    documentId,
+    fileNames,
+  } = props;
 
   const saveToDb = async () => {
     setIsLoading(true);
     const data = {
       fileNames: fileNames,
-      corpusData: corpus,
+      corpusData: corpusData,
       layout: layout,
     };
     await axios
       .post(
-        'http://saveconfig-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/saveConfig',
+        'http://savetodb-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/saveToDb',
         {
           data: data,
         }
       )
       .then((res) => {
-        saveConfig(res.data);
-        setDocumentId(res.data);
+        saveDocumentId(res.data);
         setIsLoading(false);
       });
+  };
+
+  const saveToLocal = () => {
+    setIsLoading(true);
+
+    const toSaveCorpusData = JSON.parse(JSON.stringify(corpusData));
+
+    fileNames.forEach((document) => {
+      if (toSaveCorpusData[document].network.links[0].source.id) {
+        toSaveCorpusData[document].network.links.forEach((link) => {
+          link.source = link.source.id;
+          link.target = link.target.id;
+          delete link.__indexColor;
+          delete link.__controlPoints;
+          delete link.__photons;
+          delete link.index;
+        });
+
+        toSaveCorpusData[document].network.nodes.forEach((node) => {
+          delete node.index;
+          delete node.x;
+          delete node.y;
+          delete node.vx;
+          delete node.vy;
+          delete node.__indexColor;
+        });
+      }
+    });
+
+    const data = {
+      fileNames: fileNames,
+      corpusData: toSaveCorpusData,
+      layout: layout,
+    };
+
+    var a = document.createElement('a');
+    document.body.appendChild(a);
+    a.style = 'display: none';
+    var json = JSON.stringify(data),
+      blob = new Blob([json], { type: 'octet/stream' }),
+      url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = 'test.json';
+    a.click();
+    window.URL.revokeObjectURL(url);
+
+    setIsLoading(false);
   };
 
   return (
@@ -44,26 +88,16 @@ const Settings = (props) => {
         <Button onClick={() => saveToDb()}>
           <MdSave size={30} />
         </Button>
-        Save
-        {documentId ? <text>The Case ID is {documentId}</text> : null}
+        Save to Database
       </div>
-      {/* <div className="settings-button">
-        <FormControl>
-          <InputLabel id="topic-select">Number of Topics</InputLabel>
-          <Select
-            labelId="topic-select-label"
-            value={topic}
-            onChange={(event) => setTopic(event.target.value)}
-          >
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={20}>20</MenuItem>
-            <MenuItem value={30}>30</MenuItem>
-          </Select>
-          <FormHelperText>
-            Number of words per topic (topic modelling)
-          </FormHelperText>
-        </FormControl>
-      </div> */}
+      {documentId ? <h2>Case ID: {documentId}</h2> : null}
+
+      <div className="settings-button">
+        <Button onClick={() => saveToLocal()}>
+          <MdSave size={30} />
+        </Button>
+        Save JSON
+      </div>
     </Container>
   );
 };

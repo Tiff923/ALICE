@@ -9,7 +9,7 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 
-import Upload from './Upload.js';
+import Upload from './components/Upload/UploadContainer.js';
 import About from './components/FrontPage/About';
 import Login from './components/Account/Login.js';
 import CreateAcc from './components/Account/CreateAcc.js';

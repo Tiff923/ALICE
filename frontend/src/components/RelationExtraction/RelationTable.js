@@ -17,14 +17,9 @@ const updateNetwork = (data) => {
   for (var i = 0; i < data.length; i++) {
     var temp = $.extend(true, {}, links_template);
     var el = data[i];
-    if (el['relation'].slice(-7) === '(e2,e1)') {
-      temp['source'] = el['e2'];
-      temp['target'] = el['e1'];
-    } else {
-      temp['source'] = el['e1'];
-      temp['target'] = el['e2'];
-      temp['relation'] = el['relation'];
-    }
+    temp['source'] = el['e1'];
+    temp['target'] = el['e2'];
+    temp['relation'] = el['relation'];
     var node_t = temp['target'];
     var node_t_label = node_t === el['e1'] ? el['e1_label'] : el['e2_label'];
     var node_s = temp['source'];
@@ -38,7 +33,7 @@ const updateNetwork = (data) => {
         name: node_t,
         val: 4,
         color: nercolors[node_t_label],
-        neighbors: new Set(node_s),
+        neighbors: new Set([node_s]),
       };
     }
     if (node_s in nodes_temp) {
@@ -50,7 +45,7 @@ const updateNetwork = (data) => {
         name: node_s,
         val: 2,
         color: nercolors[node_s_label],
-        neighbors: new Set(node_t),
+        neighbors: new Set([node_t]),
       };
     }
     links.push(temp);

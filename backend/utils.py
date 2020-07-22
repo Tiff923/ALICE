@@ -20,28 +20,20 @@ nercolors = {'PERSON': '#FF5962',
 
 def relationToNetwork(relationData):
     links = []
-    links_template = {
-        'source': '',
-        'target': ''
-    }
 
     # Links
     nodes_temp = {}
     for i in range(len(relationData)):
-        temp = links_template.copy()
+        temp = {}
         el = relationData[i]
-        if el['relation'][:-7] == '(e2,e1)':
-            temp['source'] = el['e2']
-            temp['target'] = el['e1']
-        else:
-            temp['source'] = el['e1']
-            temp['target'] = el['e2']
-            temp['relation'] = el['relation']
+        temp['source'] = str(el['e1'])
+        temp['target'] = str(el['e2'])
+        temp['relation'] = str(el['relation'])
 
-        node_t = temp['target']
-        node_t_label = el['e1_label'] if node_t == el['e1'] else el['e2_label']
-        node_s = temp['source']
-        node_s_label = el['e2_label'] if node_s == el['e2'] else el['e1_label']
+        node_t = str(el['e2'])
+        node_t_label = str(el['e2_label'])
+        node_s = str(el['e1'])
+        node_s_label = str(el['e1_label'])
 
         if node_t in nodes_temp:
             nodes_temp[node_t]['val'] += 2
@@ -67,7 +59,6 @@ def relationToNetwork(relationData):
                 'neighbors': set([node_t])
             }
         links.append(temp)
-
     # Nodes
     nodes = list(nodes_temp.values())
     for n in nodes:
@@ -80,32 +71,20 @@ def relationToNetwork(relationData):
 
 def overviewRelationToNetwork(relationData, nerData):
     links = []
-    links_template = {
-        'source': '',
-        'target': ''
-    }
 
     # Links
     nodes_temp = {}
     for i in range(len(relationData)):
-        temp = links_template.copy()
+        temp = {}
         el = relationData[i]
-        if el['relation'][:-7] == '(e2,e1)':
-            temp['source'] = el['e2']+'_'+el['e2_label']
-            temp['target'] = el['e1']+'_'+el['e1_label']
-            node_t_name = el['e1']
-            node_t_label = el['e1_label']
-            node_s_name = el['e2']
-            node_s_label = el['e2_label']
-        else:
-            temp['source'] = el['e1']+'_'+el['e1_label']
-            temp['target'] = el['e2']+'_'+el['e2_label']
-            temp['relation'] = el['relation']
-            node_t_name = el['e2']
-            node_t_label = el['e2_label']
-            node_s_name = el['e1']
-            node_s_label = el['e1_label']
+        temp['source'] = el['e1']+'_'+el['e1_label']
+        temp['target'] = el['e2']+'_'+el['e2_label']
+        temp['relation'] = el['relation']
 
+        node_t_name = el['e2']
+        node_t_label = el['e2_label']
+        node_s_name = el['e1']
+        node_s_label = el['e1_label']
         node_t = temp['target']
         node_s = temp['source']
 

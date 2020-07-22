@@ -23,11 +23,9 @@ def classifier_api():
 
 
 def classify_one_category(model_file_path, vectorizer_file_path, selector_file_path, data):
-    print("accessing files")
     model = pickle.load(open(model_file_path, 'rb'))
     vectorizer = pickle.load(open(vectorizer_file_path, "rb"))
     selector = pickle.load(open(selector_file_path, "rb"))
-    print("file access succeed?")
     features_test = vectorizer.transform(data)
     features_test = selector.transform(features_test).toarray()
     predictions = model.predict(features_test)
@@ -57,7 +55,7 @@ def classify_all_category(data):
         './tech_selector.pickle']
 
     predictions = {}
-    keys = {0: 'health', 1: 'crime', 2: 'terrorism', 3: 'finance', 4: 'politics', 5: 'tech'}
+    keys = {0: 'Health', 1: 'Crime', 2: 'Terrorism', 3: 'Finance', 4: 'Politics', 5: 'Tech'}
     for i in range(6):
         key = keys[i]
         prediction = classify_one_category(model_path_list[i], vectorizer_path_list[i], selector_path_list[i], data)

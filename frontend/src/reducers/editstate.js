@@ -1,71 +1,7 @@
-import data from './data.json';
-import memoirData from './memoir.json';
-import { initialLayout } from '../utils/layout';
-import { initialOverviewLayout } from '../utils/overviewLayout';
-
 export const initialState = {
   corpusData: null,
   fileNames: [],
   layout: {},
-
-  // corpusData: data,
-  // fileNames: [
-  //   'Overview',
-  //   'Conclusion.pdf',
-  //   'Abstract.pdf',
-  //   'Chapter1.pdf',
-  //   'Chapter2.pdf',
-  //   'Chapter3.pdf',
-  //   'Chapter4.pdf',
-  // ],
-  // layout: {
-  //   Overview: initialOverviewLayout,
-  //   'Conclusion.pdf': initialLayout,
-  //   'Abstract.pdf': initialLayout,
-  //   'Chapter1.pdf': initialLayout,
-  //   'Chapter2.pdf': initialLayout,
-  //   'Chapter3.pdf': initialLayout,
-  //   'Chapter4.pdf': initialLayout,
-  // },
-
-  // corpusData: memoirData,
-  // fileNames: [
-  //   'Overview',
-  //   'Chapter 1.pdf',
-  //   'Chapter 2.pdf',
-  //   'Chapter 3.pdf',
-  //   'Chapter 4.pdf',
-  //   'Chapter 5.pdf',
-  //   'Chapter 6.pdf',
-  //   'Chapter 7.pdf',
-  //   'Chapter 8.pdf',
-  //   'Chapter 9.pdf',
-  //   'Chapter 10.pdf',
-  //   'Chapter 11.pdf',
-  //   'Chapter 12.pdf',
-  //   'Chapter 13.pdf',
-  //   'Chapter 14.pdf',
-  //   'Chapter 15.pdf',
-  // ],
-  // layout: {
-  //   Overview: initialOverviewLayout,
-  //   'Chapter 1.pdf': initialLayout,
-  //   'Chapter 2.pdf': initialLayout,
-  //   'Chapter 3.pdf': initialLayout,
-  //   'Chapter 4.pdf': initialLayout,
-  //   'Chapter 5.pdf': initialLayout,
-  //   'Chapter 6.pdf': initialLayout,
-  //   'Chapter 7.pdf': initialLayout,
-  //   'Chapter 8.pdf': initialLayout,
-  //   'Chapter 9.pdf': initialLayout,
-  //   'Chapter 10.pdf': initialLayout,
-  //   'Chapter 11.pdf': initialLayout,
-  //   'Chapter 12.pdf': initialLayout,
-  //   'Chapter 13.pdf': initialLayout,
-  //   'Chapter 14.pdf': initialLayout,
-  //   'Chapter 15.pdf': initialLayout,
-  // },
-
   fileUploaded: false,
   uploadingData: false,
   uploadStatus: null, // SUCCESS/FAILURE/null
@@ -74,7 +10,7 @@ export const initialState = {
   updatingNerData: false,
   nerSearch: [new Set(), null],
 
-  aliceID: null,
+  documentId: '',
 };
 
 // Actions
@@ -98,7 +34,7 @@ export const types = {
   CHANGE_LAYOUT: 'CHANGE_LAYOUT',
 
   SEARCH_NER: 'SEARCH_NER',
-  SAVE_CONFIG: 'SAVE_CONFIG',
+  SAVE_DOCUMENT_ID: 'SAVE_DOCUMENT_ID',
   SET_EXISTING_DOCUMENT: 'SET_EXISTING_DOCUMENT',
 };
 
@@ -189,10 +125,10 @@ export default function reducer(state = initialState, action) {
         ...state,
         fileNames: action.payload,
       };
-    case types.SAVE_CONFIG:
+    case types.SAVE_DOCUMENT_ID:
       return {
         ...state,
-        aliceID: action.payload,
+        documentId: action.payload,
       };
     case types.SET_LAYOUT:
       return {
@@ -208,7 +144,6 @@ export default function reducer(state = initialState, action) {
         },
       };
     case types.SET_EXISTING_DOCUMENT:
-      console.log("Action Payload: ", action.payload)
       return {
         ...state,
         corpusData: action.payload.corpusData,
@@ -253,9 +188,9 @@ export function uploadingData(payload) {
   };
 }
 
-export function saveConfig(payload) {
+export function saveDocumentId(payload) {
   return {
-    type: types.SAVE_CONFIG,
+    type: types.SAVE_DOCUMENT_ID,
     payload,
   };
 }
@@ -307,4 +242,8 @@ export function getLayout(store) {
 
 export function getFileStatus(store) {
   return store.editstate.fileUploaded;
+}
+
+export function getDocumentId(store) {
+  return store.editstate.documentId;
 }

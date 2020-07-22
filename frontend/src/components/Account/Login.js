@@ -23,13 +23,10 @@ const Login = (props) => {
 
   const handleOnClick = () => {
     axios
-      .post(
-        'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/login',
-        {
-          username: username,
-          password: password,
-        }
-      )
+      .post('http://localhost:5000/login', {
+        username: username,
+        password: password,
+      })
       .then((res) => {
         const data = res.data;
         const role = data['Role'];
