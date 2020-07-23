@@ -4,6 +4,7 @@ import axios from 'axios';
 import { initialLayout } from '../utils/layout';
 import { initialOverviewLayout } from '../utils/overviewLayout';
 
+// Posts the updated relation data to the backend and returns the updated network data.
 const apiPostNetwork = (data) => {
   const formData = new FormData();
   formData.append('relationData', JSON.stringify(data));
@@ -20,6 +21,7 @@ const apiPostNetwork = (data) => {
   );
 };
 
+// Dispatches the action UPDATED_NETWORK_DATA to update the redux store with the new network data based on the file that was changed.
 function* updateNetworkHelper({ data, currentFileName }) {
   const res = yield call(apiPostNetwork, data);
   const networkData = res.data;
@@ -30,6 +32,7 @@ function* updateNetworkHelper({ data, currentFileName }) {
   });
 }
 
+// Dispatches the action UPLOADED_CORPUS_DATA to update the redux store with the new corpus data.
 function* setCorpusData({ data }) {
   yield put({
     type: types.UPLOADED_CORPUS_DATA,
@@ -37,6 +40,7 @@ function* setCorpusData({ data }) {
   });
 }
 
+// Dispatches the action SET_FILENAMES and SET_LAYOUT based on the object keys of the corpus data.
 function* setFileNames({ data }) {
   const fileNames = Object.keys(data);
   yield put({
@@ -58,6 +62,7 @@ function* setFileNames({ data }) {
   });
 }
 
+// Posts the uploaded files to the backend and returns the output.
 const apiPost = (payload) => {
   const formData = new FormData();
   var fileNames = [];
@@ -82,6 +87,7 @@ const apiPost = (payload) => {
   );
 };
 
+// Posts the JSON document to the backend and returns the output.
 const apiPostJson = (payload) => {
   const formData = new FormData();
   formData.append('existingFile', payload);
@@ -98,6 +104,8 @@ const apiPostJson = (payload) => {
   );
 };
 
+// Posts the ObjectID of the document and returns the output from the MongoDB entry corresponding
+// to that ObjectID.
 const apiPostDb = (payload) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -112,6 +120,11 @@ const apiPostDb = (payload) => {
   );
 };
 
+// Uploads the data to the backend based on the input type and
+// dispatches the action UPLOAD_SUCCESS or UPLOAD_FAILURE depending
+// on the status of the upload.
+// If the document uploaded is an existing one (JSON or MongoDB ObjectID),
+// the function dispatches the action SET_EXISTING_DOCUMENT.
 export function* uploadData({ payload }) {
   try {
     let res;
@@ -190,6 +203,8 @@ export function* uploadData({ payload }) {
   }
 }
 
+// Dispatches the action UPDATED_NER_DATA to update the redux store with the new NER data based on the file that was changed.
+// // Updates the relation and network data based on the new changes.
 function* updateNer({ payload }) {
   const { newNer, nerToRelation, currentFileName } = payload;
   const currentNerData = yield select(getNerData, [currentFileName]);
@@ -229,6 +244,7 @@ function* updateNer({ payload }) {
   ]);
 }
 
+// Dispatches the action UPDATED_RELATION_DATA to update the redux store with the new relation data based on the file that was changed.
 function* updateRelationHelper({ data, currentFileName }) {
   yield put({
     type: types.UPDATED_RELATION_DATA,
@@ -237,6 +253,7 @@ function* updateRelationHelper({ data, currentFileName }) {
   });
 }
 
+// Updates the relation and network data based on the new changes.
 function* updateRelation({ payload }) {
   const { newRelation, currentFileName } = payload;
   const args = { data: newRelation, currentFileName: currentFileName };

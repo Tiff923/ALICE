@@ -32,6 +32,8 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 
+sagaMiddleware.run(rootSaga);
+
 const secretKey = 'a very secret key';
 
 const authenticate = () => {
@@ -71,8 +73,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     />
   );
 };
-
-sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>
