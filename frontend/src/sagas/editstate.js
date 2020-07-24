@@ -166,6 +166,9 @@ export function* uploadData({ payload }) {
     } else {
       res = yield call(apiPost, payload.files);
       const newData = res.data;
+      if (Object.keys(newData).length === 0) {
+        throw new Error('Document could not be processed');
+      }
 
       // Remove bugs related to network graph when generating new data
       Object.keys(newData).forEach((document) => {
