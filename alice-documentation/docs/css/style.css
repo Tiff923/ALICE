@@ -1,0 +1,15 @@
+h1,
+h2,
+h3,
+p {
+  font-family: 'Arial';
+}
+
+a.icon.icon-home,
+a.reference.internal {
+  color: #fcfcfc;
+}
+
+a:visited {
+  color: #2980b9;
+}

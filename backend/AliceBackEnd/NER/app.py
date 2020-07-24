@@ -22,7 +22,11 @@ def run():
 
 
 def combine(data):
-
+    """
+    Returns a list of possible combinations of two entities in a sentence.
+    Input <data> is a dictionary with the key 'ents' containing a list of entities
+    and key 'text' containing the entire text string.
+    """
     res = []
     l = len(data['ents'])
     text = data['text']
@@ -64,6 +68,12 @@ def combine(data):
 
 
 def generateTextToNer(text):
+    """
+    Returns a dictionary with the following keys:
+    'ents' contains a list of entities, 'text' contains the entire text string,
+    and 'passToRelation' contains a list of possible combinations of two 
+    entities in a sentence.
+    """
     clean_text = normalize_corpus([text], to_lower=False, to_remove_html=False,
                                   to_remove_accent=True, to_expand_contractions=True,
                                   to_lemmatize=False, to_remove_special=False,
@@ -104,34 +114,34 @@ def generateTextToNer(text):
     return res
 
 
-def generateNerToRelation(text):
-    clean_text = normalize_corpus([text], to_lower=False, to_remove_html=False,
-                                  to_remove_accent=True, to_expand_contractions=True,
-                                  to_lemmatize=False, to_remove_special=False,
-                                  to_remove_stopword=False)
-    clean_text = clean_text[0]
-    lst_sentences = nltk.sent_tokenize(clean_text)
+# def generateNerToRelation(text):
+#     clean_text = normalize_corpus([text], to_lower=False, to_remove_html=False,
+#                                   to_remove_accent=True, to_expand_contractions=True,
+#                                   to_lemmatize=False, to_remove_special=False,
+#                                   to_remove_stopword=False)
+#     clean_text = clean_text[0]
+#     lst_sentences = nltk.sent_tokenize(clean_text)
 
-    res = []
-    idTracker = defaultdict(int)
+#     res = []
+#     idTracker = defaultdict(int)
 
-    for s in lst_sentences:
-        sentence = Sentence(s, use_tokenizer=True)
-        tagger_fast.predict(sentence)
-        d = sentence.to_dict(tag_type='ner')
-        d.pop('labels')
-        for idx in d['entities']:
-            idx['id'] = idTracker[idx['text']]
-            idTracker[idx['text']] += 1
-            idx['end'] = idx.pop('end_pos')
-            idx['start'] = idx.pop('start_pos')
-            full_label = idx.pop('labels')[0]
-            full_label = str(full_label)
-            idx['type'] = full_label[:full_label.find(' ')]
-        d['ents'] = d.pop('entities')
-        combination = combine(d)
-        res.extend(combination)
-    return res
+#     for s in lst_sentences:
+#         sentence = Sentence(s, use_tokenizer=True)
+#         tagger_fast.predict(sentence)
+#         d = sentence.to_dict(tag_type='ner')
+#         d.pop('labels')
+#         for idx in d['entities']:
+#             idx['id'] = idTracker[idx['text']]
+#             idTracker[idx['text']] += 1
+#             idx['end'] = idx.pop('end_pos')
+#             idx['start'] = idx.pop('start_pos')
+#             full_label = idx.pop('labels')[0]
+#             full_label = str(full_label)
+#             idx['type'] = full_label[:full_label.find(' ')]
+#         d['ents'] = d.pop('entities')
+#         combination = combine(d)
+#         res.extend(combination)
+#     return res
 
 
 @ app.route('/ner', methods=['GET', 'POST'])

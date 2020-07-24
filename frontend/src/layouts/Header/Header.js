@@ -27,7 +27,7 @@ const Header = (props) => {
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>PLACEHOLDER</FormHelperText>
+        {/* <FormHelperText>Select Document</FormHelperText> */}
       </FormControl>
     </div>
   );

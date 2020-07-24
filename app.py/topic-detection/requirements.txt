@@ -1,3 +1,0 @@
-numpy
-flask
-flask_restful

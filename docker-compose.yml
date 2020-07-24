@@ -1,5 +1,11 @@
 version: "3"
 services:
+  docs:
+    build: ./alice-documentation
+    hostname: docs
+    tty: true
+    ports:
+      - "8000:8000"
   frontend:
     build: ./frontend
     hostname: frontend

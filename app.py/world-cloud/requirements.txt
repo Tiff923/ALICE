@@ -1,7 +1,0 @@
-flask
-flask_restful
-redis
-pillow
-matplotlib
-numpy
-wordcloud

@@ -160,8 +160,8 @@ const Dashboard = (props) => {
         </div>
         <div key="summary">
           <VisualCard
-            title="Summary of document"
-            category="PLACEHOLDER"
+            title="Summary"
+            category="Key sentences in the document"
             content={summaryData}
           />
         </div>

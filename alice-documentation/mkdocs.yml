@@ -1,0 +1,41 @@
+site_name: A.L.I.C.E. Documentation
+repo_url: https://github.com/luketankw/ALICE
+edit_uri: ""
+dev_addr: "0.0.0.0:8000"
+nav:
+  - Home: index.md
+  - Frontend:
+      - React: react.md
+      - Visualization: visualization.md
+  - Backend:
+      - Backend Flask Server: backend.md
+      - Document Clustering: clustering.md
+      - Named Entity Recognition: ner.md
+      - Relation Extraction: relation.md
+      - Sentiment Analysis: sentiment.md
+      - Text Classifier: classifier.md
+      - Text Summarizer: summary.md
+      - Topic Modelling: topics.md
+      - Wordcloud: wordcloud.md
+  - DevOps:
+      - Docker: docker.md
+      - Openshift: openshift.md
+  - Appendix:
+      - NER Appendix: ner-appendix.md
+      - Relation Types: relation-types.md
+  - Files:
+      - Ops Presentation: files/Ops_Presentation.pdf
+      - Midterm Report: files/Midterm_Report.pdf
+      - EP Presentation: files/EP_Presentation.pdf
+      - Google Colab Tutorial: files/Google_Colab_Tutorial.pdf
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - js
+    - python
+    - bash
+extra_css:
+  - css/style.css
+markdown_extensions:
+  - mdx_truly_sane_lists
