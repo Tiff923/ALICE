@@ -358,12 +358,15 @@ def runAlice(text):
     # ABSA
     print("start ABSA")
     try: 
-        ABSAdata = nerToSentiment(ner)
+        nerData = nerToSentiment(ner)
+        print('posting to backend', flush=True)
+        ABSAdata = postABSA(nerData)
+        print('appending', flush=True)
         sentimentList.append(ABSAdata)
+        print('finish')
     except Exception as err:
         print('err start ASBA', err, flush=True)
     print('finish ABSA')
-
     # Key Data
     print('doing key data stuff')
     key_data_classification = classify
