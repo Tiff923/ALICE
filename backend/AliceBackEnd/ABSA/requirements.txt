@@ -3,4 +3,4 @@ torch>=0.4.0
 pytorch-transformers==1.2.0
 sklearn
 flask 
-request
+requests
