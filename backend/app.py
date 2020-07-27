@@ -484,7 +484,7 @@ def postABSA(data):
 def nerToSentiment(nerData):
     prevLen = 0
     res={}
-    allEnts, text = nerData['ner'], nerData['text']
+    allEnts, text = nerData['ents'], nerData['text']
     lst_sentences = nltk.sent_tokenize(text)
 
     while allEnts:
