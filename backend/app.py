@@ -11,6 +11,7 @@ import pdfplumber
 import chardet
 import re
 import datetime
+import nltk
 import threading
 from bson import ObjectId
 
