@@ -512,6 +512,9 @@ def nerToSentiment(nerData):
                 prevLen += length + 1
             except:
                 continue
+    return res
+
+     
 
 
 
