@@ -357,8 +357,11 @@ def runAlice(text):
 
     # ABSA
     print("start ABSA")
-    ABSAdata = nerToSentiment(ner)
-    sentimentList.append(ABSAdata)
+    try: 
+        ABSAdata = nerToSentiment(ner)
+        sentimentList.append(ABSAdata)
+    except Exception as err:
+        print('err start ASBA', err, flush=True)
     print('finish ABSA')
 
     # Key Data
