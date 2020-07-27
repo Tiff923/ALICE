@@ -20,6 +20,7 @@ cors = CORS(app)
 app.config['MONGO_URI'] = 'mongodb+srv://alice_guest:aliceandjarvis@alice-onmay.mongodb.net/Alice_Corpus?retryWrites=true&w=majority'
 app.config['SECRET_KEY'] = "a very secret key"
 mongo = PyMongo(app)
+nltk.download('punkt')
 print("server started", flush=True)
 
 
