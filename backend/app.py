@@ -355,6 +355,12 @@ def runAlice(text):
     network = relationToNetwork(relation)
     print("finished relation network")
 
+    # ABSA
+    print("start ABSA")
+    ABSAdata = nerToSentiment(ner)
+    sentimentList.append(ABSAdata)
+    print('finish ABSA')
+
     # Key Data
     print('doing key data stuff')
     key_data_classification = classify
@@ -459,6 +465,48 @@ def postCluster(corpus):
     except Exception as err:
         print(f"Error in Clustering: {err}", flush=True)
     return result
+
+def postABSA(data):
+    try:
+        url = "http://absa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/aspectSentiment"
+        result = requests.post(url, json=data)
+        result = result.json()
+    except Exception as err:
+         print(f"Error in ABSA: {err}", flush=True)
+    return result
+
+def nerToSentiment(nerData):
+    prevLen = 0
+    res={}
+    allEnts, text = nerData['ner'], nerData['text']
+    lst_sentences = nltk.sent_tokenize(text)
+
+    while allEnts:
+        for sentence in lst_sentences:
+            length = len(sentence)
+            try:
+                while allEnts and length + prevLen > allEnts[0]['start']:
+                    ent = allEnts.pop(0)
+                    entity, start, end = ent['text'], ent['start'] - prevLen, ent['end'] - prevLen
+                    if entity in res:
+                        res[entity].append(
+                            {
+                                'left': sentence[:start],
+                                'aspect': sentence[start:end],
+                                'right': sentence[end:]
+                            })
+                    else:
+                        res[entity] = [
+                            {
+                                'left': sentence[:start],
+                                'aspect': sentence[start:end],
+                                'right': sentence[end:]
+                            }
+                        ]               
+                prevLen += length + 1
+            except:
+                continue
+
 
 
 if __name__ == "__main__":
