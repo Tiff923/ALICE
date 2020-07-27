@@ -478,6 +478,7 @@ def postABSA(data):
     try:
         url = "http://absa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/aspectSentiment"
         result = requests.post(url, json=data)
+        print('result from ABSA', result, flush=True)
         result = result.json()
     except Exception as err:
          print(f"Error in ABSA: {err}", flush=True)
