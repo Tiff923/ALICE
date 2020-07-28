@@ -7,6 +7,12 @@ from data_utils import Tokenizer4Bert
 import argparse
 import json
 from flask import Flask, request
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+nltk.download('punkt')
+nltk.download('vader_lexicon')
 
 app = Flask(__name__)
 
@@ -54,8 +60,9 @@ def aspectSentiment_api():
             sentence_d['sentiment']= aspect_sentiment
             sentence_d['sentence']= sentence
             out.append(sentence_d)
-
-    returnJson = {'sentimentTableData': out}
+    absa_c = absa_chapter(out)
+    s_words_c = sentiment_words_chapter(out)
+    returnJson = {'sentimentTableData': out, 'absa_chapter': absa_c, 'sentiment_words_chapter':s_words_c}
     return returnJson 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
@@ -114,6 +121,66 @@ def get_parameters():
                         help='set ratio between 0 and 1 for validation support')
     opt = parser.parse_args()
     return opt
+
+def absa_chapter(l):
+    summary = {}
+    for element in l:
+      aspect = element['aspect']
+      sentiment = element['sentiment']
+      if aspect in summary.keys():
+        if sentiment == 'Negative': 
+          summary[aspect][0] += 1
+        elif sentiment == 'Neutral':
+          summary[aspect][1] += 1
+        else: 
+          summary[aspect][2] += 1
+      else:
+        if sentiment == 'Negative': 
+          summary[aspect] = [1, 0, 0]
+        elif sentiment == 'Neutral':
+          summary[aspect] = [0, 1, 0]
+        else: 
+          summary[aspect] = [0, 0, 1]
+    
+    out = {}
+    sentiment_dic = {0:'Negative', 1:'Neutral', 2:'Positive'}
+    for aspect, sentimentList in summary.items():
+      index = sentimentList.index(max(sentimentList))
+      out[aspect] = sentiment_dic[index]
+
+    return out 
+
+def extract_sentiment_words(sentence): 
+  tokenized_sentence = nltk.word_tokenize(sentence)
+
+  sid = SentimentIntensityAnalyzer()
+  pos_word_list=[]
+  neg_word_list=[]
+
+  for word in tokenized_sentence:
+      if (sid.polarity_scores(word)['compound']) >= 0.1:
+          pos_word_list.append(word)
+      if (sid.polarity_scores(word)['compound']) <= -0.1:
+          neg_word_list.append(word)             
+
+  return pos_word_list, neg_word_list
+
+
+def entity_sentimentwords_chapter(l):
+  out = {}
+  for element in l: 
+    aspect = element['aspect']
+    sentence = element['sentence']
+    pos, neg = extract_sentiment_words(sentence)
+    if aspect in out.keys(): 
+      out[aspect]['pos'] = out[aspect]['pos'] + pos 
+      out[aspect]['neg'] = out[aspect]['neg'] + neg 
+    else:
+      out[aspect] = {}
+      out[aspect]['pos'] = pos 
+      out[aspect]['neg'] = neg 
+  return out 
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5090)
