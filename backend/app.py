@@ -199,6 +199,8 @@ def thread_task(text, fileName, number, data):
         # Semaphore this 
         data.absaDocumentLock.acquire()
         absa_document(data, absa_chapter, fileName)
+        print('absa_chapter', absa_chapter, flush=True)
+        print('absa_document', data.absaDocument, flush=True)
         data.absaDocumentLock.release()
         # Semaphore this later
         data.returnJsonLock.acquire()
