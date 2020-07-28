@@ -31,7 +31,7 @@ def wordCloud_ABSA():
     return returnJson
 
 @app.route('/wcABSAOverview', methods=['GET', 'POST'])
-def wordCloud_ABSA_Overview(): 
+def wc_ABSA_Overview(): 
     try: 
         data = request.json
         key = list(data.keys())[0]
