@@ -195,14 +195,11 @@ def thread_task(text, fileName, number, data):
     try:
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
-        #print('tempJson', tempJson['sentiment'], flush=True)
         absa_chapter = tempJson['sentiment'][2]['absa_chapter'].copy()
         # Semaphore this 
         data.absaDocumentLock.acquire()
         print('absa_chapter_before', absa_chapter, flush=True)
         absa_document(data, absa_chapter, fileName)
-        print('absa_chapter', absa_chapter, flush=True)
-        print('absa_document', data.absaDocument, flush=True)
         data.absaDocumentLock.release()
         # Semaphore this later
         data.returnJsonLock.acquire()
