@@ -501,7 +501,7 @@ def postABSA(data):
 def postwcabsa(data):
     try: 
         url = "http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA"
-        result = request.post(url, json=data)
+        result = requests.post(url, json=data)
         print('result from wcabsa', flush=True)
         result = result.json()
     except Exception as err: 
