@@ -35,8 +35,8 @@ def wc_ABSA_Overview():
     try: 
         data = request.json
         key = list(data.keys())[0]
-        pos = output[key]['pos']
-        neg = output[key]['neg']
+        pos = data[key]['pos']
+        neg = data[key]['neg']
         text = ' '.join(pos + neg)
         result = wc_green_red(text, pos, neg)
         returnJson = {'sentimentWordCloud': result}
