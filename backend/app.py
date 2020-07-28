@@ -135,6 +135,8 @@ class dataClass():
         self.corpusRelationLock = threading.Lock()
         self.absaDocument = []
         self.absaDocumentLock = threading.Lock()
+        self.sentimentWordDocument = {}
+        self.sentimentWordDocumentLock = threading.Lock()
         self.users = 0
 
 
@@ -180,13 +182,14 @@ def receiveFile():
 
     try:
         if length > 1:
-            data.returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, data.absaDocument, fileNames)
+            data.returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, data.absaDocument, data.sentimentWordDocument, fileNames)
         returnDict = data.returnJson
         returnJson = jsonify(returnDict)
     except Exception as err:
         print(f"Error in completing overview: {err}", flush=True)
     
     print('absaDocument', data.absaDocument, flush=True)
+    print('sentimentwordDocument', data.sentimentwordDocument, flush=True)
     return returnJson
 
 
@@ -196,6 +199,11 @@ def thread_task(text, fileName, number, data):
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
         absa_chapter = tempJson['sentiment'][2]['absa_chapter'].copy()
+        sentimentWordChapter = tempJson['sentiment'][2]['sentimentWordChapter'].copy()
+        # Semaphore this
+        data.sentimentWordDocumentLock.acquire()
+        entity_sentimentwords_document(data, sentimentWordChapter)
+        data.sentimentWordDocumentLock.release()
         # Semaphore this 
         data.absaDocumentLock.acquire()
         absa_document(data, absa_chapter, fileName)
@@ -253,7 +261,18 @@ def absa_document(dc, inc, filename):
       })
   return 
 
-def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, fileNames):
+def entity_sentimentwords_document(dc, inc):
+  for entity, s_w in inc.items():
+    if entity in dc.sentimentWordDocument.keys():
+      dc.sentimentWordDocument[entity]['pos'] = dc.sentimentWordDocument[entity]['pos'] + s_w['pos']
+      dc.sentimentWordDocument[entity]['neg'] = dc.sentimentWordDocument[entity]['neg'] + s_w['neg']
+    else:
+      dc.sentimentWordDocument[entity] = {}
+      dc.sentimentWordDocument[entity]['pos'] = s_w['pos'] 
+      dc.sentimentWordDocument[entity]['neg'] =  s_w['neg']
+  return 
+
+def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, sentimentWordDocument, fileNames):
     print('Start overview', flush=True)
     text = ' '.join(corpus)
     text = text.replace("\\x92", "")
@@ -306,16 +325,20 @@ def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, fileNames):
     wordcloud = bytestringJson['data']
     print("receive wordcloud")
 
-    # ABSA 
-    sentimentList.append({'sentimentTableData': absaDocument})
+    # ABSA, wcabsa
+    wcabsaJson = postwcabscaOverview(sentimentWordDocument)
+    sentimentList.append({
+        'sentimentTableData': absaDocument, 
+        'sentimentWordDocument': sentimentWordDocument, 
+        'sentimentWordCloud': wcabsaJson['sentimentWordCloud']})
+
+    print('sentimentList Overview', sentimentList, flush=True)
 
     # Key Data
     print('doing key data stuff')
     key_data_classification = classify
     keyData = {"num_words": num_words, "topic_classifier": key_data_classification, "sentiment": key_data_sentiment,
                "legitimacy": key_data_legitimacy}
-
-    print('sentimentList', sentimentList, flush=True)
 
     jsonToReact = {}
     jsonToReact["keyData"] = keyData
@@ -407,7 +430,8 @@ def runAlice(text):
         print('sending to wcabsa', flush=True)
         wcabsa_data = postwcabsa(wcabsa_input)
         print('wcabsa appending', flush=True)
-        sentimentList[2]['sentimentWordCloud'] = wcabsa_data['data']
+        sentimentList[2]['sentimentWordCloud'] = wcabsa_data['sentimentWordCloud']
+        sentimentList[2]['sentimentWordChapter'] = wcabsa_data['sentimentWordChapter']
         print('finish', flush=True)
     except Exception as err: 
         print('err start wcabsa', err, flush=True)
@@ -532,11 +556,20 @@ def postwcabsa(data):
     try: 
         url = "http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA"
         result = requests.post(url, json=data)
-        print('result from wcabsa', flush=True)
         print('result postwcabsa', result, flush=True)
         result = result.json()
     except Exception as err: 
-        print(f'Error in absa:{err}', flush=True)
+        print(f'Error in wcabsa:{err}', flush=True)
+    return result 
+
+def postwcabscaOverview(data):
+    try: 
+        url = "http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview"
+        result = requests.post(url, json=data)
+        print('result postwcabsa', result, flush=True)
+        result = result.json()
+    except Exception as err: 
+        print(f'Error in wcabsaOverview:{err}', flush=True)
     return result 
 
 def nerToSentiment(nerData):
