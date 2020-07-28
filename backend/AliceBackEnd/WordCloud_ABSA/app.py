@@ -6,6 +6,9 @@ from flask import Flask, request
 import base64
 import io
 import nltk
+from nltk.tokenize import word_tokenize
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
 
 nltk.download('punkt')
 nltk.download('vader_lexicon')

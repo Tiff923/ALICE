@@ -7,12 +7,6 @@ from data_utils import Tokenizer4Bert
 import argparse
 import json
 from flask import Flask, request
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
-nltk.download('punkt')
-nltk.download('vader_lexicon')
 
 app = Flask(__name__)
 

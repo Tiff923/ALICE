@@ -4,4 +4,3 @@ pytorch-transformers==1.2.0
 sklearn
 flask 
 requests
-nltk
