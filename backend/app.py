@@ -133,6 +133,8 @@ class dataClass():
         self.corpusEntityLock = threading.Lock()
         self.corpusRelation = []
         self.corpusRelationLock = threading.Lock()
+        self.absaDocument = []
+        self.absaDocumentLock = threading.Lock()
         self.users = 0
 
 
@@ -183,6 +185,8 @@ def receiveFile():
         returnJson = jsonify(returnDict)
     except Exception as err:
         print(f"Error in completing overview: {err}", flush=True)
+    
+    print('absaDocument', data.absaDocument, flush=True)
     return returnJson
 
 
@@ -191,6 +195,11 @@ def thread_task(text, fileName, number, data):
     try:
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
+        absa_chapter = tempJson['sentiment'][2]['absa_chapter'].copy()
+        # Semaphore this 
+        data.absaDocumentLock.acquire()
+        absa_document(data, absa_chapter, fileName)
+        data.absaDocumentLock.release()
         # Semaphore this later
         data.returnJsonLock.acquire()
         data.returnJson[fileName] = tempJson
@@ -227,6 +236,22 @@ def thread_task(text, fileName, number, data):
     except:
         print('Unknown error in'+fileName, flush=True)
 
+def absa_document(dc, inc, filename):
+  for element in inc: 
+    found = False
+    for e in dc.absaDocument: 
+      if element['aspect'] == e['aspect']:
+        if element['sentiment'] == e['sentiment']:
+          found = True
+          e['chapter'].append(filename)
+          break 
+    if not found: 
+      dc.absaDocument.append({
+          'aspect': element['aspect'], 
+          'sentiment': element['sentiment'], 
+          'chapter': [filename]
+      })
+  return 
 
 def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     print('Start overview', flush=True)
@@ -364,7 +389,7 @@ def runAlice(text):
         print('posting to backend', flush=True)
         ABSAdata = postABSA(nerData)
         print('appending', flush=True)
-        sentimentList.append({'sentimentTableData': ABSAdata['sentimentTableData']})
+        sentimentList.append(ABSAdata)
         print('finish')
     except Exception as err:
         print('err start ASBA', err, flush=True)
