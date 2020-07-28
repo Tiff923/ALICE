@@ -78,6 +78,7 @@ def wc_green_red(text, pos, neg):
     imageRes.save(file_object, format='PNG')
     bytestring = base64.b64encode(file_object.getvalue())
     returnJson = {"data": bytestring.decode('utf-8')}
+    print('wcabsa returnJson', returnJson, flush=True)
     return returnJson
 
 if __name__ == '__main__':
