@@ -364,11 +364,27 @@ def runAlice(text):
         print('posting to backend', flush=True)
         ABSAdata = postABSA(nerData)
         print('appending', flush=True)
-        sentimentList.append(ABSAdata)
+        sentimentList.append({'sentimentTableData': ABSAdata['sentimentTableData']})
         print('finish')
     except Exception as err:
         print('err start ASBA', err, flush=True)
     print('finish ABSA')
+
+    # wcabsa
+    print('start wcabsa')
+    try: 
+        d = ABSAdata['sentiment_words_chapter']
+        default = list(d.keys())[0]
+        wcabsa_input = d[default]
+        print('sending to wcabsa', flush=True)
+        wcabsa_data = postwcabsa(wcabsa_input)
+        print('wcabsa appending', flush=True)
+        sentimentList[2]['sentimentWordCloud'] = wcabsa_data['data']
+        print('finish', flush=True)
+    except Exception as err: 
+        print('err start wcabsa', err, flush=True)
+    print('finish wcabsa')
+            
     # Key Data
     print('doing key data stuff')
     key_data_classification = classify
@@ -483,6 +499,16 @@ def postABSA(data):
     except Exception as err:
          print(f"Error in ABSA: {err}", flush=True)
     return result
+
+def postwcabsa(data):
+    try: 
+        url = "http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA"
+        result = request.post(url, json=data)
+        print('result from wcabsa', flush=True)
+        result = result.json()
+    except Exception as err: 
+        print(f'Error in absa:{err}', flush=True)
+    return result 
 
 def nerToSentiment(nerData):
     prevLen = 0
