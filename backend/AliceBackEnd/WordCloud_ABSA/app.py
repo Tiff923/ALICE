@@ -63,7 +63,7 @@ class SimpleGroupedColorFunc(object):
         return self.word_to_color.get(word, self.default_color)
 
 
-def wc_green_red(text, pos, neg):
+def wc_green_red(text, pos, neg): 
     custom_mask = np.array(Image.open("Book4.jpg"))
     wc = WordCloud(collocations=False, background_color = "white", mask = custom_mask).generate(text.lower())
     color_to_words = {
@@ -73,14 +73,19 @@ def wc_green_red(text, pos, neg):
     default_color = 'grey'
     grouped_color_func = SimpleGroupedColorFunc(color_to_words, default_color)
     wc.recolor(color_func=grouped_color_func)
-    imageRes = wc.to_image()
 
-    # Convert to bytes
-    file_object = io.BytesIO()
-    imageRes.save(file_object, format='PNG')
-    bytestring = base64.b64encode(file_object.getvalue())
-    returnJson = {"data": bytestring.decode('utf-8')}
-    print('wcabsa returnJson', returnJson, flush=True)
+    try: 
+        imageRes = wc.to_image()
+
+        # Convert to bytes
+        file_object = io.BytesIO()
+        imageRes.save(file_object, format='PNG')
+        bytestring = base64.b64encode(file_object.getvalue())
+        returnJson = {"data": bytestring.decode('utf-8')}
+        print('wcabsa returnJson', returnJson, flush=True)
+    except Exception as err: 
+        returnJson = {'error':err}
+
     return returnJson
 
 if __name__ == '__main__':
