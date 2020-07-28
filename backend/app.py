@@ -195,11 +195,11 @@ def thread_task(text, fileName, number, data):
     try:
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
-        print('tempJson', tempJson['sentiment'], flush=True)
+        #print('tempJson', tempJson['sentiment'], flush=True)
         absa_chapter = tempJson['sentiment'][2]['absa_chapter'].copy()
         # Semaphore this 
         data.absaDocumentLock.acquire()
-        print('absa_chapter_before', absa_chapter, flush=True)
+        #print('absa_chapter_before', absa_chapter, flush=True)
         absa_document(data, absa_chapter, fileName)
         print('absa_chapter', absa_chapter, flush=True)
         print('absa_document', data.absaDocument, flush=True)
@@ -249,6 +249,7 @@ def absa_document(dc, inc, filename):
           found = True
           e['chapter'].append(filename)
           break 
+    print('dc.absaDocument', dc.absaDocument, flush=True)
     if not found: 
       dc.absaDocument.append({
           'aspect': element['aspect'], 
