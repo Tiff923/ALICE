@@ -5,6 +5,10 @@ import numpy as np
 from flask import Flask, request
 import base64
 import io
+import nltk
+
+nltk.download('punkt')
+nltk.download('vader_lexicon')
 
 app = Flask(__name__)
 
