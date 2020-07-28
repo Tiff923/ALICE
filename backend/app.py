@@ -198,7 +198,6 @@ def thread_task(text, fileName, number, data):
         absa_chapter = tempJson['sentiment'][2]['absa_chapter'].copy()
         # Semaphore this 
         data.absaDocumentLock.acquire()
-        print('absa_chapter_before', absa_chapter, flush=True)
         absa_document(data, absa_chapter, fileName)
         data.absaDocumentLock.release()
         # Semaphore this later
@@ -246,7 +245,6 @@ def absa_document(dc, inc, filename):
           found = True
           e['chapter'].append(filename)
           break 
-    print('absa_document', dc.absaDocument, flush=True)
     if not found: 
       dc.absaDocument.append({
           'aspect': entity, 
@@ -314,6 +312,8 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     keyData = {"num_words": num_words, "topic_classifier": key_data_classification, "sentiment": key_data_sentiment,
                "legitimacy": key_data_legitimacy}
 
+    print('sentimentList', sentimentList, flush=True)
+    
     jsonToReact = {}
     jsonToReact["keyData"] = keyData
     jsonToReact['ner'] = ner
