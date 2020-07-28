@@ -241,23 +241,22 @@ def thread_task(text, fileName, number, data):
         print('Unknown error in'+fileName, flush=True)
 
 def absa_document(dc, inc, filename):
-  for element in inc: 
+  for entity, sentiment in inc.items(): 
     found = False
     for e in dc.absaDocument: 
-      if element['aspect'] == e['aspect']:
-        if element['sentiment'] == e['sentiment']:
+      if entity == e['aspect']:
+        if sentiment == e['sentiment']:
           found = True
           e['chapter'].append(filename)
           break 
-    
+    print('absa_document', dc.absaDocument, flush=True)
     if not found: 
       dc.absaDocument.append({
-          'aspect': element['aspect'], 
-          'sentiment': element['sentiment'], 
+          'aspect': entity, 
+          'sentiment': sentiment,
           'chapter': [filename]
       })
-    print('dc.absaDocument', dc.absaDocument,flush=True)
-  return
+  return 
 
 def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     print('Start overview', flush=True)
