@@ -20,7 +20,7 @@ def wordCloud_ABSA():
     try: 
         data = request.json
         output = entity_sentimentwords_chapter(data)
-        key = list(d.keys())[0]
+        key = list(output.keys())[0]
         pos = output[key]['pos']
         neg = output[key]['neg']
         text = ' '.join(pos + neg)
