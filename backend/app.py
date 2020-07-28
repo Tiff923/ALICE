@@ -373,9 +373,7 @@ def runAlice(text):
     # wcabsa
     print('start wcabsa')
     try: 
-        d = ABSAdata['sentiment_words_chapter']
-        default = list(d.keys())[0]
-        wcabsa_input = d[default]
+        wcabsa_input = ABSAdata['sentimentTableData']
         print('sending to wcabsa', flush=True)
         wcabsa_data = postwcabsa(wcabsa_input)
         print('wcabsa appending', flush=True)

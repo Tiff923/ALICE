@@ -9,11 +9,44 @@ app = Flask(__name__)
 @app.route('/wordCloudABSA', methods=['GET', 'POST'])
 def wordCloud_ABSA(): 
     data = request.json
-    pos = data['pos']
-    neg = data['neg']
+    output = entity_sentimentwords_chapter(data)
+    key = list(d.keys())[0]
+    pos = output[key]['pos']
+    neg = output[key]['neg']
     text = ' '.join(pos + neg)
     returnJson = wc_green_red(text, pos, neg)
     return returnJson
+
+def extract_sentiment_words(sentence): 
+  tokenized_sentence = nltk.word_tokenize(sentence)
+
+  sid = SentimentIntensityAnalyzer()
+  pos_word_list=[]
+  neg_word_list=[]
+
+  for word in tokenized_sentence:
+      if (sid.polarity_scores(word)['compound']) >= 0.1:
+          pos_word_list.append(word)
+      if (sid.polarity_scores(word)['compound']) <= -0.1:
+          neg_word_list.append(word)             
+
+  return pos_word_list, neg_word_list
+
+
+def entity_sentimentwords_chapter(l):
+  out = {}
+  for element in l: 
+    aspect = element['aspect']
+    sentence = element['sentence']
+    pos, neg = extract_sentiment_words(sentence)
+    if aspect in out.keys(): 
+      out[aspect]['pos'] = out[aspect]['pos'] + pos 
+      out[aspect]['neg'] = out[aspect]['neg'] + neg 
+    else:
+      out[aspect] = {}
+      out[aspect]['pos'] = pos 
+      out[aspect]['neg'] = neg 
+  return out 
 
 class SimpleGroupedColorFunc(object):
 

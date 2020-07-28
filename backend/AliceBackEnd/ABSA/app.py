@@ -61,8 +61,7 @@ def aspectSentiment_api():
             sentence_d['sentence']= sentence
             out.append(sentence_d)
     absa_c = absa_chapter(out)
-    s_words_c = sentiment_words_chapter(out)
-    returnJson = {'sentimentTableData': out, 'absa_chapter': absa_c, 'sentiment_words_chapter':s_words_c}
+    returnJson = {'sentimentTableData': out, 'absa_chapter': absa_c}
     return returnJson 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
@@ -149,37 +148,6 @@ def absa_chapter(l):
       out[aspect] = sentiment_dic[index]
 
     return out 
-
-def extract_sentiment_words(sentence): 
-  tokenized_sentence = nltk.word_tokenize(sentence)
-
-  sid = SentimentIntensityAnalyzer()
-  pos_word_list=[]
-  neg_word_list=[]
-
-  for word in tokenized_sentence:
-      if (sid.polarity_scores(word)['compound']) >= 0.1:
-          pos_word_list.append(word)
-      if (sid.polarity_scores(word)['compound']) <= -0.1:
-          neg_word_list.append(word)             
-
-  return pos_word_list, neg_word_list
-
-
-def entity_sentimentwords_chapter(l):
-  out = {}
-  for element in l: 
-    aspect = element['aspect']
-    sentence = element['sentence']
-    pos, neg = extract_sentiment_words(sentence)
-    if aspect in out.keys(): 
-      out[aspect]['pos'] = out[aspect]['pos'] + pos 
-      out[aspect]['neg'] = out[aspect]['neg'] + neg 
-    else:
-      out[aspect] = {}
-      out[aspect]['pos'] = pos 
-      out[aspect]['neg'] = neg 
-  return out 
 
 
 if __name__ == '__main__':
