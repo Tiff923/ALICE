@@ -189,7 +189,7 @@ def receiveFile():
         print(f"Error in completing overview: {err}", flush=True)
     
     print('absaDocument', data.absaDocument, flush=True)
-    print('sentimentwordDocument', data.sentimentwordDocument, flush=True)
+    print('sentimentwordDocument', data.sentimentWordDocument, flush=True)
     return returnJson
 
 
