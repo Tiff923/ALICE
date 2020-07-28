@@ -180,7 +180,7 @@ def receiveFile():
 
     try:
         if length > 1:
-            data.returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, fileNames)
+            data.returnJson['Overview'] = getOverview(corpus, data.corpusEntity, data.corpusRelation, data.absaDocument, fileNames)
         returnDict = data.returnJson
         returnJson = jsonify(returnDict)
     except Exception as err:
@@ -253,7 +253,7 @@ def absa_document(dc, inc, filename):
       })
   return 
 
-def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
+def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, fileNames):
     print('Start overview', flush=True)
     text = ' '.join(corpus)
     text = text.replace("\\x92", "")
@@ -306,6 +306,9 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     wordcloud = bytestringJson['data']
     print("receive wordcloud")
 
+    # ABSA 
+    sentimentList.append({'sentimentTableData': absaDocument})
+
     # Key Data
     print('doing key data stuff')
     key_data_classification = classify
@@ -313,7 +316,7 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
                "legitimacy": key_data_legitimacy}
 
     print('sentimentList', sentimentList, flush=True)
-    
+
     jsonToReact = {}
     jsonToReact["keyData"] = keyData
     jsonToReact['ner'] = ner
