@@ -10,13 +10,16 @@ app = Flask(__name__)
 
 @app.route('/wordCloudABSA', methods=['GET', 'POST'])
 def wordCloud_ABSA(): 
-    data = request.json
-    output = entity_sentimentwords_chapter(data)
-    key = list(d.keys())[0]
-    pos = output[key]['pos']
-    neg = output[key]['neg']
-    text = ' '.join(pos + neg)
-    returnJson = wc_green_red(text, pos, neg)
+    try: 
+        data = request.json
+        output = entity_sentimentwords_chapter(data)
+        key = list(d.keys())[0]
+        pos = output[key]['pos']
+        neg = output[key]['neg']
+        text = ' '.join(pos + neg)
+        returnJson = wc_green_red(text, pos, neg)
+    except Exception as err: 
+        print('error in wcabsa container', err, flush=True)
     return returnJson
 
 def extract_sentiment_words(sentence): 
@@ -84,7 +87,7 @@ def wc_green_red(text, pos, neg):
         returnJson = {"data": bytestring.decode('utf-8')}
         print('wcabsa returnJson', returnJson, flush=True)
     except Exception as err: 
-        returnJson = {'error':err}
+        print('error in wc_green_red', err, flush=True)
 
     return returnJson
 
