@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from PIL import Image 
 import numpy as np
 from flask import Flask, request
+import base64
+import io
 
 app = Flask(__name__)
 
