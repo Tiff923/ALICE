@@ -24,9 +24,24 @@ def wordCloud_ABSA():
         pos = output[key]['pos']
         neg = output[key]['neg']
         text = ' '.join(pos + neg)
-        returnJson = wc_green_red(text, pos, neg)
+        result = wc_green_red(text, pos, neg)
+        returnJson = {'sentimentWordCloud': result, 'sentimentWordChapter':output}
     except Exception as err: 
-        print('error in wcabsa container', err, flush=True)
+        print('error in /wordCloudABSA', err, flush=True)
+    return returnJson
+
+@app.route('/wcABSAOverview', methods=['GET', 'POST'])
+def wordCloud_ABSA(): 
+    try: 
+        data = request.json
+        key = list(data.keys())[0]
+        pos = output[key]['pos']
+        neg = output[key]['neg']
+        text = ' '.join(pos + neg)
+        result = wc_green_red(text, pos, neg)
+        returnJson = {'sentimentWordCloud': result}
+    except Exception as err: 
+        print('error in /wcABSAOverview', err, flush=True)
     return returnJson
 
 def extract_sentiment_words(sentence): 
@@ -91,12 +106,13 @@ def wc_green_red(text, pos, neg):
         file_object = io.BytesIO()
         imageRes.save(file_object, format='PNG')
         bytestring = base64.b64encode(file_object.getvalue())
-        returnJson = {"data": bytestring.decode('utf-8')}
-        print('wcabsa returnJson', returnJson, flush=True)
+        result = bytestring.decode('utf-8')
+        #returnJson = {"data": bytestring.decode('utf-8')}
+        print('wc_green_red result', result, flush=True)
     except Exception as err: 
         print('error in wc_green_red', err, flush=True)
 
-    return returnJson
+    return result
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5100)
