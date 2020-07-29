@@ -12,6 +12,7 @@ import chardet
 import re
 import datetime
 from bson import ObjectId
+import nltk
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -119,7 +120,8 @@ def receiveFile():
     length = int(request.form['length'])
     returnJson = {}
     fileNames = json.loads(request.form['fileNames'])
-
+    absaDocument = []
+    sentimentWordDocument = {}
     corpus = []
     corpusEntity = {}
     # corpusPassToRelation = []
@@ -145,6 +147,11 @@ def receiveFile():
                         text += page.extract_text()
             text = re.sub('\\\\', '', text)
             tempJson = runAlice(text)
+            absaChapter = tempJson['sentiment'][2]['absaChapter'].copy()
+            sentimentWordChapter = tempJson['sentiment'][2]['sentimentWordChapter'].copy()
+            absaDocument = absaDocumentMerger(absaDocument, absaChapter, name)
+            sentimentWordDocument = sentimentWordsDocumentMerger(sentimentWordDocument, sentimentWordChapter)
+
             returnJson[name] = tempJson
 
             tempEntity = tempJson['ner']['ents']
@@ -177,13 +184,13 @@ def receiveFile():
             print('Unknown error in'+fileName)
     if length > 1:
         print(f"Corpus being sent to overview {corpus}", flush=True)
-        returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, fileNames)
+        returnJson['Overview'] = getOverview(corpus, corpusEntity, corpusRelation, absaDocument, sentimentWordDocument fileNames)
     print('RESULT', json.dumps(returnJson))
     returnJson = jsonify(returnJson)
     return returnJson
 
 
-def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
+def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, sentimentWordDocument, fileNames):
     print('Start overview', flush=True)
     text = ' '.join(corpus)
     text = text.replace("\\x92", "")
@@ -236,6 +243,13 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     wordcloud = bytestringJson['data']
     print("receive wordcloud")
 
+    # ABSA, wcabsa
+    wcabsaJson = postwcabscaOverview(sentimentWordDocument)
+    sentimentList.append({
+        'sentimentTableData': absaDocument, 
+        'sentimentWordDocument': sentimentWordDocument, 
+        'sentimentWordCloud': wcabsaJson['sentimentWordCloud']})
+
     # Key Data
     print('doing key data stuff')
     key_data_classification = classify
@@ -256,16 +270,94 @@ def getOverview(corpus, corpusEntity, corpusRelation, fileNames):
     return jsonToReact
 
 
-@app.route("/saveToDb", methods=["GET", "POST"])
-def saveToDb():
-    data = request.get_json()
-    res = mongo.db.Documents.insert_one(data)
-    res_id = str(res.inserted_id)
-    print(res_id)
-    return res_id
-
-
 def runAlice(text):
+    text = text.replace("\\x92", "")
+    text = text.replace("\\x93", "")
+    text = text.replace("\\x94", "")
+    num_words = len(text.split(' '))
+
+    # Topic Modelling
+    print("Sending topic")
+    topicJson = postTopicRequest([text], 1, 10)
+    topics = topicJson['topics']
+    print("receive topic")
+
+    # Sentiment
+    sentimentJson = postSentimentRequest(text)
+    sentimentList = sentimentJson["sentiment"]
+    key_data_sentiment = sentimentList[0]["sentiment"]
+    key_data_legitimacy = sentimentList[1]["sentiment"]
+    sentimentList[0]["sentiment"] = "sentiment"
+    sentimentList[1]["sentiment"] = "subjective"
+
+    # Classifier
+    print("sending classifier")
+    classifyJson = postClassifierRequest(text)
+    classify = classifyJson['classify']
+    print("receive classifier")
+
+    # Word cloud
+    print("sending wordcloud")
+    bytestringJson = postWordCloud(text)
+    wordcloud = bytestringJson['data']
+    print("receive wordcloud")
+
+    # Summary
+    print("Sending to summary")
+    summaryJson = postSummaryRequest(text, 3)
+    summary = summaryJson["summary"]
+    print("Receive from summary")
+
+    # NER
+    print("Sending to NER")
+    nerJson = postNerRequest(text)
+    ner = nerJson['ner']
+    passToRelation = ner.pop('passToRelation')
+    print("Receive from NER")
+
+    # Relation
+    print("Send to relation")
+    relationJson = postRelationRequest(passToRelation)
+    relation = relationJson['relation']
+    print("Receive from Relation")
+
+    # Network
+    print("start relation network")
+    network = relationToNetwork(relation)
+    print("finished relation network")
+
+    # ABSA
+    print("start ABSA")
+    nerData = nerToSentiment(ner)
+    ABSAdata = postABSA(nerData)
+    sentimentList.append(ABSAdata)
+    print('finish ABSA')
+
+    # wcabsa
+    print('start wcabsa')
+    wcabsaInput = ABSAdata['sentimentTableData']
+    wcabsaData = postwcabsa(wcabsaInput)
+    sentimentList[2]['sentimentWordCloud'] = wcabsaData['sentimentWordCloud']
+    sentimentList[2]['sentimentWordChapter'] = wcabsaData['sentimentWordChapter']
+    print('finish wcabsa')
+            
+    # Key Data
+    print('doing key data stuff')
+    key_data_classification = classify
+    keyData = {"num_words": num_words, "topic_classifier": key_data_classification, "sentiment": key_data_sentiment,
+               "legitimacy": key_data_legitimacy}
+
+    jsonToReact = {}
+    jsonToReact["keyData"] = keyData
+    jsonToReact['sentiment'] = sentimentList
+    jsonToReact['summary'] = summary
+    jsonToReact['topics'] = topics
+    jsonToReact['classify'] = classify
+    jsonToReact['ner'] = ner
+    jsonToReact['relation'] = relation
+    jsonToReact['network'] = network
+    jsonToReact['wordcloud'] = wordcloud
+    return jsonToReact
     text = text.replace("\\x92", "")
     text = text.replace("\\x93", "")
     text = text.replace("\\x94", "")
@@ -341,6 +433,44 @@ def runAlice(text):
     return jsonToReact
 
 
+@app.route("/saveToDb", methods=["GET", "POST"])
+def saveToDb():
+    data = request.get_json()
+    res = mongo.db.Documents.insert_one(data)
+    res_id = str(res.inserted_id)
+    print(res_id)
+    return res_id
+
+
+def absaDocumentMerger(dc, inc, filename):
+  for entity, sentiment in inc.items(): 
+    found = False
+    for e in dc: 
+      if entity == e['aspect']:
+        if sentiment == e['sentiment']:
+          found = True
+          e['chapter'].append(filename)
+          break 
+    if not found: 
+      dc.append({
+          'aspect': entity, 
+          'sentiment': sentiment,
+          'chapter': [filename]
+      })
+  return dc
+
+def sentimentWordsDocumentMerger(dc, inc):
+  for entity, s_w in inc.items():
+    if entity in dc.keys():
+      dc[entity]['pos'] = dc[entity]['pos'] + s_w['pos']
+      dc[entity]['neg'] = dc[entity]['neg'] + s_w['neg']
+    else:
+      dc[entity] = {}
+      dc[entity]['pos'] = s_w['pos'] 
+      dc[entity]['neg'] =  s_w['neg']
+  return dc
+
+
 def postSummaryRequest(text, no_of_sentence):
     url = "http://summary-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/textSummarizer"
     requestJson = {"text": text, "no_of_sentence": no_of_sentence}
@@ -401,6 +531,68 @@ def postCluster(corpus):
     result = requests.post(url, json=corpus)
     print("result in server: ", result)
     return result.json()
+
+def postABSA(data):
+    try:
+        url = "http://absa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/aspectSentiment"
+        result = requests.post(url, json=data)
+        result = result.json()
+    except Exception as err:
+         print(f"Error in ABSA: {err}", flush=True)
+    return result
+
+def postwcabsa(data):
+    try: 
+        url = "http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA"
+        result = requests.post(url, json=data)
+        result = result.json()
+    except Exception as err: 
+        print(f'Error in wcabsa:{err}', flush=True)
+    return result 
+
+def postwcabscaOverview(data):
+    try: 
+        url = "http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview"
+        result = requests.post(url, json=data)
+        result = result.json()
+    except Exception as err: 
+        print(f'Error in wcabsaOverview:{err}', flush=True)
+    return result 
+
+def nerToSentiment(ner):
+    prevLen = 0
+    res={}
+    nerData = ner.copy()
+    allEnts, text = nerData['ents'], nerData['text']
+    lst_sentences = nltk.sent_tokenize(text)
+
+    while allEnts:
+        for sentence in lst_sentences:
+            length = len(sentence)
+            try:
+                while allEnts and length + prevLen > allEnts[0]['start']:
+                    ent = allEnts.pop(0)
+                    entity, start, end = ent['text'], ent['start'] - prevLen, ent['end'] - prevLen
+                    if entity in res:
+                        res[entity].append(
+                            {
+                                'left': sentence[:start],
+                                'aspect': sentence[start:end],
+                                'right': sentence[end:]
+                            })
+                    else:
+                        res[entity] = [
+                            {
+                                'left': sentence[:start],
+                                'aspect': sentence[start:end],
+                                'right': sentence[end:]
+                            }
+                        ]               
+                prevLen += length + 1
+            except:
+                continue
+    return res
+
 
 
 if __name__ == "__main__":

@@ -184,7 +184,6 @@ const TwoDGraph = (props) => {
         backgroundColor={'#f5f5f5'}
         graphData={data}
         cooldownTicks={cooldownTicks}
-        // onEngineStop={() => setCooldownTicks(0)}
         onNodeDragEnd={(node) => {
           node.fx = node.x;
           node.fy = node.y;

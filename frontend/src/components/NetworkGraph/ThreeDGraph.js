@@ -22,7 +22,6 @@ const ThreeDGraph = (props) => {
     setShow,
     linkDistance,
     chargeStrength,
-    cooldownTicks,
   } = props;
   const fgRef3D = useRef(null);
 

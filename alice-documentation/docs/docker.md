@@ -9,7 +9,7 @@
 
 ![Docker Container](./img/docker/docker-container.png)
 
-- A.L.I.C.E. is comprised of the following Docker containers: Summarizer, Classifier, Sentiment, Topics, Wordcloud, NER, Relation Extraction, Clustering, Backend Flask server, and our Frontend React and Node server.
+- A.L.I.C.E. is comprised of the following Docker containers: Summarizer, Classifier, Sentiment, Aspect-Based Sentiment Analysis (ABSA), Wordcloud Aspect-Based Sentiment Analysis (WCABSA), Topics, Wordcloud, NER, Relation Extraction, Clustering, Mkdocs Documentation, Backend Flask server, and our Frontend React and Node server.
 
 - For future plans, we aim to utilize Red Hat’s Openshift platform that is powered by Kubernetes. Kubernetes provides the ability to run containers on various machines, auto-scale containers, distribute load between containers, manage storage required by containers, and provide resiliency of containers in case of failure. Kubernetes helps simplify container runtime by managing Docker-based applications that are placed on an underlying assures system that maintains several replicas of running applications. Kubernetes has enabled developers to accelerate the development of cloud-native applications and created an ecosystem of services that are self-driven and reusable.
 
@@ -50,4 +50,108 @@ docker-compose up
 
 // to build certain images
 docker-compose build <service_name>
+```
+
+## docker-compose.yml example
+```yml
+version: "3"
+services:
+  docs:
+    build: ./alice-documentation
+    hostname: docs
+    tty: true
+    ports:
+      - "8000:8000"
+  frontend:
+    build: ./frontend
+    hostname: frontend
+    tty: true
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+  backend:
+    build: ./backend
+    hostname: backend
+    tty: true
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/code
+  relation:
+    image: alice_relation:latest
+    build: ./backend/AliceBackEnd/Relation
+    tty: true
+    hostname: relation
+    ports:
+      - "5010:5010"
+  ner:
+    build: ./backend/AliceBackEnd/NER
+    hostname: ner
+    tty: true
+    ports:
+      - "5020:5020"
+  classifier:
+    build: ./backend/AliceBackEnd/Classifier
+    hostname: classifier
+    ports:
+      - "5030:5030"
+    volumes:
+      - ./backend/AliceBackEnd/Classifier:/app
+  topics:
+    build: ./backend/AliceBackEnd/TopicModelling
+    hostname: topics
+    tty: true
+    ports:
+      - "5040:5040"
+    volumes:
+      - ./backend/AliceBackEnd/TopicModelling:/app
+  sentiment:
+    build: ./backend/AliceBackEnd/Sentiment
+    hostname: sentiment
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./backend/AliceBackEnd/Sentiment:/app
+  summary:
+    build: ./backend/AliceBackEnd/TextSummarizer
+    hostname: summary
+    ports:
+      - "5060:5060"
+    volumes:
+      - ./backend/AliceBackEnd/TextSummarizer:/app
+  wordcloud:
+    build: ./backend/AliceBackEnd/WordCloud
+    hostname: wordcloud
+    ports:
+      - "5070:5070"
+    volumes:
+      - ./backend/AliceBackEnd/WordCloud:/app
+  clustering:
+    build: ./backend/AliceBackEnd/Clustering
+    hostname: clustering
+    tty: true
+    ports:
+      - "5080:5080"
+    volumes:
+      - ./backend/AliceBackEnd/Clustering:/app
+  absa:
+    build: ./backend/AliceBackEnd/ABSA
+    hostname: absa
+    tty: true
+    ports:
+      - "5090:5090"
+    volumes:
+      - ./backend/AliceBackEnd/ABSA:/app
+  wordcloudabsa:
+    build: ./backend/AliceBackEnd/WordCloud_ABSA
+    hostname: wordcloudabsa
+    tty: true
+    ports: 
+      - "5100:5100"
+    volumes: 
+      - ./backend/AliceBackEnd/WordCloud_ABSA:/app
 ```

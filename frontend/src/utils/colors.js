@@ -19,6 +19,12 @@
 //   CARDINAL: '#A1E8CC',
 // };
 
+export const sentimentcolors = {
+  Positive: '#B0DB43',
+  Negative: '#FC2F00',
+  Neutral: '#80CED7',
+};
+
 export const nercolors = {
   PERSON: '#FF5964',
   NORP: '#30BCED',

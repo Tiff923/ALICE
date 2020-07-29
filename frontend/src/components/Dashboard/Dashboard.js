@@ -8,12 +8,13 @@ import { FaDatabase } from 'react-icons/fa';
 import './dashboard.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import RelationTable from '../../components/RelationExtraction/RelationTable';
-import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
-import SentimentGraph from '../../components/SentimentGraph/SentimentGraph';
-import NerDisplacy from '../../components/NerDisplacy/NerDisplacy';
-import TopicBubble from '../../components/TopicModelling/TopicBubble';
-import EntityDisplay from '../../components/NerTable/EntityDisplay';
+import RelationTable from '../RelationExtraction/RelationTable';
+import NetworkGraph from '../NetworkGraph/NetworkGraph';
+import SentimentGraph from '../Sentiment/SentimentGraph';
+import SentimentTable from '../Sentiment/SentimentTable';
+import NerDisplacy from '../NerDisplacy/NerDisplacy';
+import TopicBubble from '../TopicModelling/TopicBubble';
+import EntityDisplay from '../NerTable/EntityDisplay';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -43,6 +44,7 @@ const Dashboard = (props) => {
   const [cooldownTicks, setCooldownTicks] = useState(undefined);
   const [isFullScreen, setFullScreen] = useState(false);
   const [netData, setNetworkData] = useState(networkData);
+  const [sentimentEntity, setSentimentEntity] = useState('');
   const wordCloudURL = 'data:image/png;base64,' + wordCloud;
 
   useEffect(() => {
@@ -190,7 +192,7 @@ const Dashboard = (props) => {
               return (
                 <VisualCard
                   title="Word Cloud"
-                  category="Word cloud placeholder"
+                  category="Most frequent words"
                   content={
                     <div
                       style={{
@@ -224,6 +226,55 @@ const Dashboard = (props) => {
                   content={
                     <div style={{ height: size.height * 0.8, width: '100%' }}>
                       <SentimentGraph data={sentimentData} />
+                    </div>
+                  }
+                />
+              );
+            }}
+          </SizeMe>
+        </div>
+
+        <div key="sentiment-table">
+          <VisualCard
+            title="Sentiment Table"
+            category="Breakdown of sentiments towards entities"
+            content={
+              <div style={{ width: '100%', overflowX: 'hidden' }}>
+                <SentimentTable
+                  data={sentimentData[2].sentimentTableData}
+                  currentFileName={currentFileName}
+                  setSentimentEntity={setSentimentEntity}
+                />
+              </div>
+            }
+          />
+        </div>
+
+        <div key="sentiment-wordcloud">
+          <SizeMe monitorHeight>
+            {({ size }) => {
+              return (
+                <VisualCard
+                  title="Sentiment Wordcloud"
+                  category={`Current Entity: ${sentimentEntity}`}
+                  content={
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: size * 0.8,
+                        width: '100%',
+                      }}
+                    >
+                      <img
+                        src={
+                          'data:image/png;base64,' +
+                          sentimentData[2].sentimentWordCloud
+                        }
+                        alt="sentiment word cloud"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
                     </div>
                   }
                 />
