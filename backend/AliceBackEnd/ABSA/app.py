@@ -55,7 +55,7 @@ def aspectSentiment_api():
             sentence_d['sentence']= sentence
             out.append(sentence_d)
     absa_c = absa_chapter(out)
-    returnJson = {'sentimentTableData': out, 'absa_chapter': absa_c}
+    returnJson = {'sentimentTableData': out, 'absaChapter': absa_c}
     return returnJson 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):

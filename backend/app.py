@@ -198,7 +198,7 @@ def thread_task(text, fileName, number, data):
     try:
         tempJson = runAlice(text)
         newRelation = tempJson['relation'].copy()
-        absa_chapter = tempJson['sentiment'][2]['absa_chapter'].copy()
+        absaChapter = tempJson['sentiment'][2]['absaChapter'].copy()
         sentimentWordChapter = tempJson['sentiment'][2]['sentimentWordChapter'].copy()
         # Semaphore this
         data.sentimentWordDocumentLock.acquire()
@@ -206,7 +206,7 @@ def thread_task(text, fileName, number, data):
         data.sentimentWordDocumentLock.release()
         # Semaphore this 
         data.absaDocumentLock.acquire()
-        absa_document(data, absa_chapter, fileName)
+        absa_document(data, absaChapter, fileName)
         data.absaDocumentLock.release()
         # Semaphore this later
         data.returnJsonLock.acquire()
@@ -426,12 +426,12 @@ def runAlice(text):
     # wcabsa
     print('start wcabsa')
     try: 
-        wcabsa_input = ABSAdata['sentimentTableData']
+        wcabsaInput = ABSAdata['sentimentTableData']
         print('sending to wcabsa', flush=True)
-        wcabsa_data = postwcabsa(wcabsa_input)
+        wcabsaData = postwcabsa(wcabsaInput)
         print('wcabsa appending', flush=True)
-        sentimentList[2]['sentimentWordCloud'] = wcabsa_data['sentimentWordCloud']
-        sentimentList[2]['sentimentWordChapter'] = wcabsa_data['sentimentWordChapter']
+        sentimentList[2]['sentimentWordCloud'] = wcabsaData['sentimentWordCloud']
+        sentimentList[2]['sentimentWordChapter'] = wcabsaData['sentimentWordChapter']
         print('finish', flush=True)
     except Exception as err: 
         print('err start wcabsa', err, flush=True)

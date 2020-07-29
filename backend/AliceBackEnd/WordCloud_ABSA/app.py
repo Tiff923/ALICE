@@ -19,13 +19,13 @@ app = Flask(__name__)
 def wordCloud_ABSA(): 
     try: 
         data = request.json
-        output = entity_sentimentwords_chapter(data)
-        key = list(output.keys())[0]
-        pos = output[key]['pos']
-        neg = output[key]['neg']
+        sentimentWord_c = entity_sentimentwords_chapter(data)
+        key = list(sentimentWord_c.keys())[0]
+        pos = sentimentWord_c[key]['pos']
+        neg = sentimentWord_c[key]['neg']
         text = ' '.join(pos + neg)
-        result = wc_green_red(text, pos, neg)
-        returnJson = {'sentimentWordCloud': result, 'sentimentWordChapter':output}
+        wc = wc_green_red(text, pos, neg)
+        returnJson = {'sentimentWordCloud': wc, 'sentimentWordChapter':sentimentWord_c}
     except Exception as err: 
         print('error in /wordCloudABSA', err, flush=True)
     return returnJson
@@ -38,8 +38,8 @@ def wc_ABSA_Overview():
         pos = data[key]['pos']
         neg = data[key]['neg']
         text = ' '.join(pos + neg)
-        result = wc_green_red(text, pos, neg)
-        returnJson = {'sentimentWordCloud': result}
+        wc = wc_green_red(text, pos, neg)
+        returnJson = {'sentimentWordCloud': wc}
     except Exception as err: 
         print('error in /wcABSAOverview', err, flush=True)
     return returnJson
