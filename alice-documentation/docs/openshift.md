@@ -72,19 +72,19 @@ oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
 
 5. Aspect-Based Sentiment Analysis (ABSA)
 
-<!-- ```bash
+```bash
 oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/Relation \
+--strategy=docker --context-dir=backend/AliceBackEnd/ABSA \
 --name=absa
-``` -->
+```
 
 6. Wordcloud Aspect-Based Sentiment Analysis (WCABSA)
 
-<!-- ```bash
+```bash
 oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/Relation \
+--strategy=docker --context-dir=backend/AliceBackEnd/WordCloud_ABSA \
 --name=wcabsa
-``` -->
+```
 
 7. Sentiment
 
@@ -154,6 +154,134 @@ oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
 - From the image below, the route created is linked to the `backend` container and can be accessed at `http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/uploadFile`
 
   ![route-2](./img/openshift/route2.png)
+
+### Routes to create
+
+1. Summary
+
+   - Name: summary
+   - Path: /textSummarizer
+   - Service: summary
+   - Target Port: 5060 -> 5060 (TCP)
+
+2. Sentiment
+
+   - Name: sentiment
+   - Path: /sentiment
+   - Service: sentiment
+   - Target Port: 5050 -> 5050 (TCP)
+
+3. NER
+
+   - Name: ner
+   - Path: /ner
+   - Service: ner
+   - Target Port: 5020 -> 5020 (TCP)
+
+4. Relation
+
+   - Name: relation
+   - Path: /relation
+   - Service: relation
+   - Target Port: 5010 -> 5010 (TCP)
+
+5. Topics
+
+   - Name: topics
+   - Path: /topic_modelling
+   - Service: topics
+   - Target Port: 5040 -> 5040 (TCP)
+
+6. Classifier
+
+   - Name: classifier
+   - Path: /classifier
+   - Service: classifier
+   - Target Port: 5030 -> 5030 (TCP)
+
+7. Wordcloud
+
+   - Name: wordcloud
+   - Path: /wordcloud
+   - Service: wordcloud
+   - Target Port: 5070 -> 5070 (TCP)
+
+8. Clustering
+
+   - Name: clustering
+   - Path: /cluster
+   - Service: clustering
+   - Target Port: 5080 -> 5080 (TCP)
+
+9. Aspect-Based Sentiment Analysis
+
+   - Name: absa
+   - Path: /aspectSentiment
+   - Service: absa
+   - Target Port: 5090 -> 5090 (TCP)
+
+10. Wordcloud Aspect-Based Sentiment Analysis
+
+   - Name: wcabsa
+   - Path: /wordCloudABSA
+   - Service: wcabsa
+   - Target Port: 5100 -> 5100 (TCP)
+
+11. Wordcloud Aspect-Based Sentiment Analysis Overview
+
+   - Name: wcabsaoverview
+   - Path: /wcABSAOverview
+   - Service: wcabsa
+   - Target Port: 5100 -> 5100 (TCP)
+
+12. Backend (updateNetwork)
+
+   - Name: updatenetwork
+   - Path: /updateNetwork
+   - Service: backend
+   - Target Port: 5000 -> 5000 (TCP)
+
+13. Backend (uploadFile)
+
+   - Name: backend
+   - Path: /uploadFile
+   - Service: backend
+   - Target Port: 5000 -> 5000 (TCP)
+
+14. Backend (loadExistingFile)
+
+   - Name: loadexistingfile
+   - Path: /loadExistingFile
+   - Service: backend
+   - Target Port: 5000 -> 5000 (TCP)
+
+15. Backend (loadDbFile)
+
+   - Name: loaddbfile
+   - Path: /loadDbFile
+   - Service: backend
+   - Target Port: 5000 -> 5000 (TCP)
+
+16. Backend (saveToDb)
+
+   - Name: savetodb
+   - Path: /saveToDb
+   - Service: backend
+   - Target Port: 5000 -> 5000 (TCP)
+
+17. Frontend
+
+   - Name: frontend
+   - Path: /
+   - Service: frontend
+   - Target Port: 3000 -> 3000 (TCP)
+
+18. Documentation (mkdocs)
+
+   - Name: docs
+   - Path: /
+   - Service: docs
+   - Target Port: 8000 -> 8000 (TCP)
 
 ## Route Timeout
 

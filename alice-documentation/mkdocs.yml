@@ -1,7 +1,7 @@
 site_name: A.L.I.C.E. Documentation
 repo_url: https://github.com/luketankw/ALICE
-edit_uri: ""
-dev_addr: "0.0.0.0:8000"
+edit_uri: ''
+dev_addr: '0.0.0.0:8000'
 nav:
   - Home: index.md
   - Frontend:
@@ -21,12 +21,10 @@ nav:
       - Docker: docker.md
       - Openshift: openshift.md
   - Appendix:
+      - Hosting on Local: hosting-local.md
       - NER Appendix: ner-appendix.md
       - Relation Types: relation-types.md
   - Files:
-      - Ops Presentation: files/Ops_Presentation.pdf
-      - Midterm Report: files/Midterm_Report.pdf
-      - EP Presentation: files/EP_Presentation.pdf
       - Google Colab Tutorial: files/Google_Colab_Tutorial.pdf
 theme:
   name: readthedocs

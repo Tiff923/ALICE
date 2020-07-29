@@ -30,14 +30,11 @@ The key components of A.L.I.C.E. are the Frontend (React, D3), Backend (Flask, M
 
 ## Appendix
 
+- [Hosting on Local](./hosting-local.md)
 - [NER Appendix](./ner-appendix.md)
 - [Relation Types](./relation-types.md)
 
 ## Resources
-
-<!-- - 21/07/2020 - [Ops Presentation](./files/Ops_Presentation.pdf)
-- 30/06/2020 - [Midterm Report](files/Midterm_Report.pdf)
-- 26/05/2020 - [EP Presentation](files/EP_Presentation.pdf) -->
 
 - 20/05/2020 - [Google Colab Tutorial](files/Google_Colab_Tutorial.pdf)
 
