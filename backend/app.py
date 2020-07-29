@@ -406,7 +406,6 @@ def runAlice(text):
     ner = nerJson['ner']
     passToRelation = ner.pop('passToRelation')
     print("Receive from NER")
-    print("NER Data: ", ner, flush=True)
 
     # Relation
     print("Send to relation")
@@ -423,7 +422,6 @@ def runAlice(text):
     print("start ABSA")
     nerDataToSentiment = copy.deepcopy(ner)
     nerData = nerToSentiment(nerDataToSentiment)
-    print("NER after passing to sentiment: ", ner, flush=True)
     ABSAdata = postABSA(nerData)
     sentimentList.append(ABSAdata)
     print('finish ABSA')
