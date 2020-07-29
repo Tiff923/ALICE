@@ -13,6 +13,7 @@ app = Flask(__name__)
 @app.route('/aspectSentiment', methods=['GET', 'POST'])
 def aspectSentiment_api():
     data = request.json
+    print('Received Data', flush=True)
 
     opt = get_parameters()
     opt.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -55,6 +56,7 @@ def aspectSentiment_api():
             sentence_d['sentence']= sentence
             out.append(sentence_d)
     absa_c = absa_chapter(out)
+    print('Model complete', flush=True)
     returnJson = {'sentimentTableData': out, 'absaChapter': absa_c}
     return returnJson 
 

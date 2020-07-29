@@ -13,7 +13,7 @@ import re
 import datetime
 import nltk
 import threading
-import copy
+import copy 
 from bson import ObjectId
 
 app = Flask(__name__)
@@ -188,8 +188,7 @@ def receiveFile():
         returnJson = jsonify(returnDict)
     except Exception as err:
         print(f"Error in completing overview: {err}", flush=True)
-    
-    print('sentimentWordDocument', data.sentimentWordDocument, flush=True)
+
     return returnJson
 
 
@@ -264,8 +263,6 @@ def absa_document(dc, inc, filename):
 def entity_sentimentwords_document(dc, inc):
   df = ['none', 'positive', 'word']
   for entity, s_w in inc.items():
-    print('entity', entity, flush=True)
-    print('s_w', s_w, flush=True)
     if entity in dc.sentimentWordDocument.keys():
       if not all(elem in df  for elem in s_w['pos']):
         if all(elem in df  for elem in dc.sentimentWordDocument[entity]['pos']):
@@ -418,8 +415,7 @@ def runAlice(text):
 
     # ABSA
     print("start ABSA")
-    nerDataToSentiment = copy.deepcopy(ner)
-    nerData = nerToSentiment(nerDataToSentiment)
+    nerData = nerToSentiment(ner)
     ABSAdata = postABSA(nerData)
     sentimentList.append(ABSAdata)
     print('finish ABSA')
@@ -564,9 +560,10 @@ def postwcabscaOverview(data):
         print(f'Error in wcabsaOverview:{err}', flush=True)
     return result 
 
-def nerToSentiment(nerData):
+def nerToSentiment(ner):
     prevLen = 0
     res={}
+    nerData = copy.deepcopy(ner)
     allEnts, text = nerData['ents'], nerData['text']
     lst_sentences = nltk.sent_tokenize(text)
 
