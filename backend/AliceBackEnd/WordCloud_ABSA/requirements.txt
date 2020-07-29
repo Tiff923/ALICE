@@ -1,0 +1,8 @@
+gunicorn
+Flask==1.1.2
+Flask-Cors==3.0.8
+matplotlib
+wordcloud
+Pillow==7.1.2
+nltk 
+
