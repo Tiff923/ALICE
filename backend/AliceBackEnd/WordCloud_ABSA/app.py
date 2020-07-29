@@ -86,6 +86,14 @@ def entity_sentimentwords_chapter(l):
       out[aspect] = {}
       out[aspect]['pos'] = pos 
       out[aspect]['neg'] = neg 
+
+  for entity in out.keys():
+    pos_word_list = out[entity]['pos']
+    neg_word_list = out[entity]['neg']
+    if len(pos_word_list) == 0 and len(neg_word_list) == 0: 
+      out[entity]['pos'] = ['none', 'positive', 'word'] 
+      out[entity]['neg'] = ['none', 'negative', 'word']
+
   return out 
 
 class SimpleGroupedColorFunc(object):
