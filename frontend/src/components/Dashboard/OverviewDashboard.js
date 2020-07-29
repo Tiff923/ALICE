@@ -8,12 +8,13 @@ import { FaDatabase } from 'react-icons/fa';
 import './dashboard.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import OverviewRelationTable from '../../components/RelationExtraction/OverviewRelationTable';
-import NetworkGraph from '../../components/NetworkGraph/NetworkGraph';
-import SentimentGraph from '../../components/SentimentGraph/SentimentGraph';
-import TopicBubble from '../../components/TopicModelling/TopicBubble';
-import OverviewEntityDisplay from '../../components/OverviewNerTable/OverviewEntityDisplay';
-import ClusterScatter from '../../components/ClusterScatter/ClusterScatter';
+import OverviewRelationTable from '../RelationExtraction/OverviewRelationTable';
+import NetworkGraph from '../NetworkGraph/NetworkGraph';
+import SentimentGraph from '../Sentiment/SentimentGraph';
+import OverviewSentimentTable from '../Sentiment/OverviewSentimentTable';
+import TopicBubble from '../TopicModelling/TopicBubble';
+import OverviewEntityDisplay from '../OverviewNerTable/OverviewEntityDisplay';
+import ClusterScatter from '../ClusterScatter/ClusterScatter';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -43,6 +44,7 @@ const OverviewDashboard = (props) => {
   const [cooldownTicks, setCooldownTicks] = useState(undefined);
   const [isFullScreen, setFullScreen] = useState(false);
   const [netData, setNetworkData] = useState(networkData);
+  const [sentimentEntity, setSentimentEntity] = useState('');
   const wordCloudURL = 'data:image/png;base64,' + wordCloud;
 
   useEffect(() => {
@@ -74,6 +76,7 @@ const OverviewDashboard = (props) => {
     }
   };
 
+  console.log(sentimentData);
   if (isFullScreen) {
     return (
       <SizeMe monitorHeight>
@@ -183,7 +186,7 @@ const OverviewDashboard = (props) => {
               return (
                 <VisualCard
                   title="Word Cloud"
-                  category="Word cloud placeholder"
+                  category="Most frequent words"
                   content={
                     <div
                       style={{
@@ -217,6 +220,52 @@ const OverviewDashboard = (props) => {
                   content={
                     <div style={{ height: size.height * 0.8, width: '100%' }}>
                       <SentimentGraph data={sentimentData} />
+                    </div>
+                  }
+                />
+              );
+            }}
+          </SizeMe>
+        </div>
+
+        <div key="sentiment-table">
+          <VisualCard
+            title="Sentiment Table"
+            category="Breakdown of sentiments towards entities"
+            content={
+              <div style={{ width: '100%', overflowX: 'hidden' }}>
+                <OverviewSentimentTable
+                  data={sentimentData[2].sentimentTableData}
+                  currentFileName={currentFileName}
+                  setSentimentEntity={setSentimentEntity}
+                />
+              </div>
+            }
+          />
+        </div>
+
+        <div key="sentiment-wordcloud">
+          <SizeMe monitorHeight>
+            {({ size }) => {
+              return (
+                <VisualCard
+                  title="Sentiment Wordcloud"
+                  category={`Current Entity: ${sentimentEntity}`}
+                  content={
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: size * 0.8,
+                        width: '100%',
+                      }}
+                    >
+                      <img
+                        src={wordCloudURL} // sentimentData[2].sentimentwordCloud
+                        alt="sentiment word cloud"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
                     </div>
                   }
                 />

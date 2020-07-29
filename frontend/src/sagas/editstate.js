@@ -1,5 +1,10 @@
 import { put, all, call, select, takeEvery } from 'redux-saga/effects';
-import { types, getNerData, getRelationData } from '../reducers/editstate';
+import {
+  types,
+  getNerData,
+  getRelationData,
+  getSentimentData,
+} from '../reducers/editstate';
 import axios from 'axios';
 import { initialLayout } from '../utils/layout';
 import { initialOverviewLayout } from '../utils/overviewLayout';
@@ -30,6 +35,36 @@ function* updateNetworkHelper({ data, currentFileName }) {
     payload: networkData,
     currentFileName: currentFileName,
   });
+}
+
+// Posts the filtered sentiment data to the backend and returns the updated sentiment wordcloud data.
+const apiPostSentimentWordcloud = (data) => {
+  const formData = new FormData();
+  formData.append('relationData', JSON.stringify(data));
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST',
+  };
+  return axios.post(
+    'http://updatenetwork-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/updateNetwork',
+    formData,
+    {
+      headers: headers,
+    }
+  );
+};
+
+function* updateSentimentWordcloud({ payload }) {
+  const { data, currentFileName } = payload;
+  const sentimentData = yield select(getSentimentData, [currentFileName]);
+  // const res = yield call(apiPostSentimentWordcloud, data);
+  // sentimentData[2].sentimentwordCloud = res.data
+
+  // yield put({
+  //   type: types.UPDATED_SENTIMENT_WORDCLOUD,
+  //   payload: sentimentData,
+  //   currentFileName: currentFileName,
+  // });
 }
 
 // Dispatches the action UPLOADED_CORPUS_DATA to update the redux store with the new corpus data.
@@ -270,4 +305,5 @@ export default [
   takeEvery(types.UPLOADING_DATA, uploadData),
   takeEvery(types.UPDATING_NER_DATA, updateNer),
   takeEvery(types.UPDATING_RELATION_DATA, updateRelation),
+  takeEvery(types.UPDATING_SENTIMENT_WORDCLOUD, updateSentimentWordcloud),
 ];

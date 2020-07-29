@@ -1,4 +1,18 @@
+import data from './politics_in_cyberspace.json';
+import { initialLayout } from '../utils/layout.js';
+import { initialOverviewLayout } from '../utils/overviewLayout.js';
+
 export const initialState = {
+  // corpusData: data.corpusData,
+  // fileNames: data.fileNames,
+  // layout: {
+  //   Chapter1: initialLayout,
+  //   Chapter2: initialLayout,
+  //   Chapter3: initialLayout,
+  //   Chapter4: initialLayout,
+  //   Conclusion: initialLayout,
+  //   Overview: initialOverviewLayout,
+  // },
   corpusData: null,
   fileNames: [],
   layout: {},
@@ -8,6 +22,7 @@ export const initialState = {
 
   updatingRelationData: false,
   updatingNerData: false,
+  updatingSentimentWordcloud: false,
   nerSearch: [new Set(), null],
 
   documentId: '',
@@ -22,6 +37,8 @@ export const types = {
   UPDATED_RELATION_DATA: 'UPDATED_RELATION_DATA',
   UPDATED_NER_DATA: 'UPDATED_NER_DATA',
   UPDATED_NETWORK_DATA: 'UPDATED_NETWORK_DATA',
+  UPDATING_SENTIMENT_WORDCLOUD: 'UPDATING_SENTIMENT_WORDCLOUD',
+  UPDATED_SENTIMENT_WORDCLOUD: 'UPDATED_SENTIMENT_WORDCLOUD',
 
   UPLOADING_DATA: 'UPLOADING_DATA',
   UPLOAD_SUCCESS: 'UPLOAD_SUCCESS',
@@ -52,6 +69,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         updatingNerData: true,
+      };
+    case types.UPDATING_SENTIMENT_WORDCLOUD:
+      return {
+        ...state,
+        updatingSentimentWordcloud: true,
       };
     case types.UPDATED_RELATION_DATA:
       var currentFileName = action.currentFileName;
@@ -87,6 +109,19 @@ export default function reducer(state = initialState, action) {
           [currentFileName]: {
             ...state.corpusData[currentFileName],
             ner: action.payload,
+          },
+        },
+        updatingNerData: false,
+      };
+    case types.UPDATED_SENTIMENT_WORDCLOUD:
+      currentFileName = action.currentFileName;
+      return {
+        ...state,
+        corpusData: {
+          ...state.corpusData,
+          [currentFileName]: {
+            ...state.corpusData[currentFileName],
+            sentiment: action.payload,
           },
         },
         updatingNerData: false,
@@ -174,6 +209,13 @@ export function updateNer(payload) {
   };
 }
 
+export function updateSentimentWordcloud(payload) {
+  return {
+    type: types.UPDATING_SENTIMENT_WORDCLOUD,
+    payload,
+  };
+}
+
 export function udpateNerSearch(payload) {
   return {
     type: types.SEARCH_NER,
@@ -214,6 +256,11 @@ export function getNerData(store, ...args) {
 export function getRelationData(store, ...args) {
   const currentFileName = args;
   return store.editstate.corpusData[currentFileName].relation;
+}
+
+export function getSentimentData(store, ...args) {
+  const currentFileName = args;
+  return store.editstate.corpusData[currentFileName].sentiment;
 }
 
 export function getCorpusData(store) {
