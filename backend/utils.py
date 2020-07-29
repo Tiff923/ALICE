@@ -131,3 +131,38 @@ def overviewRelationToNetwork(relationData, nerData):
         'nodes': nodes,
         'links': links
     }
+
+
+def nerToSentiment(ner):
+    prevLen = 0
+    res = {}
+    nerData = ner.copy()
+    allEnts, text = nerData['ents'], nerData['text']
+    lst_sentences = nltk.sent_tokenize(text)
+
+    while allEnts:
+        for sentence in lst_sentences:
+            length = len(sentence)
+            try:
+                while allEnts and length + prevLen > allEnts[0]['start']:
+                    ent = allEnts.pop(0)
+                    entity, start, end = ent['text'], ent['start'] - prevLen, ent['end'] - prevLen
+                    if entity in res:
+                        res[entity].append(
+                            {
+                                'left': sentence[:start],
+                                'aspect': sentence[start:end],
+                                'right': sentence[end:]
+                            })
+                    else:
+                        res[entity] = [
+                            {
+                                'left': sentence[:start],
+                                'aspect': sentence[start:end],
+                                'right': sentence[end:]
+                            }
+                        ]
+                prevLen += length + 1
+            except:
+                continue
+    return res
