@@ -329,7 +329,8 @@ def runAlice(text):
 
     # ABSA
     print("start ABSA")
-    nerData = nerToSentiment(ner)
+    nerDataToSentiment = copy.deepcopy(ner)
+    nerData = nerToSentiment(nerDataToSentiment)
     ABSAdata = postABSA(nerData)
     sentimentList.append(ABSAdata)
     print('finish ABSA')
