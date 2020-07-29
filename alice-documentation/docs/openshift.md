@@ -353,19 +353,19 @@ oc annotate route sentiment  --overwrite haproxy.router.openshift.io/timeout=10h
 oc annotate route summary --overwrite haproxy.router.openshift.io/timeout=10h 
 ```
 
-&nbsp;10. Topics 
+&nbsp;10. Topics
 ```bash
 oc annotate route topics  --overwrite haproxy.router.openshift.io/timeout=10h 
 ```
 
-&nbsp;11. Wcabsa 
+&nbsp;11. Wordcloud Aspect-Based Sentiment Analysis 
 ```bash
 oc annotate route wcabsa --overwrite haproxy.router.openshift.io/timeout=10h 
 
 oc annotate route wcabsaoverview  --overwrite haproxy.router.openshift.io/timeout=10h 
 ```
 
-&nbsp;12. Word cloud 
+&nbsp;12. Wordcloud 
 ```bash
 oc annotate route wordcloud  --overwrite haproxy.router.openshift.io/timeout=10h
 ```
