@@ -421,7 +421,7 @@ def runAlice(text):
 
     # ABSA
     print("start ABSA")
-    nerDataToSentiment = ner.copy()
+    nerDataToSentiment = copy.deepcopy(ner)
     nerData = nerToSentiment(nerDataToSentiment)
     print("NER after passing to sentiment: ", ner, flush=True)
     ABSAdata = postABSA(nerData)
