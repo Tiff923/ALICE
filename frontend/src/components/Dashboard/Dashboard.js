@@ -268,7 +268,10 @@ const Dashboard = (props) => {
                       }}
                     >
                       <img
-                        src={wordCloudURL} // sentimentData[2].sentimentwordCloud
+                        src={
+                          'data:image/png;base64,' +
+                          sentimentData[2].sentimentWordCloud
+                        }
                         alt="sentiment word cloud"
                         style={{ maxWidth: '100%', maxHeight: '100%' }}
                       />

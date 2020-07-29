@@ -76,7 +76,6 @@ const OverviewDashboard = (props) => {
     }
   };
 
-  console.log(sentimentData);
   if (isFullScreen) {
     return (
       <SizeMe monitorHeight>
@@ -236,8 +235,10 @@ const OverviewDashboard = (props) => {
               <div style={{ width: '100%', overflowX: 'hidden' }}>
                 <OverviewSentimentTable
                   data={sentimentData[2].sentimentTableData}
+                  setCurrentFileName={setCurrentFileName}
                   currentFileName={currentFileName}
                   setSentimentEntity={setSentimentEntity}
+                  sentimentWordDocument={sentimentData[2].sentimentWordDocument}
                 />
               </div>
             }
@@ -262,7 +263,10 @@ const OverviewDashboard = (props) => {
                       }}
                     >
                       <img
-                        src={wordCloudURL} // sentimentData[2].sentimentwordCloud
+                        src={
+                          'data:image/png;base64,' +
+                          sentimentData[2].sentimentWordCloud
+                        }
                         alt="sentiment word cloud"
                         style={{ maxWidth: '100%', maxHeight: '100%' }}
                       />

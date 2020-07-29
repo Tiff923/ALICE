@@ -6,21 +6,8 @@ import { updateSentimentWordcloud } from '../../reducers/editstate';
 import { sentimentcolors } from '../../utils/colors';
 
 const SentimentTable = (props) => {
-  const { currentFileName } = props;
+  const { currentFileName, setSentimentEntity, data } = props;
   const tableRef = React.useRef();
-
-  const data = [
-    {
-      aspect: 'test1',
-      sentiment: 'Positive',
-      sentence: 'test1 sentence',
-    },
-    {
-      aspect: 'test2',
-      sentiment: 'Neutral',
-      sentence: 'test2 sentence',
-    },
-  ];
 
   const columns = [
     { title: 'Entity', field: 'aspect', editable: 'never' },
@@ -61,16 +48,22 @@ const SentimentTable = (props) => {
     {
       tooltip: 'Generate sentiment wordcloud',
       icon: () => <MdCloudUpload color="rgb(255, 136, 17)" />,
-      onClick: (evt, data) => {
-        // POST DATA TO BACKEND TO GENERATE WORDCLOUD
-        props.updateSentimentWordcloud({
-          data: data,
-          currentFileName: currentFileName,
-        });
+      onClick: (evt, tableData) => {
+        const data = new Set();
+        tableData.forEach((e) => data.add(e.aspect));
+        if (data.size !== 1) {
+          alert('Select only one entity!');
+        } else {
+          const entitySelected = data.values().next().value;
+          setSentimentEntity(entitySelected);
+          props.updateSentimentWordcloud({
+            data: tableData,
+            currentFileName: currentFileName,
+          });
+        }
       },
     },
   ];
-
   return (
     <Table
       data={data}

@@ -1,31 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Table from '../../layouts/Header/Table/Table';
+import Chip from '@material-ui/core/Chip';
 import { MdCloudUpload } from 'react-icons/md';
 import { updateSentimentWordcloud } from '../../reducers/editstate';
 import { sentimentcolors } from '../../utils/colors';
 
 const OverviewSentimentTable = (props) => {
-  const { currentFileName } = props;
+  const {
+    currentFileName,
+    setSentimentEntity,
+    setCurrentFileName,
+    sentimentWordDocument,
+    data,
+  } = props;
   const tableRef = React.useRef();
-
-  const data = [
-    {
-      aspect: 'test1',
-      sentiment: 'Positive',
-      chapter: 'test1 sentence',
-    },
-    {
-      aspect: 'test2',
-      sentiment: 'Neutral',
-      chapter: 'test2 sentence',
-    },
-    {
-      aspect: 'test2',
-      sentiment: 'Negative',
-      chapter: 'test2 sentence',
-    },
-  ];
 
   const columns = [
     { title: 'Entity', field: 'aspect', editable: 'never' },
@@ -49,8 +38,18 @@ const OverviewSentimentTable = (props) => {
   const detailPanel = (rowData) => {
     return (
       <div style={{ padding: 5 }}>
-        <span>Sentence: </span>
-        <span>{rowData.sentence}</span>
+        <span>Found in: </span>
+        {rowData.chapters.map((e) => {
+          return (
+            <Chip
+              key={e}
+              style={{ margin: 2 }}
+              label={e}
+              color="primary"
+              onClick={() => setCurrentFileName(e)}
+            />
+          );
+        })}
       </div>
     );
   };
@@ -66,12 +65,21 @@ const OverviewSentimentTable = (props) => {
     {
       tooltip: 'Generate sentiment wordcloud',
       icon: () => <MdCloudUpload color="rgb(255, 136, 17)" />,
-      onClick: (evt, data) => {
-        // POST DATA TO BACKEND TO GENERATE WORDCLOUD
-        props.updateSentimentWordcloud({
-          data: data,
-          currentFileName: currentFileName,
-        });
+      onClick: (evt, tableData) => {
+        const data = new Set();
+        tableData.forEach((e) => data.add(e.aspect));
+        if (data.size !== 1) {
+          alert('Select only one entity!');
+        } else {
+          const entitySelected = data.values().next().value;
+          setSentimentEntity(entitySelected);
+          const newData = {};
+          newData[entitySelected] = sentimentWordDocument[entitySelected];
+          props.updateSentimentWordcloud({
+            data: newData,
+            currentFileName: currentFileName,
+          });
+        }
       },
     },
   ];

@@ -41,7 +41,7 @@ const barGraphProps = {
 const SentimentGraph = ({ data /* see data tab */ }) => (
   <ResponsiveBar
     {...barGraphProps}
-    data={data}
+    data={data.slice(0, 2)}
     keys={['positivity', 'negativity', 'subjectivity']}
     indexBy="sentiment"
     margin={{ top: 50, right: 40, bottom: 70, left: 0 }}
