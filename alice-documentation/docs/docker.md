@@ -9,7 +9,7 @@
 
 ![Docker Container](./img/docker/docker-container.png)
 
-- A.L.I.C.E. is comprised of the following Docker containers: Summarizer, Classifier, Sentiment, Topics, Wordcloud, NER, Relation Extraction, Clustering, Backend Flask server, and our Frontend React and Node server.
+- A.L.I.C.E. is comprised of the following Docker containers: Summarizer, Classifier, Sentiment, Aspect-Based Sentiment Analysis (ABSA), Wordcloud Aspect-Based Sentiment Analysis (WCABSA), Topics, Wordcloud, NER, Relation Extraction, Clustering, Mkdocs Documentation, Backend Flask server, and our Frontend React and Node server.
 
 - For future plans, we aim to utilize Red Hat’s Openshift platform that is powered by Kubernetes. Kubernetes provides the ability to run containers on various machines, auto-scale containers, distribute load between containers, manage storage required by containers, and provide resiliency of containers in case of failure. Kubernetes helps simplify container runtime by managing Docker-based applications that are placed on an underlying assures system that maintains several replicas of running applications. Kubernetes has enabled developers to accelerate the development of cloud-native applications and created an ecosystem of services that are self-driven and reusable.
 

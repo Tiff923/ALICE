@@ -22,11 +22,12 @@ To create a new application that will build, deploy, and run an application from
 4. In your local terminal, run the `oc new-app` command:
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+oc new-app https://github.com/luketankw/ALICE.git#<branch> --source-secret=leekw \
 --strategy=docker --context-dir=backend/AliceBackEnd/TopicModelling \
 --name=topics
 ```
 
+<github_link>#master specifies the github branch to clone from (if cloning from master, there is no need to specify the branch);
 The first argument is the source of the github repo; `--source-secret` is the name of the secret used to access the private github repo; `--strategy` specifies the build strategy (either docker or source); `--context-dir` specifies the file directory of the build path.
 
 5. There was in issue we faced using the web console to create our application.
@@ -35,6 +36,111 @@ The first argument is the source of the github repo; `--source-secret` is the na
    - However, the S2I strategy ignores the `Dockerfile` in the github repo and is why we chose to use the Openshift terminal commands instead of the web console to create our application, i.e. `--strategy=docker`
 
    ![create-5](./img/openshift/app5.png)
+
+### Codes to build Openshift applications
+
+1. Backend
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git#parallel \ --source-secret=leekw --strategy=docker --context-dir=backend \
+--name=backend
+```
+
+2. Frontend
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=frontend \
+--name=frontend
+```
+
+3. NER
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/NER \
+--name=ner
+```
+
+4. Relation
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/Relation \
+--name=relation
+```
+
+5. Aspect-Based Sentiment Analysis (ABSA)
+
+<!-- ```bash
+oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/Relation \
+--name=absa
+``` -->
+
+6. Wordcloud Aspect-Based Sentiment Analysis (WCABSA)
+
+<!-- ```bash
+oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/Relation \
+--name=wcabsa
+``` -->
+
+7. Sentiment
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/Sentiment \
+--name=sentiment
+```
+
+8. Summarizer
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/TextSummarizer \
+--name=summary
+```
+
+9. Classifier
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/Classifier \
+--name=classifier
+```
+
+10. Topics
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/TopicModelling \
+--name=topics
+```
+
+11. Wordcloud
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/WordCloud \
+--name=wordcloud
+```
+
+12. Clustering
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=backend/AliceBackEnd/Clustering \
+--name=clustering
+```
+
+13. Mkdocs Documentation
+
+```bash
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
+--strategy=docker --context-dir=alice-documentation \
+--name=docs
+```
 
 ## Routing
 
