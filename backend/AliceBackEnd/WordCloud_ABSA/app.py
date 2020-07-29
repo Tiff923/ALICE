@@ -58,7 +58,7 @@ def extract_sentiment_words(sentence):
   for word in tokenized_sentence:
       if (sid.polarity_scores(word)['compound']) >= 0.1:
           pos_word_list.append(word)
-      if (sid.polarity_scores(word)['compound']) <= -0.1:
+      else:
           neg_word_list.append(word)             
 
   return pos_word_list, neg_word_list
