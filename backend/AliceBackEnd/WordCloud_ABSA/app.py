@@ -98,19 +98,13 @@ def wc_green_red(text, pos, neg):
     default_color = 'grey'
     grouped_color_func = SimpleGroupedColorFunc(color_to_words, default_color)
     wc.recolor(color_func=grouped_color_func)
+    imageRes = wc.to_image()
 
-    try: 
-        imageRes = wc.to_image()
-
-        # Convert to bytes
-        file_object = io.BytesIO()
-        imageRes.save(file_object, format='PNG')
-        bytestring = base64.b64encode(file_object.getvalue())
-        result = bytestring.decode('utf-8')
-        #returnJson = {"data": bytestring.decode('utf-8')}
-        print('wc_green_red result', result, flush=True)
-    except Exception as err: 
-        print('error in wc_green_red', err, flush=True)
+    # Convert to bytes
+    file_object = io.BytesIO()
+    imageRes.save(file_object, format='PNG')
+    bytestring = base64.b64encode(file_object.getvalue())
+    result = bytestring.decode('utf-8')
 
     return result
 

@@ -187,9 +187,7 @@ def receiveFile():
         returnJson = jsonify(returnDict)
     except Exception as err:
         print(f"Error in completing overview: {err}", flush=True)
-    
-    print('absaDocument', data.absaDocument, flush=True)
-    print('sentimentwordDocument', data.sentimentWordDocument, flush=True)
+
     return returnJson
 
 
@@ -332,8 +330,6 @@ def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, sentimentWor
         'sentimentWordDocument': sentimentWordDocument, 
         'sentimentWordCloud': wcabsaJson['sentimentWordCloud']})
 
-    print('sentimentList Overview', sentimentList, flush=True)
-
     # Key Data
     print('doing key data stuff')
     key_data_classification = classify
@@ -412,29 +408,17 @@ def runAlice(text):
 
     # ABSA
     print("start ABSA")
-    try: 
-        nerData = nerToSentiment(ner)
-        print('posting to backend', flush=True)
-        ABSAdata = postABSA(nerData)
-        print('appending', flush=True)
-        sentimentList.append(ABSAdata)
-        print('finish')
-    except Exception as err:
-        print('err start ASBA', err, flush=True)
+    nerData = nerToSentiment(ner)
+    ABSAdata = postABSA(nerData)
+    sentimentList.append(ABSAdata)
     print('finish ABSA')
 
     # wcabsa
     print('start wcabsa')
-    try: 
-        wcabsaInput = ABSAdata['sentimentTableData']
-        print('sending to wcabsa', flush=True)
-        wcabsaData = postwcabsa(wcabsaInput)
-        print('wcabsa appending', flush=True)
-        sentimentList[2]['sentimentWordCloud'] = wcabsaData['sentimentWordCloud']
-        sentimentList[2]['sentimentWordChapter'] = wcabsaData['sentimentWordChapter']
-        print('finish', flush=True)
-    except Exception as err: 
-        print('err start wcabsa', err, flush=True)
+    wcabsaInput = ABSAdata['sentimentTableData']
+    wcabsaData = postwcabsa(wcabsaInput)
+    sentimentList[2]['sentimentWordCloud'] = wcabsaData['sentimentWordCloud']
+    sentimentList[2]['sentimentWordChapter'] = wcabsaData['sentimentWordChapter']
     print('finish wcabsa')
             
     # Key Data
@@ -546,7 +530,6 @@ def postABSA(data):
     try:
         url = "http://absa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/aspectSentiment"
         result = requests.post(url, json=data)
-        print('result from ABSA', result, flush=True)
         result = result.json()
     except Exception as err:
          print(f"Error in ABSA: {err}", flush=True)
@@ -556,7 +539,6 @@ def postwcabsa(data):
     try: 
         url = "http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA"
         result = requests.post(url, json=data)
-        print('result postwcabsa', result, flush=True)
         result = result.json()
     except Exception as err: 
         print(f'Error in wcabsa:{err}', flush=True)
@@ -566,7 +548,6 @@ def postwcabscaOverview(data):
     try: 
         url = "http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview"
         result = requests.post(url, json=data)
-        print('result postwcabsa', result, flush=True)
         result = result.json()
     except Exception as err: 
         print(f'Error in wcabsaOverview:{err}', flush=True)
