@@ -1,3 +1,6 @@
+import nltk
+import copy
+
 nercolors = {'PERSON': '#FF5962',
              'NORP': '#30BCED',
              'FAC': '#30BCED',
@@ -133,9 +136,10 @@ def overviewRelationToNetwork(relationData, nerData):
     }
 
 
-def nerToSentiment(nerData):
+def nerToSentiment(ner):
     prevLen = 0
     res = {}
+    nerData = copy.deepcopy(ner)
     allEnts, text = nerData['ents'], nerData['text']
     lst_sentences = nltk.sent_tokenize(text)
 
