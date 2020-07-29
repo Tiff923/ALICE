@@ -64,10 +64,6 @@ def extract_sentiment_words(sentence):
           pos_word_list.append(word)
       if (sid.polarity_scores(word)['compound']) <= -0.1:
           neg_word_list.append(word)
-
-  if len(pos_word_list) == 0 and len(neg_word_list) == 0: 
-      pos_word_list = ['none', 'positive', 'word'] 
-      neg_word_list = ['none', 'negative', 'word']
           
 
   return pos_word_list, neg_word_list
