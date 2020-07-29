@@ -13,6 +13,7 @@ import re
 import datetime
 import nltk
 import threading
+import copy
 from bson import ObjectId
 
 app = Flask(__name__)
@@ -420,7 +421,8 @@ def runAlice(text):
 
     # ABSA
     print("start ABSA")
-    nerData = nerToSentiment(ner)
+    nerDataToSentiment = ner.copy()
+    nerData = nerToSentiment(nerDataToSentiment)
     print("NER after passing to sentiment: ", ner, flush=True)
     ABSAdata = postABSA(nerData)
     sentimentList.append(ABSAdata)
@@ -566,10 +568,9 @@ def postwcabscaOverview(data):
         print(f'Error in wcabsaOverview:{err}', flush=True)
     return result 
 
-def nerToSentiment(ner):
+def nerToSentiment(nerData):
     prevLen = 0
     res={}
-    nerData = ner.copy()
     allEnts, text = nerData['ents'], nerData['text']
     lst_sentences = nltk.sent_tokenize(text)
 
