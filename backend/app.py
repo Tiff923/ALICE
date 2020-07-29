@@ -262,20 +262,18 @@ def absa_document(dc, inc, filename):
 
 def entity_sentimentwords_document(dc, inc):
   df = ['none', 'positive', 'word']
-  removed = False 
   for entity, s_w in inc.items():
     print('s_w', s_w, flush=True)
     if entity in dc.sentimentWordDocument.keys():
       if not all(elem in df  for elem in s_w['pos']):
-          if not removed:  
-            removed = True
+        if all(elem in df  for elem in dc.sentimentWordDocument[entity]['pos']):
             dc.sentimentWordDocument[entity]['pos'] = s_w['pos']
             dc.sentimentWordDocument[entity]['neg'] = s_w['neg']
             print('sentimentWordDocument removal', dc.sentimentWordDocument, flush=True)
-          else: 
-             dc.sentimentWordDocument[entity]['pos'] = dc.sentimentWordDocument[entity]['pos'] + s_w['pos']
-             dc.sentimentWordDocument[entity]['neg'] = dc.sentimentWordDocument[entity]['neg'] + s_w['neg']
-             print('sentimentWordDocument normal', dc.sentimentWordDocument, flush=True)
+        else: 
+            dc.sentimentWordDocument[entity]['pos'] = dc.sentimentWordDocument[entity]['pos'] + s_w['pos']
+            dc.sentimentWordDocument[entity]['neg'] = dc.sentimentWordDocument[entity]['neg'] + s_w['neg']
+            print('sentimentWordDocument normal', dc.sentimentWordDocument, flush=True)
     else:
       dc.sentimentWordDocument[entity] = {}
       dc.sentimentWordDocument[entity]['pos'] = s_w['pos'] 
