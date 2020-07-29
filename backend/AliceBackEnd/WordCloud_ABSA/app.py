@@ -66,8 +66,8 @@ def extract_sentiment_words(sentence):
           neg_word_list.append(word)
 
   if len(pos_word_list) == 0 and len(neg_word_list) == 0: 
-      pos_word_list = ['no', 'positive', 'word'] 
-      neg_word_list = ['no', 'negative', 'word']
+      pos_word_list = ['none', 'positive', 'word'] 
+      neg_word_list = ['none', 'negative', 'word']
           
 
   return pos_word_list, neg_word_list
@@ -103,12 +103,12 @@ class SimpleGroupedColorFunc(object):
 
 def wc_green_red(text, pos, neg): 
     custom_mask = np.array(Image.open("Book4.jpg"))
-    wc = WordCloud(collocations=False, background_color = "white", mask = custom_mask).generate(text.lower())
+    wc = WordCloud(collocations=False, background_color = "white", mask = custom_mask).generate(text)
     color_to_words = {
         'green': pos, 
         'red': neg
     }
-    default_color = 'grey'
+    default_color = '#80CED7'
     grouped_color_func = SimpleGroupedColorFunc(color_to_words, default_color)
     wc.recolor(color_func=grouped_color_func)
     imageRes = wc.to_image()
