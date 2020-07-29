@@ -271,11 +271,9 @@ def entity_sentimentwords_document(dc, inc):
         if all(elem in df  for elem in dc.sentimentWordDocument[entity]['pos']):
             dc.sentimentWordDocument[entity]['pos'] = s_w['pos']
             dc.sentimentWordDocument[entity]['neg'] = s_w['neg']
-            print('sentimentWordDocument removal', dc.sentimentWordDocument, flush=True)
         else: 
             dc.sentimentWordDocument[entity]['pos'] = dc.sentimentWordDocument[entity]['pos'] + s_w['pos']
             dc.sentimentWordDocument[entity]['neg'] = dc.sentimentWordDocument[entity]['neg'] + s_w['neg']
-            print('sentimentWordDocument normal', dc.sentimentWordDocument, flush=True)
     else:
       dc.sentimentWordDocument[entity] = {}
       dc.sentimentWordDocument[entity]['pos'] = s_w['pos'] 
