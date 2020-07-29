@@ -13,6 +13,7 @@ import re
 import datetime
 from bson import ObjectId
 import nltk
+import copy
 
 app = Flask(__name__)
 cors = CORS(app)
