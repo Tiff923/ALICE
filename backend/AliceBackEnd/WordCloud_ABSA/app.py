@@ -21,6 +21,7 @@ cors = CORS(app)
 def wordCloud_ABSA(): 
     try: 
         data = request.json
+        print('data from frontend wc', data, flush=True)
         sentimentWord_c = entity_sentimentwords_chapter(data)
         key = list(sentimentWord_c.keys())[0]
         pos = sentimentWord_c[key]['pos']
@@ -38,6 +39,7 @@ def wordCloud_ABSA():
 def wc_ABSA_Overview(): 
     try: 
         data = request.json
+        print('data from frontend wc overview', data, flush=True)
         key = list(data.keys())[0]
         pos = data[key]['pos']
         neg = data[key]['neg']
