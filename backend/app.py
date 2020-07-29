@@ -264,7 +264,7 @@ def absa_document(dc, inc, filename):
 def entity_sentimentwords_document(dc, inc):
   df = ['none', 'positive', 'word']
   for entity, s_w in inc.items():
-    print('entity', enity, flush=True)
+    print('entity', entity, flush=True)
     print('s_w', s_w, flush=True)
     if entity in dc.sentimentWordDocument.keys():
       if not all(elem in df  for elem in s_w['pos']):
