@@ -1,18 +1,4 @@
-import data from './politics_in_cyberspace.json';
-import { initialLayout } from '../utils/layout.js';
-import { initialOverviewLayout } from '../utils/overviewLayout.js';
-
 export const initialState = {
-  // corpusData: data.corpusData,
-  // fileNames: data.fileNames,
-  // layout: {
-  //   Chapter1: initialLayout,
-  //   Chapter2: initialLayout,
-  //   Chapter3: initialLayout,
-  //   Chapter4: initialLayout,
-  //   Conclusion: initialLayout,
-  //   Overview: initialOverviewLayout,
-  // },
   corpusData: null,
   fileNames: [],
   layout: {},

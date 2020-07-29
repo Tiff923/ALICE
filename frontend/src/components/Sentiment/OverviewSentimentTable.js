@@ -32,14 +32,14 @@ const OverviewSentimentTable = (props) => {
         borderColor: `${sentimentcolors[rowData]}`,
       }),
     },
-    { title: 'Chapter', field: 'chapters', hidden: true },
+    { title: 'Chapter', field: 'chapter', hidden: true },
   ];
 
   const detailPanel = (rowData) => {
     return (
       <div style={{ padding: 5 }}>
         <span>Found in: </span>
-        {rowData.chapters.map((e) => {
+        {rowData.chapter.map((e) => {
           return (
             <Chip
               key={e}

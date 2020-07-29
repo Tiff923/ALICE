@@ -44,7 +44,7 @@ const OverviewDashboard = (props) => {
   const [cooldownTicks, setCooldownTicks] = useState(undefined);
   const [isFullScreen, setFullScreen] = useState(false);
   const [netData, setNetworkData] = useState(networkData);
-  const [sentimentEntity, setSentimentEntity] = useState('');
+  const [sentimentEntity, setSentimentEntity] = useState('NIL');
   const wordCloudURL = 'data:image/png;base64,' + wordCloud;
 
   useEffect(() => {
