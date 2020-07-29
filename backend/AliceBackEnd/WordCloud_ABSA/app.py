@@ -8,12 +8,14 @@ import io
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from flask_cors import CORS, cross_origin
 
 
 nltk.download('punkt')
 nltk.download('vader_lexicon')
 
 app = Flask(__name__)
+cors = CORS(app)
 
 @app.route('/wordCloudABSA', methods=['GET', 'POST'])
 def wordCloud_ABSA(): 

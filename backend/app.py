@@ -553,9 +553,10 @@ def postwcabscaOverview(data):
         print(f'Error in wcabsaOverview:{err}', flush=True)
     return result 
 
-def nerToSentiment(nerData):
+def nerToSentiment(ner):
     prevLen = 0
     res={}
+    nerData = ner.copy()
     allEnts, text = nerData['ents'], nerData['text']
     lst_sentences = nltk.sent_tokenize(text)
 
