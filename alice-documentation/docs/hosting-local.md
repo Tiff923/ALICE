@@ -100,6 +100,16 @@ def postwcabsa(data):
     except Exception as err: 
         print(f'Error in wcabsa:{err}', flush=True)
     return result 
+
+def postwcabscaOverview(data):
+    try:
+        # "http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview"
+        url = "http://wordcloudabsa:5100/wcABSAOverview"
+        result = requests.post(url, json=data)
+        result = result.json()
+    except Exception as err:
+        print(f'Error in wcabsaOverview:{err}', flush=True)
+    return result
 ```
 
 ## `frontend/src/sagas/editstate.js`
