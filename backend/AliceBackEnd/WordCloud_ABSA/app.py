@@ -24,6 +24,8 @@ def wordCloud_ABSA():
         pos = sentimentWord_c[key]['pos']
         neg = sentimentWord_c[key]['neg']
         text = ' '.join(pos + neg)
+        print('pos /wordCloudABSA', pos, flush=True)
+        print('neg /wordCloudABSA', neg, flush=True)
         wc = wc_green_red(text, pos, neg)
         returnJson = {'sentimentWordCloud': wc, 'sentimentWordChapter':sentimentWord_c}
     except Exception as err: 
@@ -38,6 +40,8 @@ def wc_ABSA_Overview():
         pos = data[key]['pos']
         neg = data[key]['neg']
         text = ' '.join(pos + neg)
+        print('pos /wcABSAOverview', pos, flush=True)
+        print('neg /wcABSAOverview', neg, flush=True)
         wc = wc_green_red(text, pos, neg)
         returnJson = {'sentimentWordCloud': wc}
     except Exception as err: 
