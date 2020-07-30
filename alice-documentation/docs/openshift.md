@@ -390,3 +390,19 @@ oc annotate route wordcloud  --overwrite haproxy.router.openshift.io/timeout=10h
   - `leastconn`: The endpoint with the lowest number of connections receives the request. Round-robin is performed when multiple endpoints have the same lowest number of connections. Use this algorithm when very long sessions are expected, such as LDAP, SQL, TSE, or others. Not intended to be used with protocols that typically use short sessions such as HTTP.
 
   - `source`: The source IP address is hashed and divided by the total weight of the running servers to designate which server will receive the request. This ensures that the same client IP address will always reach the same server as long as no server goes down or up. If the hash result changes due to the number of running servers changing, many clients will be directed to different servers. This algorithm is generally used with passthrough routes.
+
+## Deleting Applications
+
+To delete an application, run:
+
+```bash
+oc delete all --selector app=<app_name>
+
+oc get pods # get a list of all pods
+oc delete pod <pod_name> -n <project_name> --grace-period=0 --force # delete any pod related to the application
+```
+
+To delete all applications, run:
+```bash
+oc delete all --all
+```
