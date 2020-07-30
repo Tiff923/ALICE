@@ -24,9 +24,7 @@ To create a new application that will build, deploy, and run an application from
 2. In your local terminal, run the `oc new-app` command:
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git#<branch> --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/TopicModelling \
---name=topics
+oc new-app https://github.com/luketankw/ALICE.git#<branch> --source-secret=leekw --strategy=docker --context-dir=backend/AliceBackEnd/TopicModelling --name=topics
 ```
 
 <github_link>#master specifies the github branch to clone from (if cloning from master, there is no need to specify the branch);
@@ -44,104 +42,103 @@ The first argument is the source of the github repo; `--source-secret` is the na
 1. Backend
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git#parallel \ 
---source-secret=leekw --strategy=docker --context-dir=backend \
+oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw --strategy=docker --context-dir=backend 
 --name=backend
 ```
 
 &nbsp;2. Frontend
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
---strategy=docker --context-dir=frontend \
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw 
+--strategy=docker --context-dir=frontend 
 --name=frontend
 ```
 
 &nbsp;3. NER
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/NER \
+oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/NER 
 --name=ner
 ```
 
 &nbsp;4. Relation
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/Relation \
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/Relation 
 --name=relation
 ```
 
 &nbsp;5. Aspect-Based Sentiment Analysis (ABSA)
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/ABSA \
+oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/ABSA 
 --name=absa
 ```
 
 &nbsp;6. Wordcloud Aspect-Based Sentiment Analysis (WCABSA)
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/WordCloud_ABSA \
+oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/WordCloud_ABSA 
 --name=wcabsa
 ```
 
 &nbsp;7. Sentiment
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/Sentiment \
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/Sentiment 
 --name=sentiment
 ```
 
 &nbsp;8. Summary
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/TextSummarizer \
+oc new-app https://github.com/luketankw/ALICE.git#parallel --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/TextSummarizer 
 --name=summary
 ```
 
 &nbsp;9. Classifier
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/Classifier \
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/Classifier 
 --name=classifier
 ```
 
 &nbsp;10. Topics
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/TopicModelling \
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/TopicModelling 
 --name=topics
 ```
 
 &nbsp;11. Wordcloud
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/WordCloud \
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/WordCloud 
 --name=wordcloud
 ```
 
 &nbsp;12. Clustering
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
---strategy=docker --context-dir=backend/AliceBackEnd/Clustering \
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw 
+--strategy=docker --context-dir=backend/AliceBackEnd/Clustering 
 --name=clustering
 ```
 
 &nbsp;13. Documentation
 
 ```bash
-oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw \
---strategy=docker --context-dir=alice-documentation \
+oc new-app https://github.com/luketankw/ALICE.git --source-secret=leekw 
+--strategy=docker --context-dir=alice-documentation 
 --name=docs
 ```
 
@@ -316,7 +313,7 @@ oc annotate route backend  --overwrite haproxy.router.openshift.io/timeout=10h
 
 oc annotate route loaddbfile  --overwrite haproxy.router.openshift.io/timeout=10h 
 
-oc annotate route loadexisitingfile  --overwrite haproxy.router.openshift.io/timeout=10h 
+oc annotate route loadexistingfile  --overwrite haproxy.router.openshift.io/timeout=10h 
 
 oc annotate route savetodb   --overwrite haproxy.router.openshift.io/timeout=10h 
 
