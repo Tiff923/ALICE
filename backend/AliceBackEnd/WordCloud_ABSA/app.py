@@ -64,25 +64,25 @@ def extract_sentiment_words(sentence):
 
 def entity_sentimentwords_chapter(l):
   out = {}
-  for element in l: 
+  for element in l:
+    pos_entity = []
+    neg_entity = [] 
     aspect = element['aspect']
-    sentence = element['sentence']
-    pos, neg = extract_sentiment_words(sentence)
-    if aspect in out.keys(): 
-      out[aspect]['pos'] = out[aspect]['pos'] + pos 
-      out[aspect]['neg'] = out[aspect]['neg'] + neg 
-    else:
-      out[aspect] = {}
-      out[aspect]['pos'] = pos 
-      out[aspect]['neg'] = neg 
+    sentences = element['sentences']['Positive'] + element['sentences']['Negative'] + element['sentences']['Neutral']
+    for sentence in sentences: 
+        pos, neg = extract_sentiment_words(sentence)
+        pos_entity += pos
+        neg_entity += neg
 
-  for entity in out.keys():
-    pos_word_list = out[entity]['pos']
-    neg_word_list = out[entity]['neg']
-    if len(pos_word_list) == 0 and len(neg_word_list) == 0: 
-      out[entity]['pos'] = ['none', 'positive', 'word'] 
-      out[entity]['neg'] = ['none', 'negative', 'word']
+    if len(pos_entity) == 0 and len (neg_entity) == 0: 
+        pos_entity = ['neutral']
+        neg_entity = ['neutral']
 
+    out[aspect]={
+        'pos':pos_entity, 
+        'neg':neg_entity
+    }
+    
   return out 
 
 class SimpleGroupedColorFunc(object):
