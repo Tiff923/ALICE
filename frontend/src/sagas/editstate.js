@@ -46,7 +46,7 @@ const apiPostSentimentWordcloud = (payload) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,POST',
   };
-
+  console.log(data);
   if (currentFileName === 'Overview') {
     return axios.post(
       'http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview',

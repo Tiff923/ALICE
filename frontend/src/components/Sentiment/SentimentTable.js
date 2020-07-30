@@ -4,6 +4,7 @@ import Table from '../../layouts/Header/Table/Table';
 import { MdCloudUpload } from 'react-icons/md';
 import { updateSentimentWordcloud } from '../../reducers/editstate';
 import { sentimentcolors } from '../../utils/colors';
+import SentimentHighlight from './SentimentHighlight';
 
 const SentimentTable = (props) => {
   const { currentFileName, setSentimentEntity, data } = props;
@@ -31,29 +32,50 @@ const SentimentTable = (props) => {
   const detailPanel = (rowData) => {
     return (
       <>
-        {rowData.sentences.positive ? (
+        {rowData.sentences.Positive.length > 0 ? (
           <div style={{ padding: 5 }}>
-            <span>Positive Sentences: </span>
-            {rowData.sentences.Positive.map((sentence) => {
-              return <span>{sentence}</span>;
+            <span style={{ fontWeight: 'bold' }}>Positive sentences: </span>
+            {rowData.sentences.Positive.map((sentence, i) => {
+              return (
+                <SentimentHighlight
+                  key={i}
+                  sentence={sentence}
+                  sentiment={'Positive'}
+                  entity={rowData.aspect}
+                />
+              );
             })}
           </div>
         ) : null}
 
-        {rowData.sentences.negative ? (
+        {rowData.sentences.Negative.length > 0 ? (
           <div style={{ padding: 5 }}>
-            <span>Negative Sentences: </span>
-            {rowData.sentences.Negative.map((sentence) => {
-              return <span>{sentence}</span>;
+            <span style={{ fontWeight: 'bold' }}>Negative sentences: </span>
+            {rowData.sentences.Negative.map((sentence, i) => {
+              return (
+                <SentimentHighlight
+                  key={i}
+                  sentence={sentence}
+                  sentiment={'Negative'}
+                  entity={rowData.aspect}
+                />
+              );
             })}
           </div>
         ) : null}
 
-        {rowData.sentences.neutral ? (
+        {rowData.sentences.Neutral > 0 ? (
           <div style={{ padding: 5 }}>
-            <span>Neutral Sentences: </span>
-            {rowData.sentences.Neutral.map((sentence) => {
-              return <span>{sentence}</span>;
+            <span style={{ fontWeight: 'bold' }}>Neutral sentences: </span>
+            {rowData.sentences.Neutral.map((sentence, i) => {
+              return (
+                <SentimentHighlight
+                  key={i}
+                  sentence={sentence}
+                  sentiment={'Neutral'}
+                  entity={rowData.aspect}
+                />
+              );
             })}
           </div>
         ) : null}

@@ -256,7 +256,14 @@ const Dashboard = (props) => {
               return (
                 <VisualCard
                   title="Document Sentiment Wordcloud"
-                  category={<h2>`Current Entity: ${sentimentEntity}`</h2>}
+                  category={
+                    <>
+                      <span>Current Entity: </span>
+                      <span style={{ fontWeight: 'bold', fontSize: '1.5em' }}>
+                        {sentimentEntity}
+                      </span>
+                    </>
+                  }
                   content={
                     <div
                       style={{

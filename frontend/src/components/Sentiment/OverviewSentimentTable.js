@@ -38,48 +38,48 @@ const OverviewSentimentTable = (props) => {
   const detailPanel = (rowData) => {
     return (
       <>
-        {rowData.chapters.Positive ? (
+        {rowData.chapters.Positive.length > 0 ? (
           <div style={{ padding: 5 }}>
             <span>Positive: </span>
             {rowData.chapters.Positive.map((e) => {
               return (
                 <Chip
                   key={e}
-                  style={{ margin: 2 }}
+                  style={{ margin: 2, backgroundColor: '#B0DB43' }}
                   label={e}
-                  color="#B0DB43"
+                  color="primary"
                   onClick={() => setCurrentFileName(e)}
                 />
               );
             })}
           </div>
         ) : null}
-        {rowData.chapters.Negative ? (
+        {rowData.chapters.Negative.length > 0 ? (
           <div style={{ padding: 5 }}>
             <span>Negative: </span>
             {rowData.chapters.Negative.map((e) => {
               return (
                 <Chip
                   key={e}
-                  style={{ margin: 2 }}
+                  style={{ margin: 2, backgroundColor: '#FC2F00' }}
                   label={e}
-                  color="#FC2F00"
+                  color="primary"
                   onClick={() => setCurrentFileName(e)}
                 />
               );
             })}
           </div>
         ) : null}
-        {rowData.chapters.Neutral ? (
+        {rowData.chapters.Neutral.length > 0 ? (
           <div style={{ padding: 5 }}>
             <span>Neutral: </span>
             {rowData.chapters.Neutral.map((e) => {
               return (
                 <Chip
                   key={e}
-                  style={{ margin: 2 }}
+                  style={{ margin: 2, backgroundColor: '#80CED7' }}
                   label={e}
-                  color="#80CED7"
+                  color="primary"
                   onClick={() => setCurrentFileName(e)}
                 />
               );

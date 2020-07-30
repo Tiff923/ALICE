@@ -250,8 +250,15 @@ const OverviewDashboard = (props) => {
             {({ size }) => {
               return (
                 <VisualCard
-                  title="Corpus Sentiment Wordcloud"
-                  category={<h2>`Current Entity: ${sentimentEntity}`</h2>}
+                  title="Sentiment Wordcloud"
+                  category={
+                    <>
+                      <span>Current Entity: </span>
+                      <span style={{ fontWeight: 'bold', fontSize: '1.5em' }}>
+                        {sentimentEntity}
+                      </span>
+                    </>
+                  }
                   content={
                     <div
                       style={{
