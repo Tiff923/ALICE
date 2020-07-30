@@ -44,7 +44,11 @@ const OverviewDashboard = (props) => {
   const [cooldownTicks, setCooldownTicks] = useState(undefined);
   const [isFullScreen, setFullScreen] = useState(false);
   const [netData, setNetworkData] = useState(networkData);
-  const [sentimentEntity, setSentimentEntity] = useState('NIL');
+  const [sentimentEntity, setSentimentEntity] = useState(
+    sentimentData[2].sentimentTableData
+      ? sentimentData[2].sentimentTableData[0].aspect
+      : 'NIL'
+  );
   const wordCloudURL = 'data:image/png;base64,' + wordCloud;
 
   useEffect(() => {
@@ -250,7 +254,7 @@ const OverviewDashboard = (props) => {
             {({ size }) => {
               return (
                 <VisualCard
-                  title="Sentiment Wordcloud"
+                  title="Corpus Sentiment Wordcloud"
                   category={
                     <>
                       <span>Current Entity: </span>
