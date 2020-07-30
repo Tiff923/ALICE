@@ -243,6 +243,7 @@ def thread_task(text, fileName, number, data):
     except:
         print('Unknown error in'+fileName, flush=True)
 
+
 def absa_document(dc, inc, filename):
   for entity, sentiment in inc.items(): 
     found = False
@@ -331,9 +332,11 @@ def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, sentimentWor
     print("receive wordcloud")
 
     # ABSA, wcabsa
+    dic = absa_document_combined_c(absaDocument)
+    absaDocumentCombined = absa_document_to_react(dic)
     wcabsaJson = postwcabscaOverview(sentimentWordDocument)
     sentimentList.append({
-        'sentimentTableData': absaDocument, 
+        'sentimentTableData': absaDocumentCombined, 
         'sentimentWordDocument': sentimentWordDocument, 
         'sentimentWordCloud': wcabsaJson['sentimentWordCloud']})
 
@@ -356,6 +359,48 @@ def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, sentimentWor
     print("Overview finished", flush=True)
     return jsonToReact
 
+def absa_document_to_react(dic):
+  returnlist = []
+  for entity in dic.keys():
+    returnlist.append({
+        'aspect':entity, 
+        'sentiment':dic[entity]['sentiment'], 
+        'chapters':{
+            'Positive': dic[entity]['chapters']['Positive'], 
+            'Negative': dic[entity]['chapters']['Negative'], 
+            'Neutral': dic[entity]['chapters']['Neutral']
+            }
+    }) 
+  return returnlist 
+
+def absa_document_combined_c(l):
+  dic = {}
+  for element in l: 
+    entity = element['aspect']
+    sentiment = element['sentiment']
+    chapters = element['chapter']
+    if not entity in dic.keys():
+      dic[entity] = {
+          'sentiment':'', 
+          'chapters':{
+              'Positive':[], 
+              'Negative':[], 
+              'Neutral':[]
+          }
+      }
+    dic[entity]['chapters'][sentiment] += chapters 
+
+  for ent in dic.keys():
+    index_label = {0: 'Positive', 1:'Negative', 2:'Neutral'}
+    pos_list_len = len(dic[ent]['chapters']['Positive']) 
+    neg_list_len = len(dic[ent]['chapters']['Negative']) 
+    neu_list_len = len(dic[ent]['chapters']['Neutral'])
+    len_list = [pos_list_len, neg_list_len, neu_list_len]
+    index = len_list.index(max(len_list))
+    label = index_label[index]
+    dic[ent]['sentiment'] = label
+    
+  return dic 
 
 def runAlice(text):
     text = text.replace("\\x92", "")
@@ -434,6 +479,9 @@ def runAlice(text):
     keyData = {"num_words": num_words, "topic_classifier": key_data_classification, "sentiment": key_data_sentiment,
                "legitimacy": key_data_legitimacy}
 
+    dic = absa_chapter_combined_s(ABSAdata['sentimentTableData'])
+    sentimentList[2]['sentimentTableData'] = absa_chapter_to_react(dic)
+
     jsonToReact = {}
     jsonToReact["keyData"] = keyData
     jsonToReact['sentiment'] = sentimentList
@@ -446,6 +494,47 @@ def runAlice(text):
     jsonToReact['wordcloud'] = wordcloud
     return jsonToReact
 
+def absa_chapter_combined_s(l):
+  dic = {}
+  for element in l: 
+    entity = element['aspect']
+    sentiment = element['sentiment']
+    sentence = element['sentence']
+    if entity not in dic.keys():
+      dic[entity] = {
+          'sentiment':'', 
+          'sentences':{
+              'Positive': [], 
+              'Negative': [], 
+              'Neutral': []
+          }
+      }
+    dic[entity]['sentences'][sentiment].append(sentence)
+    
+  for ent in dic.keys():
+    index_label = {0: 'Positive', 1:'Negative', 2:'Neutral'}
+    pos_list_len = len(dic[ent]['sentences']['Positive'])
+    neg_list_len = len(dic[ent]['sentences']['Negative'])
+    neu_list_len = len(dic[ent]['sentences']['Neutral'])
+    len_list = [pos_list_len, neg_list_len, neu_list_len]
+    index = len_list.index(max(len_list))
+    label = index_label[index]
+    dic[ent]['sentiment'] = label
+  return dic 
+
+def absa_chapter_to_react(dic):
+  returnlist = []
+  for entity in dic.keys():
+    returnlist.append({
+        'aspect':entity, 
+        'sentiment':dic[entity]['sentiment'], 
+        'sentences':{
+            'Positive': dic[entity]['sentences']['Positive'], 
+            'Negative': dic[entity]['sentences']['Negative'], 
+            'Neutral': dic[entity]['sentences']['Neutral']
+            }
+    }) 
+  return returnlist 
 
 def postSummaryRequest(text, no_of_sentence):
     try:
