@@ -58,7 +58,6 @@ def aspectSentiment_api():
 
     dic = absa_chapter_combined_s(out)
     absaChapterCombinedS = absa_chapter_to_react(dic)
-    # absa_c = absa_chapter(absa_c_combined_s)
     print('Model complete', flush=True)
     returnJson = {'sentimentTableData': absaChapterCombinedS, 'absaChapter': dic}
     return returnJson 
@@ -161,34 +160,6 @@ def absa_chapter_to_react(dic):
             }
     }) 
   return returnlist 
-
-# def absa_chapter(l):
-#     summary = {}
-#     for element in l:
-#       aspect = element['aspect']
-#       sentiment = element['sentiment']
-#       if aspect in summary.keys():
-#         if sentiment == 'Negative': 
-#           summary[aspect][0] += 1
-#         elif sentiment == 'Neutral':
-#           summary[aspect][1] += 1
-#         else: 
-#           summary[aspect][2] += 1
-#       else:
-#         if sentiment == 'Negative': 
-#           summary[aspect] = [1, 0, 0]
-#         elif sentiment == 'Neutral':
-#           summary[aspect] = [0, 1, 0]
-#         else: 
-#           summary[aspect] = [0, 0, 1]
-    
-#     out = {}
-#     sentiment_dic = {0:'Negative', 1:'Neutral', 2:'Positive'}
-#     for aspect, sentimentList in summary.items():
-#       index = sentimentList.index(max(sentimentList))
-#       out[aspect] = sentiment_dic[index]
-
-#     return out 
 
 
 if __name__ == '__main__':
