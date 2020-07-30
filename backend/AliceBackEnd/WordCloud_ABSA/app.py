@@ -103,9 +103,10 @@ def wc_green_red(text, pos, neg):
     wc = WordCloud(collocations=False, background_color = "white", mask = custom_mask).generate(text)
     color_to_words = {
         'green': pos, 
-        'red': neg
+        'red': neg, 
+        '#80CED7': ['neutral']
     }
-    default_color = '#80CED7'
+    default_color = 'grey'
     grouped_color_func = SimpleGroupedColorFunc(color_to_words, default_color)
     wc.recolor(color_func=grouped_color_func)
     imageRes = wc.to_image()

@@ -271,7 +271,7 @@ def absa_document_combined_c(dc, inc, filename):
   return
 
 def entity_sentimentwords_document(dc, inc):
-  df = ['none', 'positive', 'word']
+  df = ['neutral']
   for entity, s_w in inc.items():
     if entity in dc.sentimentWordDocument.keys():
       if not all(elem in df  for elem in s_w['pos']):
