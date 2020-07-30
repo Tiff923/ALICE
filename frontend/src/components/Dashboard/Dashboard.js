@@ -236,7 +236,7 @@ const Dashboard = (props) => {
 
         <div key="sentiment-table">
           <VisualCard
-            title="Sentiment Table"
+            title="Document Sentiment Table"
             category="Breakdown of sentiments towards entities"
             content={
               <div style={{ width: '100%', overflowX: 'hidden' }}>
@@ -255,8 +255,8 @@ const Dashboard = (props) => {
             {({ size }) => {
               return (
                 <VisualCard
-                  title="Sentiment Wordcloud"
-                  category={`Current Entity: ${sentimentEntity}`}
+                  title="Document Sentiment Wordcloud"
+                  category={<h2>`Current Entity: ${sentimentEntity}`</h2>}
                   content={
                     <div
                       style={{

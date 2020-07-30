@@ -32,25 +32,61 @@ const OverviewSentimentTable = (props) => {
         borderColor: `${sentimentcolors[rowData]}`,
       }),
     },
-    { title: 'Chapter', field: 'chapter', hidden: true },
+    { title: 'Chapter', field: 'chapters', hidden: true },
   ];
 
   const detailPanel = (rowData) => {
     return (
-      <div style={{ padding: 5 }}>
-        <span>Found in: </span>
-        {rowData.chapter.map((e) => {
-          return (
-            <Chip
-              key={e}
-              style={{ margin: 2 }}
-              label={e}
-              color="primary"
-              onClick={() => setCurrentFileName(e)}
-            />
-          );
-        })}
-      </div>
+      <>
+        {rowData.chapters.Positive ? (
+          <div style={{ padding: 5 }}>
+            <span>Positive: </span>
+            {rowData.chapters.Positive.map((e) => {
+              return (
+                <Chip
+                  key={e}
+                  style={{ margin: 2 }}
+                  label={e}
+                  color="#B0DB43"
+                  onClick={() => setCurrentFileName(e)}
+                />
+              );
+            })}
+          </div>
+        ) : null}
+        {rowData.chapters.Negative ? (
+          <div style={{ padding: 5 }}>
+            <span>Negative: </span>
+            {rowData.chapters.Negative.map((e) => {
+              return (
+                <Chip
+                  key={e}
+                  style={{ margin: 2 }}
+                  label={e}
+                  color="#FC2F00"
+                  onClick={() => setCurrentFileName(e)}
+                />
+              );
+            })}
+          </div>
+        ) : null}
+        {rowData.chapters.Neutral ? (
+          <div style={{ padding: 5 }}>
+            <span>Neutral: </span>
+            {rowData.chapters.Neutral.map((e) => {
+              return (
+                <Chip
+                  key={e}
+                  style={{ margin: 2 }}
+                  label={e}
+                  color="#80CED7"
+                  onClick={() => setCurrentFileName(e)}
+                />
+              );
+            })}
+          </div>
+        ) : null}
+      </>
     );
   };
 

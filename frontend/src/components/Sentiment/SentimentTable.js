@@ -25,15 +25,39 @@ const SentimentTable = (props) => {
         borderColor: `${sentimentcolors[rowData]}`,
       }),
     },
-    { title: 'Sentence', field: 'sentence', hidden: true },
+    { title: 'Sentences', field: 'sentences', hidden: true },
   ];
 
   const detailPanel = (rowData) => {
     return (
-      <div style={{ padding: 5 }}>
-        <span>Sentence: </span>
-        <span>{rowData.sentence}</span>
-      </div>
+      <>
+        {rowData.sentences.positive ? (
+          <div style={{ padding: 5 }}>
+            <span>Positive Sentences: </span>
+            {rowData.sentences.Positive.map((sentence) => {
+              return <span>{sentence}</span>;
+            })}
+          </div>
+        ) : null}
+
+        {rowData.sentences.negative ? (
+          <div style={{ padding: 5 }}>
+            <span>Negative Sentences: </span>
+            {rowData.sentences.Negative.map((sentence) => {
+              return <span>{sentence}</span>;
+            })}
+          </div>
+        ) : null}
+
+        {rowData.sentences.neutral ? (
+          <div style={{ padding: 5 }}>
+            <span>Neutral Sentences: </span>
+            {rowData.sentences.Neutral.map((sentence) => {
+              return <span>{sentence}</span>;
+            })}
+          </div>
+        ) : null}
+      </>
     );
   };
 
