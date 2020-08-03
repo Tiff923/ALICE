@@ -374,106 +374,112 @@ def saveToDb():
 
 
 def absa_document_combined_c(combined, inc, filename):
-  for entity, value in inc.items():
-    sentiment = value['sentiment']
-    if entity not in combined.keys():
-      combined[entity]={
-          'sentiment':'', 
-          'chapters': {
-              'Positive':[], 
-              'Negative':[], 
-              'Neutral':[]
-          }
-      }
-    combined[entity]['chapters'][sentiment].append(filename)
+    for entity, value in inc.items():
+        sentiment = value['sentiment']
+        if entity not in combined.keys():
+            combined[entity] = {
+                'sentiment': '',
+                'chapters': {
+                    'Positive': [],
+                    'Negative': [],
+                    'Neutral': []
+                }
+            }
+        combined[entity]['chapters'][sentiment].append(filename)
 
-  for ent, val in combined.items():
-    index_label = {0: 'Positive', 1:'Negative', 2:'Neutral'}
-    pos_list_len = len(val['chapters']['Positive']) 
-    neg_list_len = len(val['chapters']['Negative']) 
-    neu_list_len = len(val['chapters']['Neutral'])
-    len_list = [pos_list_len, neg_list_len, neu_list_len]
-    index = len_list.index(max(len_list))
-    label = index_label[index]
-    combined[ent]['sentiment'] = label
+    for ent, val in combined.items():
+        index_label = {0: 'Positive', 1: 'Negative', 2: 'Neutral'}
+        pos_list_len = len(val['chapters']['Positive'])
+        neg_list_len = len(val['chapters']['Negative'])
+        neu_list_len = len(val['chapters']['Neutral'])
+        len_list = [pos_list_len, neg_list_len, neu_list_len]
+        index = len_list.index(max(len_list))
+        label = index_label[index]
+        combined[ent]['sentiment'] = label
 
-  return combined
+    return combined
 
 
 def entity_sentimentwords_document(combined, inc):
-  df = ['neutral']
-  for entity, s_w in inc.items():
-    if entity in combined.keys():
-      if not all(elem in df  for elem in s_w['pos']):
-        if all(elem in df  for elem in combined[entity]['pos']):
+    df = ['neutral']
+    for entity, s_w in inc.items():
+        if entity in combined.keys():
+            if not all(elem in df for elem in s_w['pos']):
+                if all(elem in df for elem in combined[entity]['pos']):
+                    combined[entity]['pos'] = s_w['pos']
+                    combined[entity]['neg'] = s_w['neg']
+                else:
+                    combined[entity]['pos'] = combined[entity]['pos'] + s_w['pos']
+                    combined[entity]['neg'] = combined[entity]['neg'] + s_w['neg']
+        else:
+            combined[entity] = {}
             combined[entity]['pos'] = s_w['pos']
             combined[entity]['neg'] = s_w['neg']
-        else: 
-            combined[entity]['pos'] = combined[entity]['pos'] + s_w['pos']
-            combined[entity]['neg'] = combined[entity]['neg'] + s_w['neg']
-    else:
-      combined[entity] = {}
-      combined[entity]['pos'] = s_w['pos'] 
-      combined[entity]['neg'] =  s_w['neg']
-  return combined
+    return combined
 
 
 def postSummaryRequest(text, no_of_sentence):
-    url = "http://summary-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/textSummarizer"
+    # "http://summary-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/textSummarizer"
+    url = "http://summary:5060/textSummarizer"
     requestJson = {"text": text, "no_of_sentence": no_of_sentence}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postSentimentRequest(text):
-    url = "http://sentiment-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/sentiment"
-    print(f"Sentiment {url}")
+    # "http://sentiment-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/sentiment"
+    url = "http://sentiment:5050/sentiment"
     requestJson = {"text": text}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postNerRequest(text):
-    url = "http://ner-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/ner"
+    # "http://ner-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/ner"
+    url = "http://ner:5020/ner"
     requestJson = {"text": text}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postRelationRequest(ner):
-    url = "http://relation-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/relation"
+    # "http://relation-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/relation"
+    url = "http://relation:5010/relation"
     requestJson = {"ner": ner}
     try:
         result = requests.post(url, json=requestJson)
-        print('relation model back to server', result, flush=True)
     except Exception as err:
-        print('error back in server', err, flush=True)
+        print("Relation Error", err, flush=True)
     return result.json()
 
 
 def postTopicRequest(text, no_topic, no_top_words):
-    url = "http://topics-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/topic_modelling"
+    # "http://topics-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/topic_modelling"
+    url = "http://topics:5040/topic_modelling"
     requestJson = {"document": text, "no_topic": no_topic, "no_top_words": no_top_words}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postClassifierRequest(text):
-    url = "http://classifier-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/classifier"
+    # "http://classifier-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/classifier"
+    url = "http://classifier:5030/classifier"
     requestJson = {"document": text}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postWordCloud(text):
-    url = "http://wordcloud-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordcloud"
+    # "http://wordcloud-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordcloud"
+    url = "http://wordcloud:5070/wordcloud"
     requestJson = {"data": text}
     result = requests.post(url, json=requestJson)
     return result.json()
 
 
 def postCluster(corpus):
-    url = "http://clustering-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/cluster"
+    # "http://clustering-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/cluster"
+    url = "http://clustering:5080/cluster"
     print("Corpus is: ", corpus, flush=True)
     result = requests.post(url, json=corpus)
     print("result in server: ", result)
@@ -482,7 +488,8 @@ def postCluster(corpus):
 
 def postABSA(data):
     try:
-        url = "http://absa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/aspectSentiment"
+        # http://absa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/aspectSentiment
+        url = "http://absa:5090/aspectSentiment"
         result = requests.post(url, json=data)
         result = result.json()
     except Exception as err:
@@ -492,7 +499,8 @@ def postABSA(data):
 
 def postwcabsa(data):
     try:
-        url = "http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA"
+        # http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA
+        url = "http://wordcloudabsa:5100/wordCloudABSA"
         result = requests.post(url, json=data)
         result = result.json()
     except Exception as err:
@@ -502,7 +510,8 @@ def postwcabsa(data):
 
 def postwcabscaOverview(data):
     try:
-        url = "http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview"
+        # "http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview"
+        url = "http://wordcloudabsa:5100/wcABSAOverview"
         result = requests.post(url, json=data)
         result = result.json()
     except Exception as err:

@@ -17,13 +17,9 @@ const apiPostNetwork = (data) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,POST',
   };
-  return axios.post(
-    'http://updatenetwork-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/updateNetwork',
-    formData,
-    {
-      headers: headers,
-    }
-  );
+  return axios.post('http://localhost:5000/updateNetwork', formData, {
+    headers: headers,
+  });
 };
 
 // Dispatches the action UPDATED_NETWORK_DATA to update the redux store with the new network data based on the file that was changed.
@@ -48,21 +44,15 @@ const apiPostSentimentWordcloud = (payload) => {
   };
   console.log(data);
   if (currentFileName === 'Overview') {
-    return axios.post(
-      'http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview',
-      data,
-      {
-        headers: headers,
-      }
-    );
+    // 'http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview',
+    return axios.post('http://localhost:5000/wcABSAOverview', data, {
+      headers: headers,
+    });
   } else {
-    return axios.post(
-      'http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA',
-      data,
-      {
-        headers: headers,
-      }
-    );
+    // 'http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA'
+    return axios.post('http://localhost:5000/wordCloudABSA', data, {
+      headers: headers,
+    });
   }
 };
 
@@ -125,13 +115,9 @@ const apiPost = (payload) => {
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
 
-  return axios.post(
-    'http://backend-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/uploadFile',
-    formData,
-    {
-      headers: headers,
-    }
-  );
+  return axios.post('http://localhost:5000/uploadFile', formData, {
+    headers: headers,
+  });
 };
 
 // Posts the JSON document to the backend and returns the output.
@@ -142,13 +128,11 @@ const apiPostJson = (payload) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
-  return axios.post(
-    'http://loadexistingfile-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/loadExistingFile',
-    formData,
-    {
-      headers: headers,
-    }
-  );
+
+  // 'http://loadexistingfile-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/loadExistingFile'
+  return axios.post('http://localhost:5000/loadExistingFile', formData, {
+    headers: headers,
+  });
 };
 
 // Posts the ObjectID of the document and returns the output from the MongoDB entry corresponding
@@ -158,8 +142,10 @@ const apiPostDb = (payload) => {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
   };
+
+  // 'http://loaddbfile-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/loadDbFile'
   return axios.post(
-    'http://loaddbfile-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/loadDbFile',
+    'http://localhost:5000/loadDbFile',
     { ID: payload },
     {
       headers: headers,

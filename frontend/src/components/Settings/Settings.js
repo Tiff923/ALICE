@@ -23,12 +23,9 @@ const Settings = (props) => {
       layout: layout,
     };
     await axios
-      .post(
-        'http://savetodb-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/saveToDb',
-        {
-          data: data,
-        }
-      )
+      .post('http://localhost:5000/saveToDb', {
+        data: data,
+      })
       .then((res) => {
         saveDocumentId(res.data);
         setIsLoading(false);
