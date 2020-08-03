@@ -418,6 +418,21 @@ def entity_sentimentwords_document(combined, inc):
     return combined
 
 
+def absa_document_to_react(dic):
+  returnlist = []
+  for entity in dic.keys():
+    returnlist.append({
+        'aspect':entity, 
+        'sentiment':dic[entity]['sentiment'], 
+        'chapters':{
+            'Positive': dic[entity]['chapters']['Positive'], 
+            'Negative': dic[entity]['chapters']['Negative'], 
+            'Neutral': dic[entity]['chapters']['Neutral']
+            }
+    }) 
+  return returnlist 
+
+
 def postSummaryRequest(text, no_of_sentence):
     # "http://summary-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/textSummarizer"
     url = "http://summary:5060/textSummarizer"
