@@ -28,6 +28,7 @@ const Table = (props) => {
     options,
     title,
     actions,
+    onSelectionChange,
     detailPanel,
   } = props;
   //   const [data, setData] = useState(props.data);
@@ -74,6 +75,7 @@ const Table = (props) => {
       detailPanel={detailPanel}
       onSearchChange={onSearchChange}
       onFilterChange={onFilterChange}
+      onSelectionChange = {onSelectionChange}
     />
   );
 };

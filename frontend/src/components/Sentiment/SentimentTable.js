@@ -110,6 +110,14 @@ const SentimentTable = (props) => {
       },
     },
   ];
+
+ const onSelectionChange = (rows) => {
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].tableData.checked = false;
+    }
+    console.log(rows)
+ }
+
   return (
     <Table
       data={data}
@@ -117,6 +125,7 @@ const SentimentTable = (props) => {
       options={options}
       detailPanel={detailPanel}
       tableRef={tableRef}
+      onSelectionChange={onSelectionChange}
       actions={actions}
     />
   );

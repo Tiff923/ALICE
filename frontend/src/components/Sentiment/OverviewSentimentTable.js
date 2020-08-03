@@ -120,6 +120,13 @@ const OverviewSentimentTable = (props) => {
     },
   ];
 
+  const onSelectionChange = (rows) => {
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].tableData.checked = false;
+    }
+    console.log(rows)
+ }
+
   return (
     <Table
       data={data}
@@ -128,6 +135,7 @@ const OverviewSentimentTable = (props) => {
       detailPanel={detailPanel}
       tableRef={tableRef}
       actions={actions}
+      onSelectionChange={onSelectionChange}
     />
   );
 };
