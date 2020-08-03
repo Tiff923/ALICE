@@ -121,7 +121,7 @@ def receiveFile():
     length = int(request.form['length'])
     returnJson = {}
     fileNames = json.loads(request.form['fileNames'])
-    absaDocument = []
+    absaDocument = {}
     sentimentWordDocument = {}
     corpus = []
     corpusEntity = {}
@@ -150,8 +150,8 @@ def receiveFile():
             tempJson = runAlice(text)
             absaChapter = tempJson['sentiment'][2]['absaChapter'].copy()
             sentimentWordChapter = tempJson['sentiment'][2]['sentimentWordChapter'].copy()
-            absaDocument = absaDocumentMerger(absaDocument, absaChapter, name)
-            sentimentWordDocument = sentimentWordsDocumentMerger(sentimentWordDocument, sentimentWordChapter)
+            absaDocument = absa_document_combined_c(absaDocument, absaChapter, name)
+            sentimentWordDocument = entity_sentimentwords_document(sentimentWordDocument, sentimentWordChapter)
 
             returnJson[name] = tempJson
 
@@ -247,8 +247,9 @@ def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, sentimentWor
 
     # ABSA, wcabsa
     wcabsaJson = postwcabscaOverview(sentimentWordDocument)
+    absaDocumentCombinedC = absa_document_to_react(absaDocument)
     sentimentList.append({
-        'sentimentTableData': absaDocument,
+        'sentimentTableData': absaDocumentCombinedC,
         'sentimentWordDocument': sentimentWordDocument,
         'sentimentWordCloud': wcabsaJson['sentimentWordCloud']})
 
@@ -372,34 +373,49 @@ def saveToDb():
     return res_id
 
 
-def absaDocumentMerger(dc, inc, filename):
-    for entity, sentiment in inc.items():
-        found = False
-        for e in dc:
-            if entity == e['aspect']:
-                if sentiment == e['sentiment']:
-                    found = True
-                    e['chapter'].append(filename)
-                    break
-        if not found:
-            dc.append({
-                'aspect': entity,
-                'sentiment': sentiment,
-                'chapter': [filename]
-            })
-    return dc
+def absa_document_combined_c(combined, inc, filename):
+  for entity, value in inc.items():
+    sentiment = value['sentiment']
+    if entity not in combined.keys():
+      combined[entity]={
+          'sentiment':'', 
+          'chapters': {
+              'Positive':[], 
+              'Negative':[], 
+              'Neutral':[]
+          }
+      }
+    combined[entity]['chapters'][sentiment].append(filename)
+
+  for ent, val in combined.items():
+    index_label = {0: 'Positive', 1:'Negative', 2:'Neutral'}
+    pos_list_len = len(val['chapters']['Positive']) 
+    neg_list_len = len(val['chapters']['Negative']) 
+    neu_list_len = len(val['chapters']['Neutral'])
+    len_list = [pos_list_len, neg_list_len, neu_list_len]
+    index = len_list.index(max(len_list))
+    label = index_label[index]
+    combined[ent]['sentiment'] = label
+
+  return combined
 
 
-def sentimentWordsDocumentMerger(dc, inc):
-    for entity, s_w in inc.items():
-        if entity in dc.keys():
-            dc[entity]['pos'] = dc[entity]['pos'] + s_w['pos']
-            dc[entity]['neg'] = dc[entity]['neg'] + s_w['neg']
-        else:
-            dc[entity] = {}
-            dc[entity]['pos'] = s_w['pos']
-            dc[entity]['neg'] = s_w['neg']
-    return dc
+def entity_sentimentwords_document(combined, inc):
+  df = ['neutral']
+  for entity, s_w in inc.items():
+    if entity in combined.keys():
+      if not all(elem in df  for elem in s_w['pos']):
+        if all(elem in df  for elem in combined[entity]['pos']):
+            combined[entity]['pos'] = s_w['pos']
+            combined[entity]['neg'] = s_w['neg']
+        else: 
+            combined[entity]['pos'] = combined[entity]['pos'] + s_w['pos']
+            combined[entity]['neg'] = combined[entity]['neg'] + s_w['neg']
+    else:
+      combined[entity] = {}
+      combined[entity]['pos'] = s_w['pos'] 
+      combined[entity]['neg'] =  s_w['neg']
+  return combined
 
 
 def postSummaryRequest(text, no_of_sentence):

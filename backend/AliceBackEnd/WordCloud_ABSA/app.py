@@ -75,17 +75,25 @@ def extract_sentiment_words(sentence):
 
 def entity_sentimentwords_chapter(l):
   out = {}
-  for element in l: 
+  for element in l:
+    pos_entity = []
+    neg_entity = [] 
     aspect = element['aspect']
-    sentence = element['sentence']
-    pos, neg = extract_sentiment_words(sentence)
-    if aspect in out.keys(): 
-      out[aspect]['pos'] = out[aspect]['pos'] + pos 
-      out[aspect]['neg'] = out[aspect]['neg'] + neg 
-    else:
-      out[aspect] = {}
-      out[aspect]['pos'] = pos 
-      out[aspect]['neg'] = neg 
+    sentences = element['sentences']['Positive'] + element['sentences']['Negative'] + element['sentences']['Neutral']
+    for sentence in sentences: 
+        pos, neg = extract_sentiment_words(sentence)
+        pos_entity += pos
+        neg_entity += neg
+
+    if len(pos_entity) == 0 and len (neg_entity) == 0: 
+        pos_entity = ['neutral']
+        neg_entity = ['neutral']
+
+    out[aspect]={
+        'pos':pos_entity, 
+        'neg':neg_entity
+    }
+    
   return out 
 
 class SimpleGroupedColorFunc(object):
@@ -106,9 +114,10 @@ def wc_green_red(text, pos, neg):
     wc = WordCloud(collocations=False, background_color = "white", mask = custom_mask).generate(text)
     color_to_words = {
         'green': pos, 
-        'red': neg
+        'red': neg, 
+        '#80CED7': ['neutral']
     }
-    default_color = '#80CED7'
+    default_color = 'grey'
     grouped_color_func = SimpleGroupedColorFunc(color_to_words, default_color)
     wc.recolor(color_func=grouped_color_func)
     imageRes = wc.to_image()

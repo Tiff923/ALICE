@@ -54,8 +54,9 @@ def aspectSentiment_api():
             sentence_d['sentiment']= aspect_sentiment
             sentence_d['sentence']= sentence
             out.append(sentence_d)
-    absa_c = absa_chapter(out)
-    returnJson = {'sentimentTableData': out, 'absaChapter': absa_c}
+    dic = absa_chapter_combined_s(out)
+    absaChapterCombinedS = absa_chapter_to_react(dic)
+    returnJson = {'sentimentTableData': absaChapterCombinedS, 'absaChapter': dic}
     return returnJson 
 
 def pad_and_truncate(sequence, maxlen, dtype='int64', padding='post', truncating='post', value=0):
@@ -115,33 +116,47 @@ def get_parameters():
     opt = parser.parse_args()
     return opt
 
-def absa_chapter(l):
-    summary = {}
-    for element in l:
-      aspect = element['aspect']
-      sentiment = element['sentiment']
-      if aspect in summary.keys():
-        if sentiment == 'Negative': 
-          summary[aspect][0] += 1
-        elif sentiment == 'Neutral':
-          summary[aspect][1] += 1
-        else: 
-          summary[aspect][2] += 1
-      else:
-        if sentiment == 'Negative': 
-          summary[aspect] = [1, 0, 0]
-        elif sentiment == 'Neutral':
-          summary[aspect] = [0, 1, 0]
-        else: 
-          summary[aspect] = [0, 0, 1]
-    
-    out = {}
-    sentiment_dic = {0:'Negative', 1:'Neutral', 2:'Positive'}
-    for aspect, sentimentList in summary.items():
-      index = sentimentList.index(max(sentimentList))
-      out[aspect] = sentiment_dic[index]
+def absa_chapter_combined_s(l):
+  dic = {}
+  for element in l: 
+    entity = element['aspect']
+    sentiment = element['sentiment']
+    sentence = element['sentence']
+    if entity not in dic.keys():
+      dic[entity] = {
+          'sentiment':'', 
+          'sentences':{
+              'Positive': [], 
+              'Negative': [], 
+              'Neutral': []
+          }
+      }
+    dic[entity]['sentences'][sentiment].append(sentence)
 
-    return out 
+  for ent in dic.keys():
+    index_label = {0: 'Positive', 1:'Negative', 2:'Neutral'}
+    pos_list_len = len(dic[ent]['sentences']['Positive'])
+    neg_list_len = len(dic[ent]['sentences']['Negative'])
+    neu_list_len = len(dic[ent]['sentences']['Neutral'])
+    len_list = [pos_list_len, neg_list_len, neu_list_len]
+    index = len_list.index(max(len_list))
+    label = index_label[index]
+    dic[ent]['sentiment'] = label
+  return dic 
+
+def absa_chapter_to_react(dic):
+  returnlist = []
+  for entity in dic.keys():
+    returnlist.append({
+        'aspect':entity, 
+        'sentiment':dic[entity]['sentiment'], 
+        'sentences':{
+            'Positive': dic[entity]['sentences']['Positive'], 
+            'Negative': dic[entity]['sentences']['Negative'], 
+            'Neutral': dic[entity]['sentences']['Neutral']
+            }
+    }) 
+  return returnlist 
 
 
 if __name__ == '__main__':
