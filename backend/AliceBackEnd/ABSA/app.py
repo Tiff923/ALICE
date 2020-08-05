@@ -7,6 +7,7 @@ from data_utils import Tokenizer4Bert
 import argparse
 import json
 from flask import Flask, request
+import gdown 
 
 app = Flask(__name__)
 
@@ -160,4 +161,8 @@ def absa_chapter_to_react(dic):
 
 
 if __name__ == '__main__':
+    url = 'https://drive.google.com/u/0/uc?id=1f39YozZez4cVIGPXy32tpm7_qTF5U9D8'
+    output = 'aen_bert_restaurant_val_acc0.8098'
+    gdown.download(url, output, quiet=False)
     app.run(host='0.0.0.0', debug=True, port=5090)
+

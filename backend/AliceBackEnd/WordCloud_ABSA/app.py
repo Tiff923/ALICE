@@ -21,14 +21,11 @@ cors = CORS(app)
 def wordCloud_ABSA(): 
     try: 
         data = request.json
-        print('data from frontend wc', data, flush=True)
         sentimentWord_c = entity_sentimentwords_chapter(data)
         key = list(sentimentWord_c.keys())[0]
         pos = sentimentWord_c[key]['pos']
         neg = sentimentWord_c[key]['neg']
         text = ' '.join(pos + neg)
-        print('pos /wordCloudABSA', pos, flush=True)
-        print('neg /wordCloudABSA', neg, flush=True)
         wc = wc_green_red(text, pos, neg)
         returnJson = {'sentimentWordCloud': wc, 'sentimentWordChapter':sentimentWord_c}
     except Exception as err: 
@@ -39,13 +36,10 @@ def wordCloud_ABSA():
 def wc_ABSA_Overview(): 
     try: 
         data = request.json
-        print('data from frontend wc overview', data, flush=True)
         key = list(data.keys())[0]
         pos = data[key]['pos']
         neg = data[key]['neg']
         text = ' '.join(pos + neg)
-        print('pos /wcABSAOverview', pos, flush=True)
-        print('neg /wcABSAOverview', neg, flush=True)
         wc = wc_green_red(text, pos, neg)
         returnJson = {'sentimentWordCloud': wc}
     except Exception as err: 
@@ -64,12 +58,7 @@ def extract_sentiment_words(sentence):
           pos_word_list.append(word)
       if (sid.polarity_scores(word)['compound']) <= -0.1:
           neg_word_list.append(word)
-
-  if len(pos_word_list) == 0 and len(neg_word_list) == 0: 
-      pos_word_list = ['none', 'positive', 'word'] 
-      neg_word_list = ['none', 'negative', 'word']
           
-
   return pos_word_list, neg_word_list
 
 

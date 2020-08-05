@@ -45,12 +45,12 @@ const apiPostSentimentWordcloud = (payload) => {
   console.log(data);
   if (currentFileName === 'Overview') {
     // 'http://wcabsaoverview-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wcABSAOverview',
-    return axios.post('http://localhost:5000/wcABSAOverview', data, {
+    return axios.post('http://localhost:5100/wcABSAOverview', data, {
       headers: headers,
     });
   } else {
     // 'http://wcabsa-alice.apps.8d5714affbde4fa6828a.southeastasia.azmosa.io/wordCloudABSA'
-    return axios.post('http://localhost:5000/wordCloudABSA', data, {
+    return axios.post('http://localhost:5100/wordCloudABSA', data, {
       headers: headers,
     });
   }
