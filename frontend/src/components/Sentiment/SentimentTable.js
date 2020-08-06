@@ -64,7 +64,7 @@ const SentimentTable = (props) => {
           </div>
         ) : null}
 
-        {rowData.sentences.Neutral > 0 ? (
+        {rowData.sentences.Neutral.length > 0 ? (
           <div style={{ padding: 5 }}>
             <span style={{ fontWeight: 'bold' }}>Neutral sentences: </span>
             {rowData.sentences.Neutral.map((sentence, i) => {

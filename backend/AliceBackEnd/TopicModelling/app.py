@@ -23,6 +23,14 @@ def topic_modelling_api():
 
 
 def topic_modelling(documents, no_topics=3, no_top_words=5):
+
+    """
+    Args:
+            documents: list of strings, each string is a document 
+            no_topics: integer, number of topics to be extracted 
+            no_top_words: integer, number of words describing each topic 
+    
+    """
     no_features = 1000
 
     # NMF is able to use tf-idf
@@ -33,12 +41,14 @@ def topic_modelling(documents, no_topics=3, no_top_words=5):
     # Run NMF
     nmf = NMF(n_components=no_topics, random_state=1, alpha=.1, l1_ratio=.5).fit(tfidf)
 
+    # Extract words describing each topic, appending each topics's description to list_of_topics
     list_of_topics = []
     for topic_idx, topic in enumerate(nmf.components_):
         words_of_topic = " ".join([tfidf_feature_names[i]
                                    for i in topic.argsort()[:-no_top_words - 1:-1]])
         list_of_topics.append(words_of_topic)
 
+    # Altering data structure to pass to frontend 
     topics_words = []
     for topics in list_of_topics:
         words = topics.split()

@@ -246,8 +246,8 @@ def getOverview(corpus, corpusEntity, corpusRelation, absaDocument, sentimentWor
     print("receive wordcloud")
 
     # ABSA, wcabsa
-    wcabsaJson = postwcabscaOverview(sentimentWordDocument)
     absaDocumentCombinedC = absa_document_to_react(absaDocument)
+    wcabsaJson = postwcabscaOverview(sentimentWordDocument)
     sentimentList.append({
         'sentimentTableData': absaDocumentCombinedC,
         'sentimentWordDocument': sentimentWordDocument,
