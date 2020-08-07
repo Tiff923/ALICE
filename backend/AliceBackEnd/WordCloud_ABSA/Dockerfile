@@ -10,6 +10,10 @@ ADD . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
 
+# Download nltk punkt, vader_lexicon
+RUN python -c "import nltk; nltk.download('punkt')"
+RUN python -c "import nltk; nltk.download('vader_lexicon')"
+
 # Port used in container 
 EXPOSE 5100
 

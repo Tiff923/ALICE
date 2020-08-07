@@ -7,5 +7,6 @@ RUN apt-get -y install gcc
 RUN pip install --upgrade pip
 RUN pip install --default-timeout=100 future
 RUN pip install -r requirements.txt
+RUN python -c "import nltk; nltk.download('all')"
 EXPOSE 5050
 CMD ["python", "app.py"]
