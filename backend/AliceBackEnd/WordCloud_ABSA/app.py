@@ -11,9 +11,6 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from flask_cors import CORS, cross_origin
 
 
-nltk.download('punkt')
-nltk.download('vader_lexicon')
-
 app = Flask(__name__)
 cors = CORS(app)
 
