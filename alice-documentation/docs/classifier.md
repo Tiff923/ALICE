@@ -13,6 +13,8 @@
 - Our final model, Naive Baye, was trained as a binary classification model as it achieved a higher accuracy as compared to a multi-class classification model. This means that a single document needs to be passed into 6 binary classification models, one per domain to determine which domain the document belongs to. However, since the Naive Baye model implemented using Sklearn directly outputs whether a document falls in a certain domain rather than the probability of the document belonging to a domain, we were unable to determine the best category for the document. Through this experience, we understood the need for multi-label models. 
 - We also looked into combining deep learning models to classify documents of variable length. We combined BERT with LSTM. We split each document into smaller text, 200 words each, with 50 words overlapped. Subsequent, we fed the smaller text into BERT to encode them. Before passing to LSTM, our classifier, we padded the shorter sequence with a special value to be masked. This ensures accurate encoding of documents with variable length.
 
+## Routes 
+- `/classifier`
 
 ## Scikit-learn 
 ![scikit-learn-logo](./img/clustering/scikit-learn-logo.jpg)

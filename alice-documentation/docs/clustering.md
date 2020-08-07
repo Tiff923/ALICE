@@ -6,6 +6,8 @@
 - We tried two ways to encode the document, namely using TF-IDF and Doc2Vec. Doc2Vec is an extension of the Word2Vec approach. It adds an additional input node representing the document as an additional context in predicting the next word in a sentence. 
 - The clustering model chosen is Doc2Vec, along with K means. 
 
+## Routes 
+- `/cluster`
 
 ## Scikit-learn 
 ![scikit-learn-logo](./img/clustering/scikit-learn-logo.jpg)

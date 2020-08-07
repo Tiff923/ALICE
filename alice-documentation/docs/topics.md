@@ -15,6 +15,9 @@
 
 - The approach adopted is NMF. This is because the topics could be more accurately deciphered from the list of words outputted from the NMF model. In other words, the list of words provided by the NMF model consists of more significant words. Moreover, given a small corpus, the NMF model is less likely to generate a repeated list of words for different topics. 
 
+## Routes 
+- `/topic_modelling`
+
 ## Scikit-learn
 ![scikit-learn-logo](./img/clustering/scikit-learn-logo.jpg)
 
@@ -84,11 +87,11 @@ def topic_modelling(documents, no_topics=3, no_top_words=5):
 The variable list_of_topics is in the form: 
 
 ```python
- [
+[
  'hydroxychloroquine trials study patients drug',
   'people certificates recovered said evidence', 
   'pandemic china resolution assembly president'
-  ]
+]
 ```
 
 The final result returned from our module (i.e. the variable outJson) is in the form: 
