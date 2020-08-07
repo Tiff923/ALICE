@@ -109,7 +109,7 @@ class SimpleGroupedColorFunc(object):
 
 def wc_green_red(text, pos, neg): 
 
-     """
+    """
     Args: 
     	text: string, contains positive and negative words from pos and neg respectively 
         pos: list of positive words
