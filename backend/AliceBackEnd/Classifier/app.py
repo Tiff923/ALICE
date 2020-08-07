@@ -50,7 +50,7 @@ def classify_one_category(model_file_path, vectorizer_file_path, selector_file_p
 
 def multi_final_class(data):
 
-     """
+    """
     Args: 
     	data: list of strings, each string is document (This function is applicable for only 1 document)
    
@@ -59,24 +59,9 @@ def multi_final_class(data):
     	
     """
 
-    model_path_list = ['./health_model.bin',
-                       './crime_model.bin',
-                       './terrorism_model.bin',
-                       './finance_model.bin',
-                       './politics_model.bin',
-                       './tech_model.bin']
-    vectorizer_path_list = ['./health_vectorizer.pickle',
-                            './crime_vectorizer.pickle',
-                            './terrorism_vectorizer.pickle',
-                            './finance_vectorizer.pickle',
-                            './politics_vectorizer.pickle',
-                            './tech_vectorizer.pickle']
-    selector_path_list = ['./health_selector.pickle',
-                          './crime_selector.pickle',
-                          './terrorism_selector.pickle',
-                          './finance_selector.pickle',
-                          './politics_selector.pickle',
-                          './tech_selector.pickle']
+    model_path_list = ['./health_model.bin', './crime_model.bin', './terrorism_model.bin', './finance_model.bin', './politics_model.bin', './tech_model.bin']
+    vectorizer_path_list = ['./health_vectorizer.pickle', './crime_vectorizer.pickle', './terrorism_vectorizer.pickle', './finance_vectorizer.pickle', './politics_vectorizer.pickle', './tech_vectorizer.pickle']
+    selector_path_list = ['./health_selector.pickle', './crime_selector.pickle', './terrorism_selector.pickle', './finance_selector.pickle', './politics_selector.pickle', './tech_selector.pickle']
 
     classes = []
     keys = {0: 'Health', 1: 'Crime', 2: 'Terrorism', 3: 'Finance', 4: 'Politics', 5: 'Tech'}
