@@ -1,6 +1,5 @@
-# Text Classifier
-
 # Text Classifier 
+
 - Text Classification refers to categorising documents into either of the 6 categories: Crime, Technology, Health, Finance, Terrorism, Politics. 
 - Below are models we have tested and their respective accuracy: 
 
@@ -14,9 +13,11 @@
 - We also looked into combining deep learning models to classify documents of variable length. We combined BERT with LSTM. We split each document into smaller text, 200 words each, with 50 words overlapped. Subsequent, we fed the smaller text into BERT to encode them. Before passing to LSTM, our classifier, we padded the shorter sequence with a special value to be masked. This ensures accurate encoding of documents with variable length.
 
 ## Routes 
+
 - `/classifier`
 
 ## Scikit-learn 
+
 ![scikit-learn-logo](./img/clustering/scikit-learn-logo.jpg)
 
 `backend/AliceBackEnd/Classifier/app.py`

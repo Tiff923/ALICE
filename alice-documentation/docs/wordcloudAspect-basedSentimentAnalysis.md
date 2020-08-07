@@ -5,12 +5,14 @@
 - The positive and negative words with regards to an entity are displayed as a word cloud. Positive words are color-coded green, negative words are color-coded red. 
 
 
-# Python wordcloud library, Nltk 
+## Python wordcloud library, Nltk 
+
 ![nltk-logo](./img/wordCloudAspect-basedSentimentAnalysis/nltk-logo.jpg)
 
 `backend/AliceBackEnd/WordCloud_ABSA/app.py`
 
 ### Extract Sentiment Words
+
 ```python
 def extract_sentiment_words(sentence): 
 
@@ -61,6 +63,7 @@ The output of `def entity_sentimentwords_chapter(l):` and `def entity_sentimentw
 ```
 
 ### Generate wordcloud 
+
 ```python
 def wc_green_red(text, pos, neg): 
 	
