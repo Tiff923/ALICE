@@ -17,6 +17,8 @@ nav:
       - Text Summarizer: summary.md
       - Topic Modelling: topics.md
       - Wordcloud: wordcloud.md
+      - Aspect-Based Sentiment Analysis: aspect-basedSentimentAnalysis.md
+      - Wordcloud Aspect-based Sentiment Analysis: wordcloudAspect-basedSentimentAnalysis.md
   - DevOps:
       - Docker: docker.md
       - Openshift: openshift.md
