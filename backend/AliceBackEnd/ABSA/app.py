@@ -7,36 +7,44 @@ from data_utils import Tokenizer4Bert
 import argparse
 import json
 from flask import Flask, request
-import gdown 
 
 app = Flask(__name__)
 
 @app.route('/aspectSentiment', methods=['GET', 'POST'])
 def aspectSentiment_api():
     data = request.json
+    print('Received Data', flush=True)
 
+    # Obtain default parameters
     opt = get_parameters()
     opt.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    # Load pre-trained tokenizer, bert model
     tokenizer = Tokenizer4Bert(opt.max_seq_len, opt.pretrained_bert_name)
     bert = BertModel.from_pretrained(opt.pretrained_bert_name)
     model = AEN_BERT(bert, opt).to(opt.device)
     
+    # Load trained attention model 
     print('loading model {0} ...'.format(opt.model_name))
     model.load_state_dict(torch.load('aen_bert_restaurant_val_acc0.8098', map_location=opt.device))
     model.eval()
     torch.autograd.set_grad_enabled(False)
     
+    # out, the result of the attention model, tells us the sentiment towards an aspect at sentence level 
     out = []
     for entity, sentences in data.items():
         for sentence in sentences:
             sentence_d = {'aspect':'', 'sentiment':'', 'sentence':''}
             sentiment_d = {-1: 'Negative', 0:'Neutral', 1:'Positive'}
 
+            # aspect: Entity of interest 
+            # left: Segment of the sentence that appears on the left of aspect 
+            # right: Segement of the sentence that appears on the right of aspect 
             left = sentence['left']
             aspect = sentence['aspect']
             right = sentence['right'] 
             sentence = left + aspect + right 
+            # Preparing data to feed into bert encoder 
             text_bert_indices, bert_segments_ids, text_raw_bert_indices, aspect_bert_indices = prepare_data(left, aspect, right, tokenizer)
       
             text_bert_indices = torch.tensor([text_bert_indices], dtype=torch.int64).to(opt.device)
@@ -48,15 +56,18 @@ def aspectSentiment_api():
             outputs = model(inputs)
             t_probs = F.softmax(outputs, dim=-1).cpu().numpy()
             aspect_sentiment_n = t_probs.argmax(axis=-1) - 1
-            print(aspect_sentiment_n)
             aspect_sentiment = sentiment_d[aspect_sentiment_n[0]]
 
             sentence_d['aspect']= aspect
             sentence_d['sentiment']= aspect_sentiment
             sentence_d['sentence']= sentence
             out.append(sentence_d)
+
+    # Determines the sentiment towards an aspect at chapter level (a document) and consolidate all sentences related to the aspect 
     dic = absa_chapter_combined_s(out)
+    # Altering data structure to pass to frontend 
     absaChapterCombinedS = absa_chapter_to_react(dic)
+    print('Model complete', flush=True)
     returnJson = {'sentimentTableData': absaChapterCombinedS, 'absaChapter': dic}
     return returnJson 
 
@@ -133,7 +144,7 @@ def absa_chapter_combined_s(l):
           }
       }
     dic[entity]['sentences'][sentiment].append(sentence)
-
+    
   for ent in dic.keys():
     index_label = {0: 'Positive', 1:'Negative', 2:'Neutral'}
     pos_list_len = len(dic[ent]['sentences']['Positive'])
@@ -161,8 +172,4 @@ def absa_chapter_to_react(dic):
 
 
 if __name__ == '__main__':
-    url = 'https://drive.google.com/u/0/uc?id=1f39YozZez4cVIGPXy32tpm7_qTF5U9D8'
-    output = 'aen_bert_restaurant_val_acc0.8098'
-    gdown.download(url, output, quiet=False)
     app.run(host='0.0.0.0', debug=True, port=5090)
-

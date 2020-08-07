@@ -20,9 +20,7 @@ def run():
 def getDEMCluster():
     data = request.json
     corpus = data["corpus"]
-    print('corpus-cluster', corpus, flush=True)
     fileNames = data["fileNames"]
-    print('filenames-cluster', fileNames, flush=True)
     topic_every_cluster, datapoint, centroidpoint, labels = algorithm(corpus)
     returnJson = {'clusterData': {"topic_all_cluster": topic_every_cluster, "dataPoints": datapoint.tolist(),
                                   "centroidPoints": centroidpoint.tolist(), "labels": labels, "fileNames": fileNames}}
@@ -30,6 +28,15 @@ def getDEMCluster():
 
 
 def process_corpus(corpus):
+
+    """
+    Args: 
+        corpus: list of strings, each string is a document
+        
+    Returns: 
+    	Nested list, each sub list is a list of lowercased, tokenized words found in a document  
+    """
+
     corpus_tokens = []
     for i, doc in enumerate(corpus):
         tokens = gensim.utils.simple_preprocess(doc)
@@ -38,6 +45,15 @@ def process_corpus(corpus):
 
 
 def doc2vec(test_corpus):
+
+    """
+    Args:
+    	test_corpus: Nested list, each sub list is a list of lowercased, tokenized words found in a document 
+        
+    Returns: 
+    	Nested list, each sub list is a vectorized representation of a document 
+    """
+
     model_file_path = './model.bin'
     m = pickle.load(open(model_file_path, 'rb'))
     test_doc2vec = []
@@ -47,8 +63,16 @@ def doc2vec(test_corpus):
 
 
 def optimal_k(test_doc2vec):
+
+    """
+    Args: 
+    	test_doc2vec: Nested list, each sub list is a vectorized representation of a document
+        
+    Returns:
+    	the number of clusters (k) that gives highest silhouette_val
+    """
+
     n = len(test_doc2vec)
-    print(f"Clustering n is {n}", flush=True)
     if n == 2:
         return 2, None
     else:
@@ -64,11 +88,23 @@ def optimal_k(test_doc2vec):
 
 
 def k_means(test_doc2vec):
+
+    """
+    Args: 
+    	test_doc2vec: Nested list, each sub list is a vectorized representation of a document
+    
+    Returns: 
+    	datapoint: 2D list, vectorized representation of every document in 2D
+        centroidpoint: 2D list, centriods of every cluster in 2D
+        labels: 1D list, each label represents the cluster each document belongs to 
+    """
+
     k, sil = optimal_k(test_doc2vec)
     kmeans_model = KMeans(n_clusters=k, init='k-means++', max_iter=100)
     X = kmeans_model.fit(test_doc2vec)
     labels = kmeans_model.labels_.tolist()
 
+    # Transform test_doc2vec and centroids to 2D for drawing scatterplot 
     pca = PCA(n_components=2).fit(test_doc2vec)
     datapoint = pca.transform(test_doc2vec)
 
@@ -79,10 +115,30 @@ def k_means(test_doc2vec):
 
 
 def duplicates(lst, item):
+
+    """
+    Args: 
+    	lst: list
+        item: element in list
+    
+    Returns: 
+    	list of index of elements in lst that are equal to item 
+    """
+
     return [i for i, x in enumerate(lst) if x == item]
 
 
 def prepare_corpus_topic(labels, corpus):
+
+    """
+    Args: 
+    	labels: 1D list, each label represents the cluster each document belongs to 
+        corpus: list of strings, each string is a document
+        
+    Returns: 
+    	nested list, each sub list contains documents that belong to the same cluster 
+    """
+
     clusters = sorted(list(set(labels)))
     text_all_clusters = []
     for cluster in clusters:
@@ -92,17 +148,18 @@ def prepare_corpus_topic(labels, corpus):
     return text_all_clusters
 
 
-def obtain_filenames(labels, filenames):
-    clusters = sorted(list(set(labels)))
-    filename_all_clusters = []
-    for cluster in clusters:
-        index_list = duplicates(labels, cluster)
-        filename_per_cluster = [filenames[i] for i in index_list]
-        filename_all_clusters.append(filename_per_cluster)
-    return filename_all_clusters
-
-
 def topic_modelling(documents, no_topics=3, no_top_words=5):
+
+    """
+	Args:
+    	documents: list of strings, each string is a document 
+        no_topics: integer, number of topics to be extracted 
+        no_top_words: integer, number of words describing each topic 
+            
+    Returns: 
+    	list of strings, each string describes a topic 
+    """
+
     no_features = 1000
 
     # NMF is able to use tf-idf
@@ -123,6 +180,15 @@ def topic_modelling(documents, no_topics=3, no_top_words=5):
 
 
 def topic_all_cluster(text_all_cluster):
+
+    """
+    Args: 
+    	text_all_cluster: nested list, each sub list contains documents that belong to the same cluster 
+    
+    Returns: 
+    	list of strings, each string describes a topic
+    """
+
     topic_all_cluster = []
     for text_per_cluster in text_all_cluster:
         topic_per_cluster = topic_modelling(text_per_cluster, 1, 10)
@@ -131,11 +197,16 @@ def topic_all_cluster(text_all_cluster):
 
 
 def algorithm(corpus):
+
+    # Document clustering  
     test_corpus = process_corpus(corpus)
     test_doc2vec = doc2vec(test_corpus)
     datapoint, centroidpoint, labels = k_means(test_doc2vec)
+
+    # Extracting words that describe each cluster 
     text_every_clusters = prepare_corpus_topic(labels, corpus)
     topic_every_cluster = topic_all_cluster(text_every_clusters)
+
     return topic_every_cluster, datapoint, centroidpoint, labels
 
 

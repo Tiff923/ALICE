@@ -4,9 +4,9 @@ ADD . /app
 
 RUN pip install -r requirements.txt
 
-RUN python -m nltk.downloader punkt
+RUN python -c "import nltk; nltk.download('punkt')"
 
-RUN python -m nltk.downloader wordnet
+RUN python -c "import nltk; nltk.download('wordnet')"
 
 EXPOSE 5060
 

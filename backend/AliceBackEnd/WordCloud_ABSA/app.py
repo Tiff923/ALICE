@@ -10,10 +10,6 @@ from nltk.tokenize import word_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from flask_cors import CORS, cross_origin
 
-
-nltk.download('punkt')
-nltk.download('vader_lexicon')
-
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -46,7 +42,17 @@ def wc_ABSA_Overview():
         print('error in /wcABSAOverview', err, flush=True)
     return returnJson
 
-def extract_sentiment_words(sentence): 
+def extract_sentiment_words(sentence):
+  
+  """
+  Args:
+  		sentence: string, a sentence 
+        
+  Returns: 
+  		pos_word_list: list of positive words present in the sentence  
+        neg_word_list: list of negative words present in the sentence 
+  """
+  
   tokenized_sentence = nltk.word_tokenize(sentence)
 
   sid = SentimentIntensityAnalyzer()
@@ -57,8 +63,8 @@ def extract_sentiment_words(sentence):
       if (sid.polarity_scores(word)['compound']) >= 0.1:
           pos_word_list.append(word)
       if (sid.polarity_scores(word)['compound']) <= -0.1:
-          neg_word_list.append(word)
-          
+          neg_word_list.append(word)    
+
   return pos_word_list, neg_word_list
 
 
@@ -99,8 +105,25 @@ class SimpleGroupedColorFunc(object):
 
 
 def wc_green_red(text, pos, neg): 
+
+    """
+    Args: 
+    	text: string, contains positive and negative words from pos and neg respectively 
+        pos: list of positive words
+        neg: list of negative words
+        
+    Returns: 
+    	bytestring of wordcloud 
+    """
+
+    # Defines shape of word cloud 
     custom_mask = np.array(Image.open("Book4.jpg"))
+
+    # Generate word cloud 
     wc = WordCloud(collocations=False, background_color = "white", mask = custom_mask).generate(text)
+
+    # color_to_words is a mapping of color and words 
+    # default color is the color of words that are absent in color_to_words 
     color_to_words = {
         'green': pos, 
         'red': neg, 
@@ -111,7 +134,7 @@ def wc_green_red(text, pos, neg):
     wc.recolor(color_func=grouped_color_func)
     imageRes = wc.to_image()
 
-    # Convert to bytes
+    # Convert to bytestring 
     file_object = io.BytesIO()
     imageRes.save(file_object, format='PNG')
     bytestring = base64.b64encode(file_object.getvalue())

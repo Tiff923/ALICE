@@ -13,9 +13,6 @@ app = Flask(__name__)
 
 tagger_fast = SequenceTagger.load('ner-ontonotes-fast')
 
-nltk.download('punkt')
-
-
 @app.route('/')
 def run():
     return 'NER running'
