@@ -105,7 +105,7 @@ class Tokenizer(object):
 
 class Tokenizer4Bert:
     def __init__(self, max_seq_len, pretrained_bert_name):
-        self.tokenizer = BertTokenizer.from_pretrained(pretrained_bert_name)
+        self.tokenizer = BertTokenizer.from_pretrained('./trained/bert/bert-base-uncased-vocab.txt')
         self.max_seq_len = max_seq_len
 
     def text_to_sequence(self, text, reverse=False, padding='post', truncating='post'):

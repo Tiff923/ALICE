@@ -21,12 +21,12 @@ def aspectSentiment_api():
 
     # Load pre-trained tokenizer, bert model
     tokenizer = Tokenizer4Bert(opt.max_seq_len, opt.pretrained_bert_name)
-    bert = BertModel.from_pretrained(opt.pretrained_bert_name)
+    bert = BertModel.from_pretrained('./trained/bert/')
     model = AEN_BERT(bert, opt).to(opt.device)
     
     # Load trained attention model 
     print('loading model {0} ...'.format(opt.model_name))
-    model.load_state_dict(torch.load('aen_bert_restaurant_val_acc0.8098', map_location=opt.device))
+    model.load_state_dict(torch.load('./trained/aen_bert_restaurant_val_acc0.8098', map_location=opt.device))
     model.eval()
     torch.autograd.set_grad_enabled(False)
     
