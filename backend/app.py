@@ -119,14 +119,14 @@ def updateNetwork():
 def receiveFile():
     print("Receiving File", flush=True)
     length = int(request.form['length'])
-    returnJson = {}
     fileNames = json.loads(request.form['fileNames'])
+    returnJson = {}
     absaDocument = {}
     sentimentWordDocument = {}
     corpus = []
     corpusEntity = {}
-    # corpusPassToRelation = []
     corpusRelation = []
+    
     for i in range(length):
         file = request.files[f'file{i}']
 
